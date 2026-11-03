@@ -1611,7 +1611,7 @@ html.sp-lock { overflow: hidden; }
       </div>
       <div class="auds">
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>
+          <span class="th" data-still="sep-taille"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>
           <div class="aud-b">
             <h3>Séparateurs de taille</h3>
             <p>S, M, L, XL ou 36, 38, 40…</p>
@@ -1619,10 +1619,11 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="sep-taille" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="sep-taille">Voir en 3D</button>
           </div>
         </article>
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>
+          <span class="th" data-still="clip-cintre"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>
           <div class="aud-b">
             <h3>Clips et médaillons de cintre</h3>
             <p>Pour repérer en un coup d’œil.</p>
@@ -1630,10 +1631,11 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="clip-cintre" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="clip-cintre">Voir en 3D</button>
           </div>
         </article>
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>
+          <span class="th" data-still="porte-prix"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>
           <div class="aud-b">
             <h3>Porte-étiquettes de prix</h3>
             <p>Étagères, tables et piles.</p>
@@ -1641,10 +1643,11 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="porte-prix" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="porte-prix">Voir en 3D</button>
           </div>
         </article>
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>
+          <span class="th" data-still="enseigne-cabine"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>
           <div class="aud-b">
             <h3>Enseignes de cabine et de caisse</h3>
             <p>Cabine 1, caisse, retours.</p>
@@ -1652,10 +1655,11 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="enseigne-cabine" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="enseigne-cabine">Voir en 3D</button>
           </div>
         </article>
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>
+          <span class="th" data-still="logo-relief"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>
           <div class="aud-b">
             <h3>Logo en relief</h3>
             <p>Pour la vitrine ou le comptoir.</p>
@@ -1663,10 +1667,11 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="logo-relief" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="logo-relief">Voir en 3D</button>
           </div>
         </article>
         <article class="aud">
-          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-porte-cles"/></svg></span>
+          <span class="th" data-still="porte-cles"><svg class="ico" aria-hidden="true"><use href="#i-porte-cles"/></svg></span>
           <div class="aud-b">
             <h3>Porte-clés cadeau</h3>
             <p>Offert à l’achat.</p>
@@ -1674,6 +1679,7 @@ html.sp-lock { overflow: hidden; }
           </div>
           <div class="aud-acts">
             <button type="button" class="add-btn" data-add="porte-cles" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+            <button type="button" class="text-btn" data-open="porte-cles">Voir en 3D</button>
           </div>
         </article>
       </div>
@@ -2005,13 +2011,13 @@ html.sp-lock { overflow: hidden; }
               <button type="button" class="pk" data-add="noel-sapin" aria-pressed="false"><span class="th" data-still="noel-sapin"><svg class="ico" aria-hidden="true"><use href="#i-noel-sapin"/></svg></span>Sapin de Noël</button>
               <button type="button" class="pk" data-add="noel-bonhomme" aria-pressed="false"><span class="th" data-still="noel-bonhomme"><svg class="ico" aria-hidden="true"><use href="#i-noel-bonhomme"/></svg></span>Bonhomme de neige</button>
               <button type="button" class="pk" data-add="noel-etiquette" aria-pressed="false"><span class="th" data-still="noel-etiquette"><svg class="ico" aria-hidden="true"><use href="#i-noel-etiquette"/></svg></span>Étiquette cadeau</button>
-              <button type="button" class="pk" data-add="sep-taille" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>Séparateurs de taille</button>
-              <button type="button" class="pk" data-add="clip-cintre" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>Clips de cintre</button>
-              <button type="button" class="pk" data-add="porte-prix" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>Porte-prix</button>
-              <button type="button" class="pk" data-add="enseigne-cabine" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>Enseigne</button>
-              <button type="button" class="pk" data-add="porte-cartes" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-porte-cartes"/></svg></span>Porte-cartes</button>
-              <button type="button" class="pk" data-add="support-tel" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-support"/></svg></span>Support téléphone</button>
-              <button type="button" class="pk" data-add="logo-relief" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>Logo en relief</button>
+              <button type="button" class="pk" data-add="sep-taille" aria-pressed="false"><span class="th" data-still="sep-taille"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>Séparateurs de taille</button>
+              <button type="button" class="pk" data-add="clip-cintre" aria-pressed="false"><span class="th" data-still="clip-cintre"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>Clips de cintre</button>
+              <button type="button" class="pk" data-add="porte-prix" aria-pressed="false"><span class="th" data-still="porte-prix"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>Porte-prix</button>
+              <button type="button" class="pk" data-add="enseigne-cabine" aria-pressed="false"><span class="th" data-still="enseigne-cabine"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>Enseigne</button>
+              <button type="button" class="pk" data-add="porte-cartes" aria-pressed="false"><span class="th" data-still="porte-cartes"><svg class="ico" aria-hidden="true"><use href="#i-porte-cartes"/></svg></span>Porte-cartes</button>
+              <button type="button" class="pk" data-add="support-tel" aria-pressed="false"><span class="th" data-still="support-tel"><svg class="ico" aria-hidden="true"><use href="#i-support"/></svg></span>Support téléphone</button>
+              <button type="button" class="pk" data-add="logo-relief" aria-pressed="false"><span class="th" data-still="logo-relief"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>Logo en relief</button>
               <button type="button" class="pk" data-add="autre" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-autre"/></svg></span>Autre idée</button>
             </div>
           </fieldset>
@@ -4816,11 +4822,103 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+
+  /* ---------- objets pour boutiques de mode et commerces ---------- */
+  function sepTaille(text) {
+    var disc = circle(new THREE.Shape(), 34, 0, -8);
+    var tab = rr(new THREE.Shape(), 28, 22, 6, 0, 27);
+    tab.holes.push(rr(new THREE.Path(), 15, 4.2, 2.1, 0, 30));
+    var ring = circle(new THREE.Shape(), 30.5, 0, -8);
+    ring.holes.push(circle(new THREE.Path(), 28, 0, -8));
+    var lay = layout(text, { maxW: 36, maxH: 36, cap: 34, cx: 0, cy: -8 });
+    var m = flatModel([disc, tab], [ring], lay.items, 48);
+    m.dims = [68, 76, BASE_H + REL_H];
+    m.shrunk = false;
+    return m;
+  }
+  function clipCintre(text) {
+    var disc = circle(new THREE.Shape(), 22, 0, -6);
+    var tab = rr(new THREE.Shape(), 16, 16, 7, 0, 18);
+    tab.holes.push(circle(new THREE.Path(), 3.4, 0, 21));
+    var ring = circle(new THREE.Shape(), 19.2, 0, -6);
+    ring.holes.push(circle(new THREE.Path(), 17, 0, -6));
+    var lay = layout(text, { maxW: 30, maxH: 12, cap: 6.5, cx: 0, cy: -6 });
+    var m = flatModel([disc, tab], [ring], lay.items, 40);
+    m.dims = [44, 52, BASE_H + REL_H];
+    m.shrunk = false;
+    return m;
+  }
+  function prixTag(text) {
+    var body = poly(new THREE.Shape(), [[-40, -22], [26, -22], [44, 0], [26, 22], [-40, 22]]);
+    body.holes.push(circle(new THREE.Path(), 2.6, 34, 0));
+    var frame = rr(new THREE.Shape(), 56, 36, 4, -10, 0);
+    frame.holes.push(rr(new THREE.Path(), 52.6, 32.6, 2.4, -10, 0));
+    var lay = layout(text, { maxW: 44, maxH: 18, cap: 16, cx: -10, cy: 0 });
+    var m = flatModel([body], [frame], lay.items, 20);
+    m.dims = [84, 44, BASE_H + REL_H];
+    m.shrunk = false;
+    return m;
+  }
+  function upText(g, mat, text, o) {
+    layout(text, o).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 1.2, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy + (o.y || 0), z0: o.z }), mat.relief));
+    });
+  }
+  function enseigne(mat, text) {
+    var g = new THREE.Group();
+    g.add(mk(ext([rr(new THREE.Shape(), 84, 34, 5)], 4, { bevel: 0.6, seg: 8 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 84, 40, 5, 0, 20)], 4, { upright: true, bevel: 0.6, seg: 8, z0: -2 }), mat.base));
+    var fr = rr(new THREE.Shape(), 76, 32, 3, 0, 21);
+    fr.holes.push(rr(new THREE.Path(), 73, 29, 2, 0, 21));
+    g.add(mk(ext([fr], 1.2, { upright: true, bevel: 0.25, seg: 6, z0: 1.7 }), mat.relief));
+    upText(g, mat, text, { maxW: 62, maxH: 14, cap: 11, cx: 0, cy: 0, y: 21, z: 1.7 });
+    return g;
+  }
+  function logoRelief(mat, text) {
+    var g = new THREE.Group();
+    g.add(mk(ext([rr(new THREE.Shape(), 70, 40, 5)], 4, { bevel: 0.6, seg: 8 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 16, 14, 2, 0, 9)], 4, { upright: true, bevel: 0.4, seg: 4, z0: -2 }), mat.base));
+    g.add(mk(ext([circle(new THREE.Shape(), 24, 0, 33)], 4, { upright: true, bevel: 0.6, seg: 48, z0: -2 }), mat.base));
+    var rg = circle(new THREE.Shape(), 21, 0, 33);
+    rg.holes.push(circle(new THREE.Path(), 18.6, 0, 33));
+    g.add(mk(ext([rg], 1.2, { upright: true, bevel: 0.25, seg: 48, z0: 1.7 }), mat.relief));
+    upText(g, mat, text, { maxW: 24, maxH: 24, cap: 22, cx: 0, cy: 0, y: 33, z: 1.7 });
+    return g;
+  }
+  function carteBox(mat, text) {
+    var g = new THREE.Group();
+    g.add(mk(ext([rr(new THREE.Shape(), 100, 46, 4)], 5, { bevel: 0.6, seg: 8 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 100, 44, 4, 0, 22)], 3, { upright: true, bevel: 0.5, seg: 8, z0: -21 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 100, 18, 3, 0, 9)], 3, { upright: true, bevel: 0.5, seg: 8, z0: 17 }), mat.base));
+    [-12, -8, -4].forEach(function (z) {
+      g.add(mk(ext([rr(new THREE.Shape(), 86, 50, 1.5, 0, 31)], 1.4, { upright: true, bevel: 0.2, seg: 4, z0: z }), mat.relief));
+    });
+    upText(g, mat, text, { maxW: 70, maxH: 9, cap: 8, cx: 0, cy: 0, y: 9, z: 19.6 });
+    return g;
+  }
+  function supportTel(mat, text) {
+    var g = new THREE.Group();
+    var s = poly(new THREE.Shape(), [[-34, 0], [34, 0], [34, 66], [23, 66], [10, 10], [-22, 10], [-22, 18], [-34, 18]]);
+    var geo = new THREE.ExtrudeGeometry([s], { depth: 62 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
+    geo.translate(0, 0, -31 + 0.8);
+    geo.rotateY(Math.PI / 2);
+    g.add(mk(geo, mat.base));
+    upText(g, mat, text, { maxW: 46, maxH: 9, cap: 7, cx: 0, cy: 0, y: 9, z: 34 });
+    return g;
+  }
+
   function catalogue(id, mat, text, fk) {
     setFont(fk || 'moderne');
     var G = function (m, mt) { return withAcc(toGroup(m, mt), m); };
     var T = function (d) { return text || d; };
     switch (id) {
+      case 'sep-taille': return toGroup(sepTaille(T('M')), mat);
+      case 'clip-cintre': return toGroup(clipCintre(T('NOUVEAU')), mat);
+      case 'porte-prix': return toGroup(prixTag(T('29 €')), mat);
+      case 'enseigne-cabine': return enseigne(mat, T('CABINE 1'));
+      case 'logo-relief': return logoRelief(mat, T('M'));
+      case 'porte-cartes': return carteBox(mat, T('NOMEO'));
+      case 'support-tel': return supportTel(mat, T('NOMEO'));
       case 'porte-cles': return G(keychain(T('NOMEO')), mat);
       case 'medaille': return toGroup(medal(T('1ER')), mat);
       case 'trophee': return toGroup(medal(T('1ER')), mat);
@@ -5707,7 +5805,14 @@ function A77Studio(THREE, M) {
     'c-magnet': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'], aspect: 1.3 },
     'c-magnetcoeur': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'] },
     'j-puzzle': { el: 0.8, az: -0.28, c: ['turquoise', 'jaune'], aspect: 1.5 },
-    'j-laby': { el: 0.78, az: -0.3, c: ['turquoise', 'orange'] }
+    'j-laby': { el: 0.78, az: -0.3, c: ['turquoise', 'orange'] },
+    'sep-taille': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'] },
+    'clip-cintre': { el: 0.84, az: -0.3, c: ['noir', 'jaune'] },
+    'porte-prix': { el: 0.84, az: -0.3, c: ['jaune', 'noir'], aspect: 1.5 },
+    'enseigne-cabine': { el: 0.3, az: -0.5, c: ['noir', 'blanc'], aspect: 1.3 },
+    'logo-relief': { el: 0.3, az: -0.5, c: ['bleu', 'blanc'] },
+    'porte-cartes': { el: 0.4, az: -0.5, c: ['noir', 'blanc'], aspect: 1.3 },
+    'support-tel': { el: 0.3, az: -0.6, c: ['bleu', 'blanc'] }
   };
   var IDS = Object.keys(SPEC);
   /* les aperçus visibles en premier : on suit l'ordre de la page */
