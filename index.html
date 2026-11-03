@@ -1266,6 +1266,95 @@ html.sp-lock { overflow: hidden; }
 @media (max-width: 640px) { .sp .sp-s { grid-template-columns: 1fr; gap: 5px; } .sp .sp-s span { grid-template-columns: auto 1fr; align-items: baseline; text-align: left; padding: 7px 10px; gap: 6px; } .sp .sp-s small { text-align: right; white-space: nowrap; } }
 @media (max-width: 1100px) { .modeswitch { display: none; }  }
 @media (max-width: 640px) { .sp .stepper { display: grid; grid-template-columns: 38px minmax(0, 1fr) 38px; width: 100%; } .sp .stepper button { width: 38px; min-width: 0; padding: 0; } .sp .stepper input { width: 100%; min-width: 0; } .sp .sp-b .btn { font-size: .88rem; padding: 0 6px; } .mb-in { grid-template-columns: 1fr; } .mb { padding: 12px 16px; } .shop-grid { gap: 12px; } .shop-col { gap: 12px; } .sp { padding: 8px 8px 14px; } .cl { grid-template-columns: 54px minmax(0, 1fr) auto; } .cl .obj-fig { width: 54px; height: 54px; } .cart { width: 100%; max-width: 100%; margin: auto 0 0; border-radius: 28px 28px 0 0; } }
+/* ---------- ergonomie et lisibilité (novembre 2026) ---------- */
+/* rythme : moins de vide entre les sections */
+.sec { padding-block: clamp(52px, 6.5vw, 92px); }
+.about { padding-block: clamp(52px, 6.5vw, 92px); }
+.sec-shop { padding-top: clamp(40px, 5vw, 64px); }
+.sec-creer { padding-top: 8px; }
+/* titres de section : le titre, puis son explication juste dessous */
+.sec-top { grid-template-columns: minmax(0, 1fr); gap: 12px; align-items: start; margin-bottom: 26px; }
+.sec-top h2, .sec-top p { grid-column: 1 / -1; }
+.sec-top p { max-width: 62ch; }
+h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
+.shop-head h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); margin-top: 0; }
+.shop-head { margin-bottom: 18px; }
+.cr-teaser h2 { margin-top: 0; }
+.seg-lab { text-transform: none; letter-spacing: 0; font-size: .86rem; }
+
+/* ouverture : le texte reste lisible devant l'imprimante */
+@media (min-width: 1100px) {
+  .scene::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg, rgba(245, 246, 248, .95) 0%, rgba(245, 246, 248, .86) 30%, rgba(245, 246, 248, .42) 45%, rgba(245, 246, 248, 0) 58%); }
+}
+/* la neige s'efface quand on quitte l'ouverture */
+.snow { transition: opacity .6s ease; }
+.snow.off { opacity: 0; }
+/* un seul reflet animé : le bouton principal de l'ouverture */
+.btn-y::after { content: none; }
+.hero .actions .btn-y::after { content: ""; }
+
+/* en-tête : libellés sur une ligne */
+.nav a:not(.btn) { white-space: nowrap; padding-inline: 12px; }
+@media (max-width: 1279px) { .nav a.nav-x:not(.btn) { display: none; } }
+/* téléphone : avec le badge, le bouton panier garde juste l'icône et le nombre */
+@media (max-width: 440px) {
+  .cart-btn:has(.badge:not([hidden])) > span:not(.badge) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+/* téléphone et tablette : le choix particuliers / pros reste en haut de page au lieu de suivre l'écran */
+@media (max-width: 1099px) { .modefix { position: absolute; } }
+
+/* comment commander : trois étapes, dans l'ordre */
+.steps { padding-block: clamp(36px, 4.5vw, 60px) 0; }
+.steps-h { font-size: clamp(1.45rem, 1.15rem + 1vw, 1.95rem); letter-spacing: -.03em; margin-bottom: 16px; }
+.steps-list { list-style: none; margin: 0; padding: 22px clamp(18px, 2.6vw, 30px); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-radius: 26px; background: var(--white); box-shadow: var(--shadow-card); }
+.steps-list li { position: relative; display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 14px; align-items: start; padding: 4px 24px 4px 0; }
+.steps-list li + li { padding-left: 24px; border-left: 1px solid var(--rule); }
+.steps-list b { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-weight: 800; font-variant-numeric: tabular-nums; }
+.steps-list h3 { font-size: 1.08rem; letter-spacing: -.015em; line-height: 1.2; padding-top: 6px; }
+.steps-list p { margin-top: 4px; color: var(--ink-2); font-size: .95rem; line-height: 1.45; }
+.steps-note { margin-top: 14px; color: var(--ink-2); font-size: .95rem; }
+.steps-note a { font-weight: 650; color: var(--ink); text-underline-offset: 3px; }
+@media (max-width: 760px) {
+  .steps-list { grid-template-columns: minmax(0, 1fr); padding: 18px; }
+  .steps-list li { padding: 0 0 16px; }
+  .steps-list li + li { padding-left: 0; border-left: 0; }
+  .steps-list li:last-child { padding-bottom: 0; }
+  .steps-list li:not(:last-child)::before { content: ""; position: absolute; left: 16px; top: 40px; bottom: 4px; width: 2px; border-radius: 2px; background: var(--accent-soft); }
+}
+
+/* boutique : rayons en raccourci, boutons des cartes plus calmes */
+.shop-jump { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 4px; }
+.shop-jump a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 18px; border-radius: 999px; background: var(--white); box-shadow: inset 0 0 0 1px var(--rule); text-decoration: none; font-weight: 650; font-size: .95rem; color: var(--ink); transition: box-shadow .2s; }
+.shop-jump a:hover { box-shadow: inset 0 0 0 1.5px var(--ink); }
+.shop-sub { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 96px); }
+.cr-teaser { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 96px); }
+.sp:not(.is-open) .sp-open { background: var(--accent-soft); box-shadow: inset 0 0 0 1px rgba(196, 136, 0, .22); }
+.sp:not(.is-open):hover .sp-open, .sp:not(.is-open) .sp-open:focus-visible { background: var(--accent); }
+.sp .sp-fw { padding: 0 6px; }
+/* packs : carte compacte, la personnalisation s'ouvre en fiche */
+.pkc:not(.is-open) > .pk-in, .pkc:not(.is-open) > .pk-more, .pkc:not(.is-open) > .pk-save { display: none; }
+.pkc .sp-p s { font-weight: 500; }
+.pkc.is-open .pack-fig { padding-right: 54px; }
+
+/* catalogue pro : sans numéros de référence */
+.cap .ref, #sh-ref { display: none; }
+.cap { grid-template-columns: minmax(0, 1fr) auto; }
+.cap p, .for { grid-column: 1 / -1; }
+
+/* à propos : un encadré pour écrire */
+.about-contact { align-self: start; gap: 6px; padding: 24px; border-radius: 24px; background: var(--soft); }
+.about-contact p { color: var(--ink-2); }
+.about-contact .contacts { margin-top: 12px; }
+.about-contact .copy-mini { background: var(--white); }
+.about-contact .copy-mini:hover { background: var(--soft-2); }
+@media (max-width: 480px) { .shop-jump { gap: 6px; } .shop-jump a { padding: 0 13px; font-size: .9rem; } }
+
+/* pied de page : deux colonnes de liens, titres en minuscules */
+.foot h3 { text-transform: none; letter-spacing: -.01em; font-size: 1rem; color: var(--ink); }
+.foot ul { grid-template-columns: repeat(2, max-content); column-gap: 32px; }
+.foot-links { display: inline-flex; flex-wrap: wrap; gap: 2px 20px; }
+@media (max-width: 520px) { .foot ul { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; } }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -1323,11 +1412,13 @@ html.sp-lock { overflow: hidden; }
   <a class="logo" href="#haut" aria-label="Noméo, haut de page"><svg class="hat" viewBox="0 0 68 58" aria-hidden="true"><path d="M8 44C9 26 22 11 39 8C49 6.500 57 11 60 20C55 16.500 48.500 17.500 44.500 22.500C48.500 29.500 52 37 54 44Z" fill="#d63a3e"/><path d="M44.500 22.500C48.500 29.500 52 37 54 44H44C46 37 46 29.500 44.500 22.500Z" fill="#a82529" opacity=".5"/><path d="M12 41C13 29 20 19 31 14C24 21 19 30 18 41Z" fill="#f4777a" opacity=".6"/><rect x="3" y="40" width="56" height="13" rx="6.500" fill="#fff" stroke="#cfd5dd" stroke-width="1.200"/><path d="M9 52c4 3 8 3 12 0" fill="none" stroke="#e3e7ec" stroke-width="1.400" stroke-linecap="round"/><path d="M30 52c4 3 8 3 12 0" fill="none" stroke="#e3e7ec" stroke-width="1.400" stroke-linecap="round"/><circle cx="59" cy="19" r="6.800" fill="#fff" stroke="#cfd5dd" stroke-width="1.200"/><circle cx="57" cy="17" r="2.300" fill="#eef1f5"/></svg><svg class="mark" viewBox="0 0 88 82" aria-hidden="true"><rect class="top" x="0" y="0" width="22" height="14" rx="7"/><rect class="top" x="66" y="0" width="22" height="14" rx="7"/><rect class="lay" x="0" y="17" width="38.5" height="14" rx="7"/><rect class="lay" x="66" y="17" width="22" height="14" rx="7"/><rect class="lay" x="0" y="34" width="22" height="14" rx="7"/><rect class="lay" x="33" y="34" width="22" height="14" rx="7"/><rect class="lay" x="66" y="34" width="22" height="14" rx="7"/><rect class="lay" x="0" y="51" width="22" height="14" rx="7"/><rect class="lay" x="49.5" y="51" width="38.5" height="14" rx="7"/><rect class="lay" x="0" y="68" width="22" height="14" rx="7"/><rect class="lay" x="66" y="68" width="22" height="14" rx="7"/></svg><svg class="word" viewBox="20 22 438 100" role="img" aria-label="Noméo"><g transform="translate(19.5 119)"><path class="wd" d="M2.5 -57.3H25.4L29.3 -33.6V0H6.4V-37.1ZM49.7 -59Q58.1 -59 63.9 -55.7Q69.7 -52.4 72.85 -46.35Q76 -40.3 76 -32.2V0H53V-28.9Q53 -34.5 50.05 -37.5Q47.1 -40.5 41.7 -40.5Q37.9 -40.5 35.1 -38.9Q32.3 -37.3 30.8 -34.4Q29.3 -31.5 29.3 -27.4L22.4 -31Q23.7 -40.3 27.65 -46.5Q31.6 -52.7 37.3 -55.85Q43 -59 49.7 -59Z M119.5 1.7Q108.4 1.7 100 -2.1Q91.6 -5.9 86.9 -12.75Q82.2 -19.6 82.2 -28.6Q82.2 -37.8 86.9 -44.65Q91.6 -51.5 100 -55.25Q108.4 -59 119.6 -59Q130.7 -59 139.1 -55.25Q147.5 -51.5 152.15 -44.65Q156.8 -37.8 156.8 -28.6Q156.8 -19.6 152.15 -12.75Q147.5 -5.9 139.1 -2.1Q130.7 1.7 119.5 1.7ZM119.6 -15.1Q124.1 -15.1 127.25 -16.7Q130.4 -18.3 132.05 -21.35Q133.7 -24.4 133.7 -28.6Q133.7 -32.9 132.05 -35.95Q130.4 -39 127.25 -40.6Q124.1 -42.2 119.6 -42.2Q115.1 -42.2 111.9 -40.6Q108.7 -39 107.05 -35.95Q105.4 -32.9 105.4 -28.7Q105.4 -24.4 107.05 -21.35Q108.7 -18.3 111.9 -16.7Q115.1 -15.1 119.6 -15.1Z M160.6 -57.3H183.5L187.4 -33.6V0H164.5V-37.1ZM206.7 -59Q214.7 -59 220.3 -55.7Q225.9 -52.4 228.85 -46.35Q231.8 -40.3 231.8 -32.2V0H208.9V-28.9Q208.9 -34.5 206.25 -37.5Q203.6 -40.5 198.7 -40.5Q195.2 -40.5 192.65 -38.9Q190.1 -37.3 188.75 -34.4Q187.4 -31.5 187.4 -27.4L180.5 -31Q181.8 -40.3 185.55 -46.5Q189.3 -52.7 194.8 -55.85Q200.3 -59 206.7 -59ZM251 -59Q259 -59 264.65 -55.7Q270.3 -52.4 273.25 -46.35Q276.2 -40.3 276.2 -32.2V0H253.3V-28.9Q253.3 -34.5 250.65 -37.5Q248 -40.5 243.1 -40.5Q239.6 -40.5 237.05 -38.9Q234.5 -37.3 233.15 -34.4Q231.8 -31.5 231.8 -27.4L224.9 -31Q226.2 -40.3 229.95 -46.5Q233.7 -52.7 239.15 -55.85Q244.6 -59 251 -59Z M319.2 1.7Q308.6 1.7 300.3 -2.1Q292 -5.9 287.2 -12.8Q282.4 -19.7 282.4 -28.9Q282.4 -37.9 287.05 -44.7Q291.7 -51.5 299.75 -55.25Q307.8 -59 317.8 -59Q328.3 -59 335.7 -54.65Q343.1 -50.3 347.05 -42.3Q351 -34.3 351 -23.5H301.1V-34.8H337.8L331.1 -31Q330.6 -35.3 328.95 -38.15Q327.3 -41 324.55 -42.5Q321.8 -44 318 -44Q313.8 -44 310.85 -42.2Q307.9 -40.4 306.35 -37.2Q304.8 -34 304.8 -29.9Q304.8 -24.8 307.05 -21.3Q309.3 -17.8 313.9 -15.95Q318.5 -14.1 325.3 -14.1Q331.8 -14.1 338.05 -15.8Q344.3 -17.5 349.5 -20.8V-7.4Q343.4 -3 335.4 -0.65Q327.4 1.7 319.2 1.7Z M392.9 1.7Q381.8 1.7 373.4 -2.1Q365 -5.9 360.3 -12.75Q355.6 -19.6 355.6 -28.6Q355.6 -37.8 360.3 -44.65Q365 -51.5 373.4 -55.25Q381.8 -59 393 -59Q404.1 -59 412.5 -55.25Q420.9 -51.5 425.55 -44.65Q430.2 -37.8 430.2 -28.6Q430.2 -19.6 425.55 -12.75Q420.9 -5.9 412.5 -2.1Q404.1 1.7 392.9 1.7ZM393 -15.1Q397.5 -15.1 400.65 -16.7Q403.8 -18.3 405.45 -21.35Q407.1 -24.4 407.1 -28.6Q407.1 -32.9 405.45 -35.95Q403.8 -39 400.65 -40.6Q397.5 -42.2 393 -42.2Q388.5 -42.2 385.3 -40.6Q382.1 -39 380.45 -35.95Q378.8 -32.9 378.8 -28.7Q378.8 -24.4 380.45 -21.35Q382.1 -18.3 385.3 -16.7Q388.5 -15.1 393 -15.1Z"/><rect x="298.18" y="-86.5" width="45.28" height="15" rx="7.5" class="ac" transform="rotate(-27 320.82 -79)"/></g></svg></a>
   <nav class="nav" aria-label="Navigation principale">
     <span class="modeswitch" role="group" aria-label="Vous êtes"><a href="#boutique" data-mode-go="part" aria-pressed="true">Particuliers</a><a href="#pro" data-mode-go="pro" aria-pressed="false">Professionnels</a></span>
-    <a class="only-pro" href="#objets">Les objets</a>
+    <a class="only-part" href="#boutique">Boutique</a>
+    <a class="only-part" href="#sur-mesure">Sur mesure</a>
+    <a class="only-pro" href="#objets">Objets</a>
     <a class="only-pro" href="#mode">Prêt-à-porter</a>
-    <a class="only-pro" href="#tarifs">Tarifs</a>
-    <a class="only-pro" href="#packs">Les packs</a>
-    <a href="#atelier">À propos</a>
+    <a class="only-pro" href="#packs">Packs</a>
+    <a class="only-pro nav-x" href="#tarifs">Tarifs</a>
+    <a class="nav-x" href="#atelier">À propos</a>
     <a href="#questions">Questions</a>
     <a class="btn btn-y top-devis only-pro" href="#devis" id="top-devis"><span id="top-lbl">Demander un devis</span><span class="badge" id="top-n" hidden>0</span></a>
     <button type="button" class="btn btn-y cart-btn only-part" id="cart-open" aria-haspopup="dialog" aria-controls="cart"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg><span>Panier</span><span class="badge" id="cart-n" hidden>0</span></button>
@@ -1372,7 +1463,7 @@ html.sp-lock { overflow: hidden; }
       <div>
         <h1 id="titre">Des objets à votre nom, imprimés en 3D.</h1>
         <p class="lead" hidden>Porte-clés, sous-verres, chevalets, plaques… <span class="lead-more">On les dessine et on les imprime nous-mêmes, en petites séries, </span>pour les restaurants, les bureaux, les clubs, les commerces et les événements.</p>
-        <p class="lead" id="lead-part">Boules de Noël, porte-clés, sous-verres, plaques : vous écrivez ce que vous voulez, on l’imprime en relief. Essayez ci-dessous : l’aperçu est fidèle à l’objet imprimé (les teintes peuvent varier légèrement).</p>
+        <p class="lead" id="lead-part">Boules de Noël, cœurs, porte-clés, plaques&nbsp;: écrivez votre texte, il est imprimé en relief. Essayez juste en dessous, l’aperçu 3D vous montre l’objet avant l’impression.</p>
         <p class="actions"><a class="btn btn-y only-part" href="#boutique">Voir la boutique <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-part" href="#pro" data-mode-go="pro">Je suis un professionnel</a><a class="btn btn-y only-pro" href="#devis">Demander un devis <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-pro" href="#objets">Voir les objets</a></p>
       </div>
     </div>
@@ -1467,33 +1558,43 @@ html.sp-lock { overflow: hidden; }
     </div>
   </section>
 
+  <section class="steps only-part" id="comment" aria-labelledby="t-comment">
+    <div class="wrap">
+      <h2 class="steps-h" id="t-comment">Comment commander</h2>
+      <ol class="steps-list">
+        <li><b>1</b><div><h3>Choisissez et écrivez</h3><p>Un objet, votre texte, vos couleurs. L’aperçu 3D vous montre le résultat.</p></div></li>
+        <li><b>2</b><div><h3>Envoyez votre panier</h3><p>En un message, depuis le panier. Rien à payer sur le site.</p></div></li>
+        <li><b>3</b><div><h3>Je confirme et j’imprime</h3><p>Je vous confirme le prix, le délai et le paiement, puis je vous remets la commande en main propre ou par colis.</p></div></li>
+      </ol>
+    </div>
+  </section>
+
   <section class="sec sec-shop only-part" id="boutique" aria-labelledby="t-shop">
     <div class="wrap">
       <div class="shop-head">
-        <span class="noel-tag">La boutique</span>
-        <h2 id="t-shop">Tout se commande, avec votre texte</h2>
-        <p>Un prénom, un message, une date : vous écrivez ce que vous voulez, on l’imprime en relief. Choisissez, ajoutez au panier, on vous confirme la commande par retour de message. Même une seule pièce. Chaque objet est livré prêt à accrocher ou à porter : fil doré, chaîne ou anneau inclus.</p>
+        <h2 id="t-shop">La boutique</h2>
+        <p>Tout se personnalise avec votre texte, dès une seule pièce. Chaque objet arrive prêt à accrocher ou à porter&nbsp;: fil doré, chaîne ou anneau inclus.</p>
       </div>
+      <nav class="shop-jump" aria-label="Rayons de la boutique"><a href="#b-noel">Noël</a><a href="#b-couples">Couples</a><a href="#b-annee">Toute l’année</a><a href="#b-packs">Packs</a></nav>
       <p class="deadline" id="deadline" role="note" hidden></p>
-      <h3 class="shop-sub">Décos de Noël<small>Sans logo, juste votre texte.</small></h3>
+      <h3 class="shop-sub" id="b-noel">Décos de Noël<small>Sans logo, juste votre texte.</small></h3>
       <div class="shop-grid" id="shop-grid"></div>
-      <h3 class="shop-sub">Pour les couples<small>Un cœur, deux prénoms, une date : à offrir ou à garder.</small></h3>
+      <h3 class="shop-sub" id="b-couples">Pour les couples<small>Un cœur, deux prénoms, une date : à offrir ou à garder.</small></h3>
       <div class="shop-grid" id="shop-grid3"></div>
       <h3 class="shop-sub" hidden>Jouets<small>Quatre jouets pour les enfants, à son prénom. Dès 3 ans, toujours sous la surveillance d’un adulte.</small></h3>
       <div class="shop-grid" id="shop-grid4" hidden></div>
-      <h3 class="shop-sub">Pour offrir toute l’année<small>Porte-clés, sous-verres et plaques à votre texte.</small></h3>
+      <h3 class="shop-sub" id="b-annee">Pour offrir toute l’année<small>Porte-clés, sous-verres et plaques à votre texte.</small></h3>
       <div class="shop-grid" id="shop-grid2"></div>
-      <h3 class="shop-sub">Les packs<small>Plusieurs objets assortis, mêmes couleurs et mêmes prénoms partout, en un seul clic.</small></h3>
+      <h3 class="shop-sub" id="b-packs">Les packs<small>Plusieurs objets assortis, mêmes couleurs et mêmes prénoms partout, en un seul clic.</small></h3>
       <div class="pk-grid" id="shop-packs"></div>
       <p class="shop-note">Prix par pièce, dégressifs à partir de 10 pièces du même modèle. Une grosse commande, un logo, une série pour votre entreprise ? <a href="#devis" data-mode-go="pro">Demandez un devis</a>. Envie d’un modèle unique ? <a href="#creer">Dessinez-le vous-même</a>. Une autre idée ? <a data-mail-special href="#boutique">Écrivez-moi</a>.</p>
     </div>
   </section>
 
-  <section class="sec sec-creer" id="creer" aria-labelledby="t-creer">
+  <section class="sec sec-creer only-part" id="creer" aria-labelledby="t-creer">
     <div class="wrap">
-      <div class="cr-teaser">
+      <div class="cr-teaser" id="sur-mesure">
         <div class="cr-tz-txt">
-          <span class="noel-tag cr-tag">Sur mesure</span>
           <h2 id="t-creer">Dessinez votre propre modèle</h2>
           <p>Posez du texte, des formes, des sphères, des cônes ou un trou d’attache où vous voulez sur une plaque. L’outil vérifie en direct que la pièce est imprimable. Quand c’est bon, ajoutez-la au panier.</p>
           <p class="actions"><button type="button" class="btn btn-y" data-cr-open>Ouvrir l’outil de création <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></button></p>
@@ -1508,16 +1609,15 @@ html.sp-lock { overflow: hidden; }
     </div>
   </section>
 
-  <section class="sec sec-proband only-pro" id="pro" aria-labelledby="t-pro">
+  <section class="steps only-pro" id="pro" aria-labelledby="t-pro">
     <div class="wrap">
-      <div class="pro-box">
-        <div>
-          <span class="noel-tag pro-tag">Espace professionnels</span>
-          <h2 id="t-pro">Grosses commandes, séries, logo : on vous fait un devis</h2>
-          <p>Restaurants, bureaux, clubs, commerces, événements : choisissez vos objets, on vous répond avec une maquette 3D, le prix et le délai. Gratuit et sans engagement. Pour quelques pièces seulement, la boutique est plus rapide.</p>
-        </div>
-        <p class="noel-act"><a class="btn btn-y" href="#devis">Demander un devis <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-line" href="#objets">Voir les objets</a></p>
-      </div>
+      <h2 class="steps-h" id="t-pro">Votre devis en trois étapes</h2>
+      <ol class="steps-list">
+        <li><b>1</b><div><h3>Choisissez vos objets</h3><p>Ajoutez-les à votre demande de devis, avec une photo de votre logo.</p></div></li>
+        <li><b>2</b><div><h3>Recevez la maquette</h3><p>Je vous envoie une maquette 3D, le prix et le délai. Gratuit et sans engagement.</p></div></li>
+        <li><b>3</b><div><h3>Validez, je fabrique</h3><p>J’imprime la série à vos couleurs et je vous la livre en main propre ou par colis.</p></div></li>
+      </ol>
+      <p class="steps-note">Juste quelques pièces, sans logo&nbsp;? <a href="#boutique" data-mode-go="part">La boutique</a> est plus rapide.</p>
     </div>
   </section>
 
@@ -1942,13 +2042,10 @@ html.sp-lock { overflow: hidden; }
         <p>Vous parlez toujours à la même personne, du premier message jusqu’à la livraison&nbsp;: je réponds à vos questions, je prépare le devis, je lance l’impression et je vous remets la commande.</p>
         <p>L’impression 3D n’a pas besoin de moule&nbsp;: on peut fabriquer une pièce comme cent, et chaque série est faite pour vous. Un doute, une idée, un logo à tester&nbsp;? Écrivez-moi, c’est gratuit et sans engagement.</p>
       </div>
-      <div class="how">
-        <h3>Comment ça se passe</h3>
-        <ol>
-          <li><b>1</b><span>Vous ajoutez vos objets au devis et vous me l’envoyez. Une photo du logo suffit.</span></li>
-          <li><b>2</b><span>Je vous renvoie une maquette 3D, avec le prix et le délai.</span></li>
-          <li><b>3</b><span>Vous validez, j’imprime, puis je vous livre en main propre ou par colis.</span></li>
-        </ol>
+      <div class="how about-contact">
+        <h3>Une question, une idée&nbsp;?</h3>
+        <p>Écrivez-moi, par e-mail ou en message privé.</p>
+        <dl class="contacts" data-contacts></dl>
       </div>
     </div>
   </section>
@@ -1957,16 +2054,20 @@ html.sp-lock { overflow: hidden; }
     <div class="wrap">
       <h2 id="t-questions">Questions fréquentes</h2>
       <div class="faq">
-        <details class="qa" open><summary>Quelles tailles pouvez-vous faire&nbsp;?</summary><p>Chaque objet a une taille standard, et on peut l’agrandir jusqu’à 18 × 18 × 18&nbsp;cm, le volume de notre Bambu Lab A1 mini. Le tableau des tailles est dans «&nbsp;Les objets&nbsp;». Au-delà, on imprime en plusieurs pièces à assembler.</p></details>
-        <details class="qa" open><summary>Combien ça coûte&nbsp;?</summary><p>Ça dépend de la taille, du temps d’impression et de la quantité. Le devis est gratuit et vous connaissez le prix avant de valider.</p></details>
-        <details class="qa" open><summary>Combien de temps faut-il&nbsp;?</summary><p>Le délai dépend du modèle et du nombre de pièces, il est indiqué sur le devis. Si vous avez une date d’événement, dites-la-nous dès le départ.</p></details>
-        <details class="qa" open><summary>Y a-t-il une quantité minimum&nbsp;?</summary><p>Non, on peut imprimer une seule pièce. Sur une série, le prix à la pièce baisse, parce qu’on imprime plusieurs objets à la fois.</p></details>
-        <details class="qa" open><summary>Peut-on voir l’objet avant la série&nbsp;?</summary><p>Oui. On vous envoie une maquette 3D à valider, et rien n’est imprimé avant votre accord.</p></details>
-        <details class="qa" open><summary>Mon logo n’est pas en haute qualité.</summary><p>Ce n’est pas un problème. Une photo ou une capture d’écran suffit, on le redessine pour qu’il s’imprime proprement en relief.</p></details>
-        <details class="qa" open><summary>En quelle matière sont les objets&nbsp;?</summary><p>En PLA, un plastique d’origine végétale, rigide et agréable au toucher. Il convient bien aux récompenses, aux objets de décoration et à la signalétique intérieure.</p></details>
-        <details class="qa" open><summary>Ça tient dehors ou au soleil&nbsp;?</summary><p>Le PLA est fait pour l’intérieur&nbsp;: il ramollit vers 60&nbsp;°C, derrière une vitre en plein été par exemple. Notre imprimante sait aussi imprimer le PETG, qui supporte mieux la chaleur&nbsp;: pour un objet qui restera dehors ou dans une voiture, dites-le dans votre demande.</p></details>
-        <details class="qa" open><summary>Vous livrez où&nbsp;?</summary><p>On remet les commandes en main propre quand c’est possible, sinon on les envoie par colis.</p></details>
-        <details class="qa" open><summary>Pouvez-vous passer nous voir&nbsp;?</summary><p>Oui, quand c’est possible. On passe avec le catalogue papier et quelques objets imprimés, et on regarde votre projet ensemble.</p></details>
+        <details class="qa only-part"><summary>Comment je paie&nbsp;?</summary><p>Rien à payer sur le site. Vous m’envoyez votre panier, je vous confirme le prix et le délai, et on convient ensemble du moyen de paiement.</p></details>
+        <details class="qa only-part"><summary>Quand vais-je recevoir ma commande&nbsp;?</summary><p>Je vous donne le délai en confirmant la commande. Pour Noël, commandez avant la date limite indiquée en haut de la boutique.</p></details>
+        <details class="qa only-part"><summary>L’objet ressemble-t-il à l’aperçu&nbsp;?</summary><p>Oui, l’aperçu 3D est fidèle à l’objet imprimé. Seules les teintes peuvent varier légèrement par rapport à votre écran.</p></details>
+        <details class="qa only-part"><summary>Puis-je modifier ou annuler&nbsp;?</summary><p>Oui, tant que l’impression n’a pas commencé&nbsp;: un simple message suffit. Ensuite, l’objet étant fait à votre nom, il ne peut plus être annulé.</p></details>
+        <details class="qa only-pro"><summary>Combien ça coûte&nbsp;?</summary><p>Ça dépend de la taille, du temps d’impression et de la quantité. Les prix de base sont dans «&nbsp;Les tarifs&nbsp;», et le devis est gratuit&nbsp;: vous connaissez le prix avant de valider.</p></details>
+        <details class="qa only-pro"><summary>Combien de temps faut-il&nbsp;?</summary><p>Le délai dépend du modèle et du nombre de pièces, il est indiqué sur le devis. Si vous avez une date d’événement, dites-la-nous dès le départ.</p></details>
+        <details class="qa only-pro"><summary>Y a-t-il une quantité minimum&nbsp;?</summary><p>Non, on peut imprimer une seule pièce. Sur une série, le prix à la pièce baisse, parce qu’on imprime plusieurs objets à la fois.</p></details>
+        <details class="qa only-pro"><summary>Peut-on voir l’objet avant la série&nbsp;?</summary><p>Oui. On vous envoie une maquette 3D à valider, et rien n’est imprimé avant votre accord.</p></details>
+        <details class="qa only-pro"><summary>Mon logo n’est pas en haute qualité.</summary><p>Ce n’est pas un problème. Une photo ou une capture d’écran suffit, on le redessine pour qu’il s’imprime proprement en relief.</p></details>
+        <details class="qa only-pro"><summary>Quelles tailles pouvez-vous faire&nbsp;?</summary><p>Chaque objet a une taille standard, et on peut l’agrandir jusqu’à 18 × 18 × 18&nbsp;cm, le volume de notre Bambu Lab A1 mini. Le tableau des tailles est dans «&nbsp;Les objets&nbsp;». Au-delà, on imprime en plusieurs pièces à assembler.</p></details>
+        <details class="qa"><summary>En quelle matière sont les objets&nbsp;?</summary><p>En PLA, un plastique d’origine végétale, rigide et agréable au toucher. Il convient bien aux cadeaux, aux objets de décoration et à la signalétique intérieure.</p></details>
+        <details class="qa"><summary>Ça tient dehors ou au soleil&nbsp;?</summary><p>Le PLA est fait pour l’intérieur&nbsp;: il ramollit vers 60&nbsp;°C, derrière une vitre en plein été par exemple. Notre imprimante sait aussi imprimer le PETG, qui supporte mieux la chaleur&nbsp;: pour un objet qui restera dehors ou dans une voiture, dites-le dans votre demande.</p></details>
+        <details class="qa"><summary>Vous livrez où&nbsp;?</summary><p>On remet les commandes en main propre quand c’est possible, sinon on les envoie par colis.</p></details>
+        <details class="qa only-pro"><summary>Pouvez-vous passer nous voir&nbsp;?</summary><p>Oui, quand c’est possible. On passe avec le catalogue papier et quelques objets imprimés, et on regarde votre projet ensemble.</p></details>
       </div>
     </div>
   </section>
@@ -2007,7 +2108,7 @@ html.sp-lock { overflow: hidden; }
               <button type="button" class="pk" data-add="qr" aria-pressed="false"><span class="th" data-still="qr"><svg class="ico" aria-hidden="true"><use href="#i-qr"/></svg></span>Présentoir QR</button>
               <button type="button" class="pk" data-add="plaque" aria-pressed="false"><span class="th" data-still="plaque"><svg class="ico" aria-hidden="true"><use href="#i-plaque"/></svg></span>Plaque</button>
               <button type="button" class="pk" data-add="pot" aria-pressed="false"><span class="th" data-still="pot"><svg class="ico" aria-hidden="true"><use href="#i-pot"/></svg></span>Pot à stylos</button>
-              <button type="button" class="pk" data-add="sous-verre" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-sous-verre"/></svg></span>Sous-verres</button>
+              <button type="button" class="pk" data-add="sous-verre" aria-pressed="false"><span class="th" data-still="sous-verre"><svg class="ico" aria-hidden="true"><use href="#i-sous-verre"/></svg></span>Sous-verres</button>
               <button type="button" class="pk" data-add="noel-boule" aria-pressed="false"><span class="th" data-still="noel-boule"><svg class="ico" aria-hidden="true"><use href="#i-noel-boule"/></svg></span>Boule de Noël</button>
               <button type="button" class="pk" data-add="noel-etoile" aria-pressed="false"><span class="th" data-still="noel-etoile"><svg class="ico" aria-hidden="true"><use href="#i-noel-etoile"/></svg></span>Étoile de Noël</button>
               <button type="button" class="pk" data-add="noel-sapin" aria-pressed="false"><span class="th" data-still="noel-sapin"><svg class="ico" aria-hidden="true"><use href="#i-noel-sapin"/></svg></span>Sapin de Noël</button>
@@ -2078,22 +2179,23 @@ html.sp-lock { overflow: hidden; }
     <div>
       <h3>Le site</h3>
       <ul>
-        <li><a href="#boutique">Boutique de Noël (particuliers)</a></li>
-        <li><a href="#pro">Professionnels</a></li>
-        <li><a href="#pour-qui">Pour qui</a></li>
-        <li><a href="#objets">Les objets</a></li>
-        <li><a href="#packs">Les packs</a></li>
-        <li><a href="https://claude.ai/artifact/DFxDtpbdeUhMqeNexRD1c9" target="_blank" rel="noopener noreferrer">Le catalogue</a></li>
+        <li class="only-part"><a href="#boutique">La boutique</a></li>
+        <li class="only-part"><a href="#creer">Créer votre modèle</a></li>
+        <li class="only-part"><a href="#pro" data-mode-go="pro">Espace professionnels</a></li>
+        <li class="only-pro"><a href="#objets">Les objets</a></li>
+        <li class="only-pro"><a href="#packs">Les packs</a></li>
+        <li class="only-pro"><a href="https://claude.ai/artifact/DFxDtpbdeUhMqeNexRD1c9" target="_blank" rel="noopener noreferrer">Le catalogue</a></li>
+        <li class="only-pro"><a href="#devis">Demander un devis</a></li>
+        <li class="only-pro"><a href="#boutique" data-mode-go="part">Boutique particuliers</a></li>
         <li><a href="#atelier">À propos</a></li>
         <li><a href="#questions">Questions</a></li>
-        <li><a href="#devis">Demander un devis</a></li>
       </ul>
     </div>
   </div>
   <div class="wrap">
     <div class="foot-base">
       <p class="foot-legal">© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention</p>
-      <span class="foot-links"><button type="button" class="text-btn" data-legal>Mentions légales</button> · <button type="button" class="text-btn" data-legal="cgv">Conditions de vente</button> · <button type="button" class="text-btn" data-legal="privacy">Confidentialité</button></span>
+      <span class="foot-links"><button type="button" class="text-btn" data-legal>Mentions légales</button><button type="button" class="text-btn" data-legal="cgv">Conditions de vente</button><button type="button" class="text-btn" data-legal="privacy">Confidentialité</button></span>
     </div>
   </div>
 </footer>
@@ -3582,8 +3684,11 @@ html.sp-lock { overflow: hidden; }
       return '<figure class="pk-it"><span class="th" data-still="' + g.st + '">' + icon(CAT[g.id].ico, 'ico') + '</span><figcaption>' + (g.n > 1 ? '<b class="mult">×' + g.n + '</b> ' : '') + (CAT[g.id].s || CAT[g.id].t) + '</figcaption></figure>'; }).join('');
     a.innerHTML =
       '<div class="pack-fig" aria-hidden="true">' + figs + '</div>' +
+      '<button type="button" class="sp-x" aria-label="Fermer"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>' +
       '<h3>' + p.t + '</h3><p class="sp-d">' + p.d + '</p>' +
       '<ul class="pk-list">' + grp.map(function (g) { var ab = p.items.some(function (x) { return x[0] === g.id && (x[3] === 'a' || x[3] === 'b'); }); return '<li><b>' + g.n + '</b><span>' + (g.n > 1 ? CAT[g.id].many : CAT[g.id].one) + (ab ? ' (un par prénom)' : '') + '</span></li>'; }).join('') + '</ul>' +
+      '<p class="sp-p">' + eur(pkTotal(p)) + '<small><s>' + eur(pkFull(p)) + '</s> · −' + Math.round((1 - pkTotal(p) / pkFull(p)) * 100) + ' %</small></p>' +
+      '<button type="button" class="btn btn-y sp-open" aria-haspopup="dialog">Personnaliser le pack</button>' +
       '<div class="pk-in">' + (p.two
         ? '<input class="sp-t pk-a" type="text" maxlength="14" placeholder="Prénom 1, ex. ' + p.ph[0] + '" aria-label="Premier prénom" spellcheck="false" autocomplete="off"><input class="sp-t pk-b" type="text" maxlength="14" placeholder="Prénom 2, ex. ' + p.ph[1] + '" aria-label="Second prénom" spellcheck="false" autocomplete="off">' + (p.date ? '<input class="sp-t pk-d" type="text" maxlength="12" placeholder="Date (facultatif), ex. 12.06.2027" aria-label="Date du mariage, facultatif" spellcheck="false" autocomplete="off">' : '')
         : '<input class="sp-t pk-a" type="text" maxlength="30" placeholder="Votre texte, ex. ' + p.ph[0] + '" aria-label="Texte du pack" spellcheck="false" autocomplete="off">') + '</div>' +
@@ -3614,6 +3719,7 @@ html.sp-lock { overflow: hidden; }
         cartAdd(x[0], { text: mine || tx[x[3]], combo: r ? r.value : '', qty: x[2], sz: x[1], pda: disc[i], pn: p.t });
       });
       toast(p.t + ' ajouté' + NB + ': ' + plural(pkCount(p), 'pièce', 'pièces'), { label: 'Voir le panier', fn: openCart });
+      if (a.classList.contains('is-open')) closeCard();
       btn.textContent = 'Pack ajouté';
       setTimeout(function () { btn.innerHTML = pkBtn(p); }, 1800);
     });
@@ -3692,7 +3798,7 @@ html.sp-lock { overflow: hidden; }
   }
   /* l'aperçu prend les couleurs choisies */
   function recolorCard(a) {
-    if (!A.stillCombo || !a) return;
+    if (!A.stillCombo || !a || !a.hasAttribute('data-id')) return;
     var s = cardState(a), node = a.querySelector('.obj-fig[data-still]'); if (!node || !s.combo) return;
     var shown = false;
     if (A.stillText && s.text.trim()) shown = A.stillText(s.id, s.combo, s.text.trim().slice(0, 40), s.fo, function (url) { A.setImg(node, url); });
@@ -3709,6 +3815,7 @@ html.sp-lock { overflow: hidden; }
   document.addEventListener('a77:studio', function () {
     $$('.sp[data-id]').forEach(function (a) { var s = cardState(a); if (s.text.trim() || (A.stillDefault && s.combo && A.stillDefault(s.id) !== s.combo)) recolorCard(a); });
   });
+  if (packsHost) packsHost.addEventListener('click', shopClick);
   [shopGrid, shopGrid2, shopGrid3, shopGrid4, spHost].forEach(function (g) { g.addEventListener('click', shopClick); g.addEventListener('input', shopPrices); g.addEventListener('change', shopPrices); });
   /* ouvre l'essai 3D avec l'objet, le texte et les couleurs choisis */
   function personalize(id, text, combo, sz, fo) {
@@ -7288,7 +7395,7 @@ function A77Studio(THREE, M) {
     }
     box.insertBefore(f, box.firstChild);
   }
-  sparkles(document.querySelector('.hero'), 10); sparkles(document.querySelector('.cr-teaser'), 8); sparkles(document.querySelector('.sec-shop .shop-head'), 6); sparkles(document.querySelector('.band'), 8);
+  sparkles(document.querySelector('.hero'), 10);
 
   /* neige : canvas léger, flocons de tailles et de vitesses variées, qui se balancent */
   var box = document.getElementById('snow');
@@ -7297,7 +7404,7 @@ function A77Studio(THREE, M) {
     var cx = cv.getContext('2d'), W = 0, H = 0, dpr = Math.min(1.5, window.devicePixelRatio || 1), flakes = [], run = true, last = 0, wind = 0, tw = 0;
     var resize = function () {
       W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var n = Math.round(Math.min(130, Math.max(45, W / 10)));
+      var n = Math.round(Math.min(90, Math.max(40, W / 14)));
       while (flakes.length < n) flakes.push(mk(true)); flakes.length = n;
     };
     function mk(anywhere) {
@@ -7305,7 +7412,13 @@ function A77Studio(THREE, M) {
       return { x: Math.random() * W, y: anywhere ? Math.random() * H : -10, r: .8 + z * 3.4, v: 18 + z * 55 + Math.random() * 14, a: .35 + z * .55, ph: Math.random() * 6.28, sw: 8 + z * 22, sp: .5 + Math.random() * 1.1 };
     }
     resize(); window.addEventListener('resize', resize);
-    document.addEventListener('visibilitychange', function () { run = !document.hidden; if (run) { last = 0; requestAnimationFrame(tick); } });
+    var heroEl = document.querySelector('.hero'), heroOn = true, offT = 0;
+    var setRun = function (v) { if (v === run) return; run = v; if (run) { last = 0; requestAnimationFrame(tick); } };
+    document.addEventListener('visibilitychange', function () { setRun(!document.hidden && heroOn); });
+    if (heroEl && 'IntersectionObserver' in window) new IntersectionObserver(function (en) {
+      heroOn = en[0].isIntersecting; box.classList.toggle('off', !heroOn); clearTimeout(offT);
+      if (heroOn) setRun(!document.hidden); else offT = setTimeout(function () { setRun(false); }, 700);
+    }, { threshold: 0.12 }).observe(heroEl);
     function tick(t) {
       if (!run) return;
       var dt = last ? Math.min(.05, (t - last) / 1000) : .016; last = t; tw += dt; wind = Math.sin(tw * .25) * 14;
