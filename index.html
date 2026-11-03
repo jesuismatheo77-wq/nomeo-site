@@ -1937,7 +1937,7 @@ html.sp-lock { overflow: hidden; }
     <div class="wrap about">
       <div class="who">
         <h2 id="t-atelier">À propos de Noméo</h2>
-        <p class="big">Je m’appelle Mathéo, et Noméo est mon atelier d’objets personnalisés imprimés en 3D.</p>
+        <p class="big">Noméo est un atelier d’objets personnalisés imprimés en 3D.</p>
         <p>L’idée est simple&nbsp;: un prénom, un logo ou un message rend un objet unique. Porte-clés, plaques, supports, décorations, cadeaux ou objets pour votre boutique&nbsp;: je les dessine, je les imprime et je les prépare moi-même, une pièce ou une série à la fois.</p>
         <p>Vous parlez toujours à la même personne, du premier message jusqu’à la livraison&nbsp;: je réponds à vos questions, je prépare le devis, je lance l’impression et je vous remets la commande.</p>
         <p>L’impression 3D n’a pas besoin de moule&nbsp;: on peut fabriquer une pièce comme cent, et chaque série est faite pour vous. Un doute, une idée, un logo à tester&nbsp;? Écrivez-moi, c’est gratuit et sans engagement.</p>
@@ -3164,10 +3164,10 @@ html.sp-lock { overflow: hidden; }
     var ed = ok
       ? '<p>' + (LEGAL.nom ? LEGAL.nom + ', entrepreneur individuel (EI)' : 'Entrepreneur individuel (EI)') + ', exerçant sous le nom commercial Noméo.</p>' +
         '<p>SIRET' + nb + ': ' + LEGAL.siret + '.' + (LEGAL.adresse ? ' Adresse' + nb + ': ' + LEGAL.adresse + '.' : '') + '</p>' +
-        '<p>Directeur de la publication' + nb + ': ' + (LEGAL.nom || 'Mathéo') + '.</p>'
-      : '<p>Noméo, micro-entreprise en cours de création, fondée par Mathéo.</p>' +
+        '<p>Directeur de la publication' + nb + ': ' + (LEGAL.nom || 'le fondateur de Noméo') + '.</p>'
+      : '<p>Noméo, micro-entreprise en cours de création.</p>' +
         '<p>SIRET' + nb + ': en cours d’obtention. Adresse' + nb + ': pour l’instant, contactez-nous par e-mail.</p>' +
-        '<p>Directeur de la publication' + nb + ': Mathéo.</p>';
+        '<p>Directeur de la publication' + nb + ': le fondateur de Noméo.</p>';
     var pay = LEGAL.paiement ? 'Règlement' + nb + ': ' + LEGAL.paiement + ', convenu à la confirmation de la commande.' : 'Règlement' + nb + ': convenu à la confirmation de la commande. Le paiement en ligne sera disponible à l’ouverture du site définitif.';
     var med = LEGAL.mediateur
       ? 'Conformément aux articles L611-1 et suivants du Code de la consommation, vous pouvez recourir gratuitement au médiateur de la consommation' + nb + ': ' + LEGAL.mediateur + (LEGAL.mediateurSite ? ' (<a href="' + LEGAL.mediateurSite + '" target="_blank" rel="noopener">' + LEGAL.mediateurSite.replace(/^https?:\/\//, '') + '</a>)' : '') + ', après une réclamation écrite restée sans réponse satisfaisante.'
