@@ -2089,8 +2089,8 @@ html.sp-lock { overflow: hidden; }
   </div>
   <div class="wrap">
     <div class="foot-base">
-      <p>© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention</p>
-      <button type="button" class="text-btn" data-legal>Mentions légales</button>
+      <p class="foot-legal">© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention</p>
+      <span class="foot-links"><button type="button" class="text-btn" data-legal>Mentions légales</button> · <button type="button" class="text-btn" data-legal="cgv">Conditions de vente</button> · <button type="button" class="text-btn" data-legal="privacy">Confidentialité</button></span>
     </div>
   </div>
 </footer>
@@ -2160,44 +2160,7 @@ html.sp-lock { overflow: hidden; }
 
 <dialog class="legal" id="legal" aria-labelledby="t-legal">
   <button type="button" class="icon-btn x-btn" data-close><svg class="i" aria-hidden="true"><use href="#i-x"/></svg><span class="sr">Fermer</span></button>
-  <div class="legal-in">
-    <h2 id="t-legal">Mentions légales</h2>
-    <section>
-      <h3>Éditeur du site</h3>
-      <p>Noméo, micro-entreprise en cours de création, fondée par Mathéo.</p>
-      <p>SIRET&nbsp;: en cours d’obtention. Adresse&nbsp;: pour l’instant, contactez-nous par e-mail.</p>
-      <p>Directeur de la publication&nbsp;: Mathéo.</p>
-      <p>TVA non applicable, article 293 B du CGI.</p>
-    </section>
-    <section>
-      <h3>Contact</h3>
-      <dl class="contacts" data-contacts></dl>
-    </section>
-    <section>
-      <h3>Hébergement</h3>
-      <p>Le site est hébergé par GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Nom de domaine enregistré chez Hostinger.</p>
-    </section>
-    <section>
-      <h3>Conditions de vente (résumé)</h3>
-      <ul class="legal-list">
-        <li>Chaque objet est fabriqué sur mesure à partir de votre texte, de vos couleurs ou de votre logo. Une fois l’impression lancée, il n’y a pas de droit de rétractation (article L221-28 du Code de la consommation). Avant l’impression, vous pouvez modifier ou annuler votre commande sur simple message.</li>
-        <li>La commande est confirmée par message, avec le prix, le délai et le mode de livraison (remise en main propre ou colis, à convenir).</li>
-        <li>Prix en euros, TVA non applicable. Frais de livraison éventuels indiqués avant la validation.</li>
-        <li>Règlement&nbsp;: convenu à la confirmation de la commande. Le paiement en ligne sera disponible à l’ouverture du site définitif.</li>
-        <li>Commandes de Noël&nbsp;: à passer avant la date limite indiquée dans la boutique pour être livré à temps.</li>
-        <li>La garantie légale de conformité s’applique. En cas de défaut, écrivez-nous à l’adresse e-mail ci-dessus.</li>
-      </ul>
-    </section>
-    <section>
-      <h3>Données personnelles</h3>
-      <p>Le formulaire de devis n’envoie rien et ne transmet rien à nos serveurs&nbsp;: il prépare un message que vous nous envoyez vous-même. Votre brouillon reste dans votre navigateur, sur votre appareil.</p>
-      <p>Statistiques de visite&nbsp;: nous mesurons l’audience du site avec Cloudflare Web Analytics, un outil sans cookies qui ne vous identifie pas et ne suit pas votre navigation d’un site à l’autre. Il compte seulement les visites, les pages vues, le pays et le type d’appareil.</p>
-    </section>
-    <section>
-      <h3>Propriété</h3>
-      <p>Le nom Noméo, le logo, les modèles, les visuels et les textes de ce site nous appartiennent.</p>
-    </section>
-  </div>
+  <div class="legal-in" id="legal-body"></div>
 </dialog>
 
 <dialog class="cart" id="cart" aria-labelledby="t-cart">
@@ -2260,6 +2223,18 @@ html.sp-lock { overflow: hidden; }
     whatsapp: '',   // le même numéro au format international, sans + ni espaces : '33612345678'
     instagram: 'nomeo.atelier',   // sans @
     tiktok: 'nomeo.atelier'       // sans @
+  };
+
+  /* ---------- fiche légale : à remplir à la réception du SIRET ----------
+     Tant que « siret » est vide, le site affiche le texte « en cours de création ».
+     Dès qu’il est rempli, les mentions légales, les conditions de vente et le pied de page passent en version complète. */
+  var LEGAL = {
+    nom: '',          // ex. 'Mathéo DUPONT' (prénom + nom, comme sur l’extrait / l’avis de situation)
+    siret: '',        // 14 chiffres, ex. '123 456 789 00012'
+    adresse: '',      // adresse publiée (domicile ou domiciliation), ex. '12 rue des Lilas, 75000 Paris'
+    mediateur: '',    // nom du médiateur de la consommation choisi, ex. 'CM2C'
+    mediateurSite: '',// ex. 'https://www.cm2c.net'
+    paiement: ''      // ex. 'virement, espèces ou carte (SumUp) à la remise'
   };
 
   var FIL = {
@@ -3034,7 +3009,8 @@ html.sp-lock { overflow: hidden; }
     if (sh) { setFilter(sh.getAttribute('data-show')); goTo('objets'); return; }
     var o = e.target.closest('[data-open]');
     if (o) { openSheet(o.getAttribute('data-open')); return; }
-    if (e.target.closest('[data-legal]')) { openDialog($('legal')); return; }
+    var lg = e.target.closest('[data-legal]');
+    if (lg) { openDialog($('legal')); var w = lg.getAttribute('data-legal'); var tg = w === 'cgv' ? $('l-cgv') : w === 'privacy' ? $('l-privacy') : null; var dl = $('legal'); if (tg) setTimeout(function () { dl.scrollTop = tg.offsetTop - 12; }, 30); else dl.scrollTop = 0; return; }
     var cl = e.target.closest('[data-close]');
     if (cl) { closeDialog(cl.closest('dialog')); return; }
     var cp = e.target.closest('[data-copy]');
@@ -3176,6 +3152,53 @@ html.sp-lock { overflow: hidden; }
     dl.appendChild(dd);
   }
   noelNote();
+
+  /* ---------- pages légales ---------- */
+  function renderLegal() {
+    var box = $('legal-body'); if (!box) return;
+    var ok = !!LEGAL.siret;
+    var nb = ' ';
+    var ed = ok
+      ? '<p>' + (LEGAL.nom ? LEGAL.nom + ', entrepreneur individuel (EI)' : 'Entrepreneur individuel (EI)') + ', exerçant sous le nom commercial Noméo.</p>' +
+        '<p>SIRET' + nb + ': ' + LEGAL.siret + '.' + (LEGAL.adresse ? ' Adresse' + nb + ': ' + LEGAL.adresse + '.' : '') + '</p>' +
+        '<p>Directeur de la publication' + nb + ': ' + (LEGAL.nom || 'Mathéo') + '.</p>'
+      : '<p>Noméo, micro-entreprise en cours de création, fondée par Mathéo.</p>' +
+        '<p>SIRET' + nb + ': en cours d’obtention. Adresse' + nb + ': pour l’instant, contactez-nous par e-mail.</p>' +
+        '<p>Directeur de la publication' + nb + ': Mathéo.</p>';
+    var pay = LEGAL.paiement ? 'Règlement' + nb + ': ' + LEGAL.paiement + ', convenu à la confirmation de la commande.' : 'Règlement' + nb + ': convenu à la confirmation de la commande. Le paiement en ligne sera disponible à l’ouverture du site définitif.';
+    var med = LEGAL.mediateur
+      ? 'Conformément aux articles L611-1 et suivants du Code de la consommation, vous pouvez recourir gratuitement au médiateur de la consommation' + nb + ': ' + LEGAL.mediateur + (LEGAL.mediateurSite ? ' (<a href="' + LEGAL.mediateurSite + '" target="_blank" rel="noopener">' + LEGAL.mediateurSite.replace(/^https?:\/\//, '') + '</a>)' : '') + ', après une réclamation écrite restée sans réponse satisfaisante.'
+      : 'Le médiateur de la consommation sera indiqué ici dès l’ouverture officielle de l’activité. En attendant, écrivez-nous&nbsp;: nous cherchons toujours une solution à l’amiable.';
+    box.innerHTML =
+      '<h2 id="t-legal">Mentions légales</h2>' +
+      '<section id="l-mentions"><h3>Éditeur du site</h3>' + ed + '<p>TVA non applicable, article 293 B du CGI.</p></section>' +
+      '<section><h3>Contact</h3><dl class="contacts" data-contacts></dl></section>' +
+      '<section><h3>Hébergement</h3><p>Le site est hébergé par GitHub, Inc. (GitHub Pages), 88 Colin P. Kelly Jr. Street, San Francisco, CA 94107, États-Unis. Nom de domaine enregistré chez Hostinger.</p></section>' +
+      '<section id="l-cgv"><h3>Conditions générales de vente</h3><ul class="legal-list">' +
+      '<li><b>Objet.</b> Noméo fabrique par impression 3D des objets personnalisés (texte, couleurs, logo) pour les particuliers et les professionnels.</li>' +
+      '<li><b>Commande.</b> Vous envoyez votre demande de devis. Nous répondons avec le prix, le délai et le mode de livraison. La commande n’est ferme qu’après votre accord écrit (message ou e-mail) et, le cas échéant, le versement convenu.</li>' +
+      '<li><b>Prix.</b> Prix en euros, TVA non applicable (art. 293 B du CGI). Les frais de livraison éventuels sont indiqués avant la validation.</li>' +
+      '<li><b>Paiement.</b> ' + pay + '</li>' +
+      '<li><b>Fabrication et délais.</b> Les délais sont donnés à titre indicatif et confirmés à la commande. Pour Noël, passez commande avant la date limite indiquée dans la boutique. Les couleurs affichées à l’écran peuvent différer légèrement du filament réel.</li>' +
+      '<li><b>Livraison.</b> Remise en main propre ou envoi en colis, à convenir. Le risque est transféré à la remise du colis au transporteur choisi par vous.</li>' +
+      '<li><b>Droit de rétractation.</b> Les objets étant confectionnés selon vos spécifications et nettement personnalisés, le droit de rétractation ne s’applique pas (article L221-28, 3° du Code de la consommation). Avant le lancement de l’impression, vous pouvez modifier ou annuler votre commande sur simple message.</li>' +
+      '<li><b>Garanties légales.</b> Nous répondons de la conformité des biens (garantie légale de conformité, articles L217-3 et suivants du Code de la consommation) et des défauts cachés (articles 1641 et suivants du Code civil). En cas de problème, écrivez-nous avec une photo&nbsp;: nous réparons, remplaçons ou remboursons selon le cas.</li>' +
+      '<li><b>Responsabilité.</b> Les objets sont décoratifs ou pratiques mais ne sont pas des jouets, sauf mention contraire, et ne sont pas adaptés aux enfants de moins de 3 ans. Le plastique utilisé (PLA/PETG) ne convient pas à une exposition prolongée à une forte chaleur ni au contact alimentaire direct.</li>' +
+      '<li><b>Votre contenu.</b> Si vous nous fournissez un logo, un texte ou un visuel, vous confirmez avoir le droit de l’utiliser. Nous pouvons refuser un contenu illicite ou portant atteinte aux droits d’un tiers.</li>' +
+      '<li><b>Médiation.</b> ' + med + '</li>' +
+      '<li><b>Droit applicable.</b> Droit français. En cas de litige, nous privilégions une solution amiable avant toute autre démarche.</li>' +
+      '</ul></section>' +
+      '<section id="l-privacy"><h3>Données personnelles</h3>' +
+      '<p>Le formulaire de devis n’envoie rien à nos serveurs&nbsp;: il prépare un message que vous nous envoyez vous-même. Votre brouillon reste dans votre navigateur, sur votre appareil.</p>' +
+      '<p>Quand vous nous écrivez, nous utilisons vos coordonnées et les informations de votre commande uniquement pour répondre, fabriquer et livrer votre commande, et pour nos obligations comptables (conservation des pièces pendant 10 ans). Elles ne sont ni vendues ni cédées. Vous pouvez demander l’accès, la rectification ou l’effacement de vos données (RGPD) en écrivant à ' + CONTACT.email + ', et saisir la CNIL (cnil.fr) en cas de difficulté.</p>' +
+      '<p>Statistiques de visite&nbsp;: nous mesurons l’audience avec Cloudflare Web Analytics, un outil sans cookies qui ne vous identifie pas et ne suit pas votre navigation d’un site à l’autre. Il compte seulement les visites, les pages vues, le pays et le type d’appareil.</p></section>' +
+      '<section><h3>Propriété</h3><p>Le nom Noméo, le logo, les modèles, les visuels et les textes de ce site nous appartiennent.</p></section>';
+    $$('.foot-legal').forEach(function (p) {
+      p.textContent = ok ? '© 2026 Noméo · ' + (LEGAL.nom ? LEGAL.nom + ' · ' : '') + 'EI · SIRET ' + LEGAL.siret : '© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention';
+    });
+  }
+  renderLegal();
+
   function renderContacts() {
     $$('[data-contacts]').forEach(function (dl) {
       dl.textContent = '';
