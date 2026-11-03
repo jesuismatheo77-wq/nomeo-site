@@ -921,6 +921,7 @@ dialog::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(5px);
 
 /* pour qui */
 .auds { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.mode-note { margin-top: 18px; }
 .aud { display: grid; grid-template-columns: 76px minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 14px 16px; min-width: 0; padding: 18px; border-radius: 24px; background: var(--white); box-shadow: var(--shadow-card); }
 .aud > .th { width: 76px; height: 76px; overflow: hidden; border-radius: 18px; background: var(--studio); }
 .aud > .th img.still { inset: 0; width: 100%; height: 100%; }
@@ -1296,6 +1297,10 @@ html.sp-lock { overflow: hidden; }
     <symbol id="i-porte-cartes" viewBox="0 0 64 64"><rect x="17" y="10" width="30" height="24" rx="2"/><path d="M8 34h48v16H8z"/><path d="M22 42h20"/></symbol>
     <symbol id="i-support" viewBox="0 0 64 64"><rect x="23" y="6" width="20" height="36" rx="3"/><path d="M12 56h40l-7-14H19z"/></symbol>
     <symbol id="i-logo" viewBox="0 0 64 64"><rect x="12" y="8" width="40" height="38" rx="4"/><path d="M8 56h48"/><path d="M20 18h7M37 18h7M20 27h14M37 27h7M20 36h7M30 36h14"/></symbol>
+    <symbol id="i-sep" viewBox="0 0 64 64"><path d="M6 12h52"/><rect x="18" y="12" width="28" height="34" rx="4"/><path d="M26 38V24l6 8 6-8v14"/></symbol>
+    <symbol id="i-clip" viewBox="0 0 64 64"><path d="M32 4v14"/><circle cx="32" cy="38" r="18"/><circle cx="32" cy="24" r="2.4"/><path d="M24 40h16M27 47h10"/></symbol>
+    <symbol id="i-prix" viewBox="0 0 64 64"><path d="M8 8h26l22 24-22 24H8z"/><circle cx="18" cy="18" r="3"/><path d="M22 34h14M22 42h9"/></symbol>
+    <symbol id="i-enseigne" viewBox="0 0 64 64"><rect x="8" y="12" width="48" height="28" rx="4"/><path d="M32 40v16M20 56h24"/><path d="M18 22h28M22 31h20"/></symbol>
     <symbol id="i-autre" viewBox="0 0 64 64"><circle cx="32" cy="32" r="22" stroke-dasharray="4 5"/><path d="M32 22v20M22 32h20"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
@@ -1319,6 +1324,7 @@ html.sp-lock { overflow: hidden; }
   <nav class="nav" aria-label="Navigation principale">
     <span class="modeswitch" role="group" aria-label="Vous êtes"><a href="#boutique" data-mode-go="part" aria-pressed="true">Particuliers</a><a href="#pro" data-mode-go="pro" aria-pressed="false">Professionnels</a></span>
     <a class="only-pro" href="#objets">Les objets</a>
+    <a class="only-pro" href="#mode">Prêt-à-porter</a>
     <a class="only-pro" href="#tarifs">Tarifs</a>
     <a class="only-pro" href="#packs">Les packs</a>
     <a href="#questions">Questions</a>
@@ -1593,6 +1599,90 @@ html.sp-lock { overflow: hidden; }
             <button type="button" class="text-btn" data-show="cadeaux">Voir les objets</button>
           </div>
         </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec-mode only-pro" id="mode" aria-labelledby="t-mode">
+    <div class="wrap">
+      <div class="sec-top">
+        <h2 id="t-mode">Boutiques et prêt-à-porter</h2>
+        <p>Des petits objets pour vos rayons, votre vitrine et votre caisse, à votre nom ou à votre logo. Imprimés par séries, dans les couleurs de votre boutique, et refaits quand vous en avez besoin.</p>
+      </div>
+      <div class="auds">
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>
+          <div class="aud-b">
+            <h3>Séparateurs de taille</h3>
+            <p>S, M, L, XL ou 36, 38, 40…</p>
+            <ul><li>Se clipsent sur la tringle</li><li>À votre logo et vos couleurs</li><li>Se commandent par séries</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="sep-taille" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>
+          <div class="aud-b">
+            <h3>Clips et médaillons de cintre</h3>
+            <p>Pour repérer en un coup d’œil.</p>
+            <ul><li>Nouveauté, collection, taille</li><li>Votre nom ou votre logo</li><li>S’accrochent au cintre existant</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="clip-cintre" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>
+          <div class="aud-b">
+            <h3>Porte-étiquettes de prix</h3>
+            <p>Étagères, tables et piles.</p>
+            <ul><li>Prix et infos de collection</li><li>À poser ou à coller</li><li>Votre style de boutique</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="porte-prix" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>
+          <div class="aud-b">
+            <h3>Enseignes de cabine et de caisse</h3>
+            <p>Cabine 1, caisse, retours.</p>
+            <ul><li>Plaquettes en relief</li><li>À poser ou à coller</li><li>Aux couleurs de la marque</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="enseigne-cabine" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>
+          <div class="aud-b">
+            <h3>Logo en relief</h3>
+            <p>Pour la vitrine ou le comptoir.</p>
+            <ul><li>Votre logo en volume</li><li>Sur son socle</li><li>Sur mesure</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="logo-relief" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+        <article class="aud">
+          <span class="th"><svg class="ico" aria-hidden="true"><use href="#i-porte-cles"/></svg></span>
+          <div class="aud-b">
+            <h3>Porte-clés cadeau</h3>
+            <p>Offert à l’achat.</p>
+            <ul><li>Votre nom en relief</li><li>Deux couleurs</li><li>Idéal pour Noël</li></ul>
+          </div>
+          <div class="aud-acts">
+            <button type="button" class="add-btn" data-add="porte-cles" aria-pressed="false"><svg class="i i-off" aria-hidden="true"><use href="#i-plus"/></svg><svg class="i i-on" aria-hidden="true"><use href="#i-check"/></svg><span>Ajouter au devis</span></button>
+          </div>
+        </article>
+      </div>
+      <div class="pro-box mode-note">
+        <div>
+          <h3>Des cintres à votre nom ?</h3>
+          <p>C’est possible en petites séries, mais pas pour tous les formats : un cintre enfant tient sur notre plateau, un cintre adulte doit être imprimé en deux pièces à assembler. Décrivez votre idée et on teste d’abord un exemplaire avant de vous donner un prix.</p>
+        </div>
+        <p class="noel-act"><button type="button" class="btn btn-y" data-prep="mode">Préparer mon devis <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></button><button type="button" class="btn btn-line" data-add="autre" aria-pressed="false">Décrire mon idée</button></p>
       </div>
     </div>
   </section>
@@ -1888,6 +1978,7 @@ html.sp-lock { overflow: hidden; }
               <span class="ap"><input type="radio" name="q-aud" id="qa-bureau" value="bureau"><label for="qa-bureau">Bureau</label></span>
               <span class="ap"><input type="radio" name="q-aud" id="qa-club" value="club"><label for="qa-club">Club ou association</label></span>
               <span class="ap"><input type="radio" name="q-aud" id="qa-commerce" value="commerce"><label for="qa-commerce">Commerce</label></span>
+              <span class="ap"><input type="radio" name="q-aud" id="qa-mode" value="mode"><label for="qa-mode">Boutique de mode</label></span>
               <span class="ap"><input type="radio" name="q-aud" id="qa-evenement" value="evenement"><label for="qa-evenement">Événement</label></span>
               <span class="ap"><input type="radio" name="q-aud" id="qa-cadeaux" value="cadeaux"><label for="qa-cadeaux">Cadeaux d’entreprise</label></span>
               <span class="ap"><input type="radio" name="q-aud" id="qa-autre" value="autre"><label for="qa-autre">Autre</label></span>
@@ -1914,6 +2005,10 @@ html.sp-lock { overflow: hidden; }
               <button type="button" class="pk" data-add="noel-sapin" aria-pressed="false"><span class="th" data-still="noel-sapin"><svg class="ico" aria-hidden="true"><use href="#i-noel-sapin"/></svg></span>Sapin de Noël</button>
               <button type="button" class="pk" data-add="noel-bonhomme" aria-pressed="false"><span class="th" data-still="noel-bonhomme"><svg class="ico" aria-hidden="true"><use href="#i-noel-bonhomme"/></svg></span>Bonhomme de neige</button>
               <button type="button" class="pk" data-add="noel-etiquette" aria-pressed="false"><span class="th" data-still="noel-etiquette"><svg class="ico" aria-hidden="true"><use href="#i-noel-etiquette"/></svg></span>Étiquette cadeau</button>
+              <button type="button" class="pk" data-add="sep-taille" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-sep"/></svg></span>Séparateurs de taille</button>
+              <button type="button" class="pk" data-add="clip-cintre" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-clip"/></svg></span>Clips de cintre</button>
+              <button type="button" class="pk" data-add="porte-prix" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-prix"/></svg></span>Porte-prix</button>
+              <button type="button" class="pk" data-add="enseigne-cabine" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-enseigne"/></svg></span>Enseigne</button>
               <button type="button" class="pk" data-add="porte-cartes" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-porte-cartes"/></svg></span>Porte-cartes</button>
               <button type="button" class="pk" data-add="support-tel" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-support"/></svg></span>Support téléphone</button>
               <button type="button" class="pk" data-add="logo-relief" aria-pressed="false"><span class="th"><svg class="ico" aria-hidden="true"><use href="#i-logo"/></svg></span>Logo en relief</button>
@@ -2004,6 +2099,7 @@ html.sp-lock { overflow: hidden; }
       <a href="#boutique" data-mode-go="part">Particuliers : boutique de Noël<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a href="#pro" data-mode-go="pro">Professionnels : devis<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a href="#creer">Créer votre modèle<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="only-pro" href="#mode">Prêt-à-porter<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="only-pro" href="#objets">Les objets<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="only-pro" href="#tarifs">Les tarifs<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="only-pro" href="#packs">Les packs<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
@@ -2212,6 +2308,14 @@ html.sp-lock { overflow: hidden; }
       d: 'Un support de bureau à votre logo, un cadeau utile pour vos clients ou votre équipe.' },
     'logo-relief': { t: 'Logo en relief', s: 'Logo en relief', one: 'logo en relief', many: 'logos en relief', ref: '', dims: 'sur demande', q: 1, ico: 'i-logo', who: 'commerces, bureaux, restaurants',
       d: 'Votre logo imprimé en volume, debout sur son socle, pour l’accueil ou la vitrine.' },
+    'sep-taille': { t: 'Séparateurs de taille', s: 'Séparateurs de taille', one: 'séparateur de taille', many: 'séparateurs de taille', ref: '', dims: 'sur demande', q: 10, ico: 'i-sep', who: 'boutiques de mode, prêt-à-porter',
+      d: 'Des séparateurs qui se clipsent sur la tringle (S, M, L, XL ou 36, 38, 40…), à vos couleurs et à votre logo.' },
+    'clip-cintre': { t: 'Clips et médaillons de cintre', s: 'Clips de cintre', one: 'clip de cintre', many: 'clips de cintre', ref: '', dims: 'sur demande', q: 50, ico: 'i-clip', who: 'boutiques de mode, prêt-à-porter',
+      d: 'Un clip ou un médaillon à votre nom qui s’accroche au cintre : nouveauté, collection, taille, promotion.' },
+    'porte-prix': { t: 'Porte-étiquettes de prix', s: 'Porte-prix', one: 'porte-étiquette de prix', many: 'porte-étiquettes de prix', ref: '', dims: 'sur demande', q: 10, ico: 'i-prix', who: 'boutiques de mode, commerces',
+      d: 'Des supports pour les prix et les infos de collection, à poser sur les étagères, les tables ou les piles de pulls.' },
+    'enseigne-cabine': { t: 'Enseigne de cabine ou de caisse', s: 'Enseigne', one: 'enseigne', many: 'enseignes', ref: '', dims: 'sur demande', q: 3, ico: 'i-enseigne', who: 'boutiques de mode, commerces',
+      d: 'Cabine 1, cabine 2, caisse, retours : des plaquettes en relief à votre style, à poser ou à coller.' },
     'noel-boule': { t: 'Boule de Noël', s: 'Boule de Noël', one: 'boule de Noël', many: 'boules de Noël', ref: 'N1', dims: 'Ø 30, 45 ou 60 mm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-boule', who: 'particuliers, familles, restaurants, commerces',
       d: 'Une vraie boule creuse en 3D, avec le texte de votre choix en relief. Livrée avec son fil doré, prête à accrocher au sapin.' },
     'noel-boule-logo': { t: 'Boule de Noël à votre logo', s: 'Boule à votre logo', one: 'boule de Noël à votre logo', many: 'boules de Noël à votre logo', ref: 'N5', dims: 'Ø 30, 45 ou 60 mm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-boule', who: 'particuliers, associations, commerces', logo: 1,
@@ -2371,6 +2475,7 @@ html.sp-lock { overflow: hidden; }
     commerce: { n: 'un commerce', say: 'C’est pour un commerce.', prep: [['qr', 1], ['porte-cles', 50]] },
     evenement: { n: 'un événement', say: 'C’est pour un événement.', prep: [['badge', 30], ['porte-cles', 50]] },
     cadeaux: { n: 'des cadeaux d’entreprise', say: 'C’est pour des cadeaux d’entreprise.', prep: [['porte-cles', 50], ['pot', 20]] },
+    mode: { n: 'une boutique de mode', say: 'C’est pour une boutique de vêtements (prêt-à-porter).', prep: [['sep-taille', 10], ['clip-cintre', 50]] },
     autre: { n: '', say: '', prep: [] }
   };
 
