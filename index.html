@@ -3197,7 +3197,7 @@ html.sp-lock { overflow: hidden; }
       '<p>Statistiques de visite&nbsp;: nous mesurons l’audience avec Cloudflare Web Analytics, un outil sans cookies qui ne vous identifie pas et ne suit pas votre navigation d’un site à l’autre. Il compte seulement les visites, les pages vues, le pays et le type d’appareil.</p></section>' +
       '<section><h3>Propriété</h3><p>Le nom Noméo, le logo, les modèles, les visuels et les textes de ce site nous appartiennent.</p></section>';
     $$('.foot-legal').forEach(function (p) {
-      p.textContent = ok ? '© 2026 Noméo · ' + (LEGAL.nom ? LEGAL.nom + ' · ' : '') + 'EI · SIRET ' + LEGAL.siret : '© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention';
+      p.textContent = ok ? '© 2026 Noméo · EI · SIRET ' + LEGAL.siret : '© 2026 Noméo · Micro-entreprise, SIRET en cours d’obtention';
     });
   }
   renderLegal();
