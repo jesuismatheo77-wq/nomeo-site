@@ -4901,7 +4901,7 @@ function A77Models(THREE, fontData, allFonts) {
     m.relief.y1 = T + rz;
     m.dims = [W, W * 0.92, T + rz];
     m.shrunk = (lay.size * CAP) < 8 * s * 0.75;
-    m.acc = 'chain'; m.holes = [[hx, hy]]; m.edge = [W * 0.09 + 1.5]; m.thick = T;
+    m.hang = true; m.acc = 'chain'; m.holes = [[hx, hy]]; m.edge = [W * 0.09 + 1.5]; m.thick = T;
     return m;
   }
 
@@ -5186,7 +5186,7 @@ function A77Models(THREE, fontData, allFonts) {
       var kn2 = new THREE.Mesh(new THREE.SphereGeometry(1.0, 12, 10), or); kn2.position.set(horiz ? ox + dx * e[1] : ox, 1.0, horiz ? -oy : -(oy + e[1])); kn2.userData.acc = true; kn2.castShadow = true; g.add(kn2);
     } else if (m.acc === 'chain') {   /* colliers : une chaîne argentée par morceau, qui entre dans le trou */
       hh.forEach(function (h, hi) {
-        var out = h[0] < 0 ? -1 : 1, lean = hh.length > 1 ? -out * 0.42 : out * 0.4, c = Math.cos(lean), s2 = Math.sin(lean), ed = (m.edge && m.edge[hi]) || 6;
+        var out = h[0] < 0 ? -1 : 1, lean = (hh.length > 1 ? -out * 0.42 : out * 0.4) * (m.hang ? 0.12 : 1), c = Math.cos(lean), s2 = Math.sin(lean), ed = (m.edge && m.edge[hi]) || 6;
         var dp3 = dropPts(100, hh.length > 1 ? 48 : 60, 0.7, hh.length > 1 ? 5.2 : 9), P = dp3.map(function (p) {
           var u = p[0], v = p[1], rx = u * c + v * s2 * -1 * -1 * 1, ry = -u * s2 * -1 * 1 + v * c;
           rx = u * c - v * s2; ry = u * s2 + v * c;
@@ -5772,7 +5772,14 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-etiquette': return G(etiquette(T('LÉA')), mat);
       case 'noel-bonhomme': return toGroup(snowman(T('LÉA')), mat);
       case 'c-coeurduo': return G(coeurduo(T('LÉA & NOÉ')), mat);
-      case 'c-coeur': return G(coeur(T('LÉA & NOÉ 2026')), mat);
+      case 'c-coeur': {   /* présenté debout, tenu par la chaîne */
+        var hg = G(coeur(T('LÉA & NOÉ 2026')), mat), up = new THREE.Group();
+        var hp0 = heartPts(70), tp0 = lobeTop(hp0), hx0 = tp0[0] * 0.88, hy0 = tp0[1] - 7, cy0 = hp0.reduce(function (a, p) { return a + p[1]; }, 0) / hp0.length;
+        var inn = new THREE.Group(); inn.add(hg); inn.rotation.y = 0;   /* le centre du cœur passe sous le trou : il pend droit */
+        inn.rotation.order = 'XYZ'; var o2 = new THREE.Group(); o2.add(inn); o2.rotation.x = Math.PI / 2; hg = o2; up.add(hg); up.updateMatrixWorld(true);
+        var bx = new THREE.Box3().setFromObject(up); hg.position.y -= bx.min.y; hg.position.z -= (bx.min.z + bx.max.z) / 2;
+        return up;
+      }
       case 'c-duo': return toGroup(duo(T('LÉA & NOÉ')), mat);
       case 'c-lampe': return toGroup(lampe(T('LÉA & NOÉ')), mat);
       case 'c-magnet': return toGroup(magnet(T('LÉA')), mat);
@@ -6636,7 +6643,7 @@ function A77Studio(THREE, M) {
     'noel-etiquette': { el: 0.84, az: -0.3, c: ['blanc', 'rouge'], aspect: 1.3 },
     'noel-bonhomme': { el: 0.3, az: -0.42, c: ['blanc', 'rouge'] },
     'c-coeurduo': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'], aspect: 1.2 },
-    'c-coeur': { el: 0.86, az: -0.3, c: ['rouge', 'blanc'] },
+    'c-coeur': { el: 0.12, az: -0.55, c: ['rouge', 'blanc'], aspect: 0.8 },
     'c-duo': { el: 0.84, az: -0.3, c: ['blanc', 'bleu'], aspect: 1.6 },
     'c-lampe': { el: 0.26, az: -0.4, c: ['blanc', 'rouge'] },
     'c-magnet2': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'], aspect: 1.3 },
