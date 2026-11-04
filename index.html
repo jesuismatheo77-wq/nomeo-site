@@ -1317,6 +1317,8 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
 .steps-list { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
 #comment.steps { padding-block: 0 clamp(44px, 5.5vw, 80px); }
 html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !important; }
+.new-tag { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 12px; padding: 5px 12px 5px 9px; border-radius: 999px; background: var(--ink); color: var(--accent); font-size: .82rem; font-weight: 750; letter-spacing: .01em; line-height: 1.2; }
+.new-tag .i { width: 14px; height: 14px; fill: var(--accent); stroke: none; }
 .steps-note a { font-weight: 650; color: var(--ink); text-underline-offset: 3px; }
 @media (max-width: 1099px) {
   .steps-list { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); padding: 18px; }
@@ -1600,6 +1602,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     <div class="wrap">
       <div class="cr-teaser" id="sur-mesure">
         <div class="cr-tz-txt">
+          <span class="new-tag"><svg class="i" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l1.9 5.2 5.6.2-4.4 3.4 1.6 5.4L12 14.6l-4.7 3.1 1.6-5.4-4.4-3.4 5.6-.2z"/></svg>Nouveau</span>
           <h2 id="t-creer">Dessinez votre propre modèle</h2>
           <p>Posez du texte, des formes, des sphères, des cônes ou un trou d’attache où vous voulez sur une plaque. L’outil vérifie en direct que la pièce est imprimable. Quand c’est bon, ajoutez-la au panier.</p>
           <p class="actions"><button type="button" class="btn btn-y" data-cr-open>Ouvrir l’outil de création <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></button></p>
