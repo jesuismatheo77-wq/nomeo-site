@@ -4874,7 +4874,7 @@ function A77Models(THREE, fontData, allFonts) {
     return m;
   }
 
-  /* cœur gravé : texte et filet incrustés, à fleur de la surface (deux couleurs, sans relief) */
+  /* cœur gravé : texte et filet en relief, incrustés dans le cœur et dépassant de 1,4 mm (deux couleurs) */
   function coeur(text, s) {
     s = s || 1;
     var W = 70 * s, hp = heartPts(W), t = clean(text) || 'LÉA & NOÉ 2026';
@@ -4888,12 +4888,12 @@ function A77Models(THREE, fontData, allFonts) {
     var inlayP = cexec(ClipperLib.ClipType.ctUnion, shPaths(inlay, 5), null, true);
     var holeP = cpaths([circPts(hx, hy, 2.0, 24)]);
     var baseT = cexec(ClipperLib.ClipType.ctDifference, shPaths(tShapes(cexec(ClipperLib.ClipType.ctDifference, heart, shPaths(tShapes(inlayP), 5))), 5), holeP);
-    var baseS = tShapes(baseT), relS = tShapes(inlayP), bh = 2.6;
-    var m = cust([ext(baseS, bh, { seg: 24, bevel: 0.4 })], [capGeo(baseS, { seg: 24 })], bh, [ext(relS, bh, { seg: 24 })], [capGeo(relS, { seg: 24 })], 0, 0);
-    m.relief.y1 = bh;
-    m.dims = [W, W * 0.92, bh];
+    var baseS = tShapes(baseT), relS = tShapes(inlayP), bh = 2.6, rz = 1.4;
+    var m = cust([ext(baseS, bh, { seg: 24, bevel: 0.9, bseg: 3 })], [capGeo(baseS, { seg: 24 })], bh, [ext(relS, bh + rz, { seg: 24, bevel: 0.35, bseg: 2 })], [capGeo(relS, { seg: 24 })], 0, 0);
+    m.relief.y1 = bh + rz;
+    m.dims = [W, W * 0.92, bh + rz];
     m.shrunk = (lay.size * CAP) < 8 * s * 0.75;
-    m.acc = 'chain'; m.holes = [[hx, hy]]; m.edge = [W * 0.09 + 1.5]; m.thick = bh;
+    m.acc = 'chain'; m.holes = [[hx, hy]]; m.edge = [W * 0.09 + 1.5]; m.thick = bh + rz;
     return m;
   }
 
@@ -5446,11 +5446,8 @@ function A77Models(THREE, fontData, allFonts) {
     pl.holes.push(new THREE.Path(hpts.map(function (q) { return new THREE.Vector2(q[0], q[1]); })));
     g.add(mk(ext([pl], wl + 0.2, { upright: true, seg: 10, z0: DP / 2 - wl - 0.2 }), mat.base));
     /* liseré autour du cœur */
-    /* cœur en relief : liseré bombé en gradins arrondis autour de l'ouverture */
-    [[4.6, 0], [3.8, 1], [2.8, 2], [1.7, 3]].forEach(function (r) {
-      var rg = tShapes(cexec(ClipperLib.ClipType.ctDifference, orient(cOffset(orient(cpaths([hpts])), r[0])), orient(cpaths([hpts]))));
-      g.add(mk(ext(rg, 1.4, { upright: true, seg: 14, z0: DP / 2 - 0.2 + r[1] * 1.0 }), mat.relief));
-    });
+    var ring = tShapes(cexec(ClipperLib.ClipType.ctDifference, orient(cOffset(orient(cpaths([hpts])), 2.6)), orient(cpaths([hpts]))));
+    g.add(mk(ext(ring, 1.6, { upright: true, seg: 14, z0: DP / 2 - 0.2 }), mat.relief));
     /* tête, museau, nez, bouche, sourcils, yeux, oreilles */
     var hy = H + 15, hz = 2;
     el(mat.base, 20, 19, 19.4, 0, hy, hz, 0, 0, 0, 72);
