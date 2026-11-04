@@ -5294,14 +5294,23 @@ function A77Models(THREE, fontData, allFonts) {
   function propMat(hex) { return PROPM[hex] || (PROPM[hex] = new THREE.MeshStandardMaterial({ color: new THREE.Color(hex).convertSRGBToLinear(), roughness: 0.55, side: THREE.DoubleSide })); }
   function orient(paths) { return paths.map(function (pp) { return ClipperLib.Clipper.Orientation(pp) ? pp : pp.slice().reverse(); }); }
 
-  /* étoile de cimier : une grande étoile debout sur une douille qui s'enfile sur la pointe du sapin */
+  /* étoile de cimier : une grande étoile épaisse aux pointes arrondies, sur une douille creuse qui s'enfile sur la pointe du sapin */
   function cimier(mat, text) {
-    var g = new THREE.Group(), ro = 60, ri = 26, H = 34, yc = H + ri - 6;
-    g.add(mk(ext([poly(new THREE.Shape(), starPts(0, 0, ro, ri, 5))], 8, { upright: true, bevel: 1.2, seg: 6, dx: 0, dy: yc, z0: -4 }), mat.base));
-    var prof = [[12.4, 0], [15.4, 0], [15.4, H], [12.4, H], [12.4, 0]].map(function (p) { return new THREE.Vector2(p[0], p[1]); });
-    g.add(mk(new THREE.LatheGeometry(prof, 48), mat.base));
-    layout(text, { maxW: 50, maxH: 30, cap: 18, cx: 0, cy: yc - 2, lines: 2 }).items.forEach(function (it) {
-      g.add(mk(ext(it.shapes, 1.4, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 3.6 }), mat.relief));
+    var g = new THREE.Group(), ro = 78, ri = 33, yc = 68, T = 20;
+    /* étoile : pointes adoucies par un décalage arrondi (Clipper) */
+    var pp = cpaths([starPts(0, 0, ro, ri, 5)]);
+    var soft = tShapes(cTree(cOffset(cOffset(orient(pp), -7), 7)));
+    if (!soft.length) soft = [poly(new THREE.Shape(), starPts(0, 0, ro, ri, 5))];
+    g.add(mk(ext(soft, T, { upright: true, bevel: 3, seg: 8, dx: 0, dy: yc, z0: -T / 2 }), mat.base));
+    /* douille : paroi 3,5 mm, alésage 27 mm, fond fermé en dôme qui se fond dans l'étoile */
+    var Ro = 15.5, Ri = 11.5, y1 = 30, yb = 28, arc = [], k;
+    var prof = [new THREE.Vector2(Ri, 0), new THREE.Vector2(Ro, 0), new THREE.Vector2(Ro, y1)];
+    for (k = 1; k <= 10; k++) { var an = k / 10 * Math.PI / 2; prof.push(new THREE.Vector2(Ro * Math.cos(an), y1 + 15 * Math.sin(an))); }
+    prof.push(new THREE.Vector2(0, yb), new THREE.Vector2(Ri, yb), new THREE.Vector2(Ri, 0));
+    var sl = mk(new THREE.LatheGeometry(prof, 56), mat.base);
+    g.add(sl);
+    layout(text, { maxW: 48, maxH: 30, cap: 17, cx: 0, cy: yc - 3, lines: 2 }).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 1.5, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: T / 2 - 0.02 }), mat.relief));
     });
     return g;
   }
