@@ -2639,6 +2639,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un marque-page fin avec son prénom sur la tête large et une petite étoile. La languette se glisse entre les pages.' },
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
       d: 'Les lettres de son prénom, épaisses, qui tiennent debout sur un petit socle : à poser sur une étagère ou une commode. La hauteur des lettres dépend de la longueur du prénom.' },
+    'c-nounours-ballon': { t: 'Nounours au ballon cœur', s: 'Nounours au ballon cœur', one: 'nounours au ballon cœur', many: 'nounours au ballon cœur', ref: 'D6', dims: '10 cm de large, 16 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-nounours', who: 'couples, cadeaux, Saint-Valentin',
+      d: 'Un nounours assis qui tient un ballon cœur par son cordon. Vos prénoms sont écrits sur le ballon. Imprimé d’un seul bloc sur un socle : yeux, nez et bouche en noir, le reste en deux couleurs au choix.' },
     'c-nounours': { t: 'Nounours à bougie LED', s: 'Nounours à bougie LED', one: 'nounours à bougie LED', many: 'nounours à bougie LED', ref: 'D5', dims: '9 cm de large, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-nounours', who: 'couples, chambres, cadeaux',
       d: 'Un nounours à poser sur une bougie LED, avec vos prénoms sur le ventre : la lumière passe par le cœur découpé. Le dessous est ouvert pour glisser la bougie. Bougie LED à piles (non fournie), jamais de vraie flamme sous le plastique.' },
     tirelire: { t: 'Tirelire cochon', s: 'Tirelire cochon', one: 'tirelire cochon', many: 'tirelires cochon', ref: 'B3', dims: '13 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-tirelire', who: 'enfants, naissances, cadeaux',
@@ -2734,7 +2736,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'prenom-volume:m': [17.9, 12.5, 11.6, 11.2, 10.8],
     'prenom-volume:l': [23.9, 17.0, 15.9, 15.4, 14.9],
     tirelire: [19.9, 14.9, 13.9, 13.4, 12.9],
-    'c-nounours': [24.9, 18.9, 17.4, 16.4, 15.5]
+    'c-nounours': [24.9, 18.9, 17.4, 16.4, 15.5],
+    'c-nounours-ballon': [29.9, 23.9, 22.4, 21.4, 20.5]
   };
   /* un prix qui tombe pile baisse d’un centime (7,00 € devient 6,99 €) */
   /* prix : tous terminés par ,99 (ou ,x9 sous 3 €) et un écart 1 pièce / 10 pièces adouci */
@@ -3720,6 +3723,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     { id: 'marque-page', v3: 1, obj: 1, ml: 12, ph: 'Chloé', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-jaune', 'noir-jaune'] },
     { id: 'prenom-volume', v3: 1, obj: 1, ml: 9, ph: 'Léa', combos: ['noir-jaune', 'blanc-rouge', 'bleu-jaune', 'sapin-blanc'] },
     { id: 'tirelire', v3: 1, obj: 1, ml: 10, ph: 'Léa', combos: ['blanc-rouge', 'rouge-blanc', 'jaune-noir', 'gris-noir'] },
+    { id: 'c-nounours-ballon', v3: 1, cp: 1, ml: 12, ph: 'Léa & Noé', combos: ['blanc-rouge', 'rouge-blanc', 'gris-rouge', 'jaune-rouge'] },
     { id: 'c-nounours', v3: 1, cp: 1, ml: 12, ph: 'Léa & Noé', combos: ['blanc-rouge', 'rouge-blanc', 'jaune-noir', 'gris-rouge'] }
   ];
   var TOYS_PAUSED = true;   /* jouets en pause : en attente des essais et de la conformité (EN 71) */
@@ -5453,6 +5457,59 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* nounours assis qui tient un ballon cœur en hélium (cordon fin, nœud) ; les prénoms sont sur le ballon.
+     Chaque volume est enfoncé dans le précédent pour que l'appui soit ≥ 45° : corps et jambes dans le socle, tête dans le corps */
+  function nounoursBallon(mat, text) {
+    var g = new THREE.Group(), DK = propMat('#1B1D22'), WH = propMat('#FFFFFF');
+    function el(m, sx, sy, sz, x, y, z, rx, ry, rz, seg) {
+      var e = mk(new THREE.SphereGeometry(1, seg || 40, Math.round((seg || 40) * 0.7)), m); e.scale.set(sx, sy, sz); e.position.set(x, y, z);
+      e.rotation.set(rx || 0, ry || 0, rz || 0); g.add(e); return e;
+    }
+    /* socle */
+    g.add(mk(ext([rr(new THREE.Shape(), 104, 74, 20, 0, -4)], 4, { bevel: 1, seg: 24 }), mat.base));
+    /* corps, ventre, queue */
+    el(mat.base, 25, 27, 22, 0, 23, 0, 0, 0, 0, 56);
+    el(mat.base, 7, 7, 7, 0, 12, -22, 0, 0, 0, 24);
+    /* jambes tendues devant, plantes des pieds et orteils */
+    [-1, 1].forEach(function (sg) {
+      el(mat.base, 11, 9, 16, sg * 15, 10, 20, 0.0, sg * -0.22, 0, 36);
+      el(mat.base, 6.5, 7.5, 1.8, sg * 16, 12, 34.6, 0, sg * -0.22, 0, 28);
+      [[-4.6, 19.2], [0, 21.4], [4.6, 19.2]].forEach(function (t) { el(mat.base, 2.4, 2.4, 2.2, sg * 16 + t[0], t[1] - 2, 34.2, 0, 0, 0, 14); });
+    });
+    /* bras gauche le long du corps, bras droit levé qui tient le cordon */
+    el(mat.base, 8, 15, 8, -26, 33, 6, 0, 0, 0.2, 36);
+    el(mat.base, 7, 7, 7, -29, 19, 9, 0, 0, 0, 28);
+    el(mat.base, 8, 15, 8, 32.5, 56, 5, 0, 0, -0.6, 36);
+    el(mat.base, 7.6, 7.6, 7.6, 41, 69.8, 6, 0, 0, 0, 30);
+    /* tête, museau, nez, bouche, yeux, oreilles */
+    var hy = 63, hz = 2;
+    el(mat.base, 19, 18.2, 18.6, 0, hy, hz, 0, 0, 0, 64);
+    el(mat.base, 8.6, 6.8, 7.2, 0, hy - 4.5, hz + 16.2, 0, 0, 0, 36);
+    el(DK, 3.4, 2.5, 2.4, 0, hy - 1.2, hz + 22.4, 0, 0, 0, 20);
+    var mo = mk(new THREE.TorusGeometry(2.8, 0.5, 8, 18, Math.PI), DK); mo.position.set(0, hy - 7, hz + 22.5); mo.rotation.z = Math.PI; g.add(mo);
+    var ph = mk(new THREE.CylinderGeometry(0.45, 0.45, 2.8, 8), DK); ph.position.set(0, hy - 5.1, hz + 22.5); g.add(ph);
+    [-1, 1].forEach(function (sg) {
+      el(DK, 2.4, 2.8, 1.8, sg * 7.4, hy + 5, hz + 16.6, 0, 0, 0, 18);
+      el(WH, 0.8, 0.8, 0.6, sg * 7.4 + 0.8, hy + 6.1, hz + 17.9, 0, 0, 0, 10);
+      el(mat.base, 7.4, 7.4, 6.6, sg * 13.6, hy + 15.5, hz - 1, 0, 0, 0, 32);
+      el(mat.base, 4.6, 4.6, 2, sg * 13.6, hy + 15.5, hz + 4.6, 0, 0, 0, 24);
+    });
+    /* cordon qui monte de la main jusqu'au nœud sous le ballon */
+    var cv = new THREE.CatmullRomCurve3([[41, 76, 6], [41.5, 88, 6], [38.5, 101, 5], [34.5, 112, 4.5], [33, 119, 4]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+    g.add(mk(new THREE.TubeGeometry(cv, 40, 2.1, 10, false), mat.relief));
+    el(mat.relief, 4.2, 3.6, 4.2, 33, 120.5, 4, 0, 0, 0, 20);
+    /* ballon : un cœur gonflé, bords arrondis, prénoms en relief dessus */
+    var hp = heartPts(46), ymn = 1e9, ymx = -1e9, hsh;
+    hp.forEach(function (q) { ymn = Math.min(ymn, q[1]); ymx = Math.max(ymx, q[1]); });
+    hsh = new THREE.Shape(hp.map(function (q) { return new THREE.Vector2(q[0], q[1]); }));
+    var by = 123 - ymn, T = 18;
+    g.add(mk(ext([hsh], T, { upright: true, bevel: 6, seg: 28, bseg: 8, dx: 33, dy: by, z0: 4 - T / 2 }), mat.relief));
+    layout(text, { maxW: 34, maxH: 22, cap: 9.5, cx: 0, cy: 0, lines: 2 }).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 1.3, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx + 33, dy: it.dy + by + (ymn + ymx) / 2 + 4, z0: 4 + T / 2 - 0.35 }), mat.base));
+    });
+    return g;
+  }
+
   /* marque-page : une tête large pour le prénom, une languette fine qui se glisse entre les pages */
   function marquePage(text) {
     var head = rr(new THREE.Shape(), 58, 30, 6, 0, 50), strip = rr(new THREE.Shape(), 26, 124, 5, 0, -12);
@@ -5637,6 +5694,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'prenom-volume': return prenomVol(mat, T('LÉA'));
       case 'tirelire': return tirelire(mat, T('LÉA'));
       case 'c-nounours': return nounours(mat, T('LÉA & NOÉ'));
+      case 'c-nounours-ballon': return nounoursBallon(mat, T('LÉA & NOÉ'));
       case 'reserve': return signSocle(mat, T('RÉSERVÉ'), { W: 112, H: 54, cap: 15 });
       case 'wifi': return qr(mat, 'WI-FI');
       case 'badge-nom': return toGroup(badgeNom(T('SOPHIE')), mat);
@@ -6553,6 +6611,7 @@ function A77Studio(THREE, M) {
     'prenom-volume': { el: 0.34, az: -0.4, c: ['noir', 'jaune'], aspect: 1.6 },
     tirelire: { el: 0.28, az: -0.5, c: ['blanc', 'rouge'] },
     'c-nounours': { el: 0.26, az: -0.45, c: ['blanc', 'rouge'] },
+    'c-nounours-ballon': { el: 0.2, az: -0.4, c: ['blanc', 'rouge'], aspect: 0.82 },
     reserve: { el: 0.3, az: -0.45, c: ['noir', 'jaune'], aspect: 1.3 },
     wifi: { el: 0.3, az: -0.5, c: ['blanc', 'noir'] },
     'badge-nom': { el: 0.84, az: -0.3, c: ['noir', 'blanc'], aspect: 1.6 },
