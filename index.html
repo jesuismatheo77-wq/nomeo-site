@@ -5346,22 +5346,47 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
-  /* tirelire cochon : le prénom sur le flanc, la fente sur le dos */
+  /* tirelire cochon : corps lisse, pattes soudées au corps, vraie fente avec rebord, prénom sur le flanc.
+     Pensé pour s'imprimer en deux moitiés (plan de coupe au milieu) posées à plat. */
   function tirelire(mat, text) {
-    var g = new THREE.Group(), B = mat.base, R = mat.relief;
-    put(g, new THREE.SphereGeometry(1, 48, 32), B, 0, 56, 0).scale.set(56, 44, 42);
-    [[-27, -20], [-27, 20], [27, -20], [27, 20]].forEach(function (p) { g.add(cylY(10, 9, 24, B, p[0], 0, p[1], 20)); });
-    put(g, new THREE.CylinderGeometry(15, 17, 18, 28), B, 62, 52, 0, 0, 0, Math.PI / 2);
-    [-6.5, 6.5].forEach(function (z) { put(g, new THREE.CylinderGeometry(3, 3, 1.6, 14), R, 71, 52, z, 0, 0, Math.PI / 2); });
-    put(g, new THREE.ConeGeometry(11, 20, 4), B, 31, 91, 24, 0.55, 0.8, -0.35);
-    put(g, new THREE.ConeGeometry(11, 20, 4), B, 31, 91, -24, -0.55, 0.8, -0.35);
-    [-22, 22].forEach(function (z) { put(g, new THREE.SphereGeometry(2.8, 14, 10), R, 46, 68, z); });
-    put(g, new THREE.TorusGeometry(5, 1.7, 8, 20, Math.PI * 1.5), B, -60, 62, 0);
-    put(g, new THREE.BoxGeometry(34, 2.4, 4), R, -4, 99.6, 0);
-    layout(text, { maxW: 50, maxH: 22, cap: 16, cx: -8, cy: 56 }).items.forEach(function (it) {
-      g.add(mk(ext(it.shapes, 10.5, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 33 }), R));
+    var root = new THREE.Group(), g = new THREE.Group(), B = mat.base, R = mat.relief, V = THREE.Vector2;
+    g.position.y = -8; root.add(g);
+    var CY = 58, RX = 56, RY = 42, RZ = 40;
+    function lathe(pts, seg) { return new THREE.LatheGeometry(pts.map(function (p) { return new V(p[0], p[1]); }), seg || 48); }
+    /* corps */
+    var body = put(g, new THREE.SphereGeometry(1, 72, 48), B, 0, CY, 0); body.scale.set(RX, RY, RZ);
+    /* pattes : bout arrondi, enfoncées dans le ventre */
+    var leg = [[0, 0], [7.5, 0], [10, 1.2], [11.2, 3.6], [11.6, 8], [11.2, 28], [0, 28]];
+    [[-27, -19], [-27, 19], [27, -19], [27, 19]].forEach(function (p) { put(root, lathe(leg, 40), B, p[0], 0, p[1]); });
+    /* groin : disque aux bords arrondis, légèrement en avant de la tête */
+    var sn = [[0, 0], [11.5, 0], [14, 1.6], [15, 4], [15, 9.5], [14, 12], [11.5, 13.6], [0, 13.6]];
+    put(g, lathe(sn, 48), B, 53, 51, 0, 0, 0, -Math.PI / 2);
+    [-6, 6].forEach(function (z) { var n = put(g, new THREE.SphereGeometry(1, 20, 14), R, 66.2, 51, z); n.scale.set(0.9, 3, 2.1); });
+    /* oreilles : triangles arrondis, épais, plantés sur la tête */
+    var es = new THREE.Shape(); es.moveTo(-13, 0); es.quadraticCurveTo(-11, 11, 0, 19); es.quadraticCurveTo(11, 11, 13, 0); es.lineTo(-13, 0);
+    [-1, 1].forEach(function (sg) {
+      var eg = new THREE.ExtrudeGeometry([es], { depth: 3, steps: 1, curveSegments: 16, bevelEnabled: true, bevelThickness: 1.4, bevelSize: 1.4, bevelOffset: -0.2, bevelSegments: 4 });
+      eg.translate(0, 0, -1.5);
+      var e = new THREE.Mesh(eg, B); e.castShadow = true; e.receiveShadow = true;
+      var h = new THREE.Group(); h.add(e);
+      h.position.set(24, 81, sg * 20);
+      h.rotation.set(sg * 0.42, 0, -0.2);
+      g.add(h);
     });
-    return g;
+    /* queue en tire-bouchon */
+    var tc = new THREE.CatmullRomCurve3([[-52, 64, 0], [-60, 70, 0], [-66, 67, 0], [-65, 61, 0], [-60, 61, 0]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+    g.add(mk(new THREE.TubeGeometry(tc, 48, 1.9, 14, false), B));
+    /* yeux */
+    [-1, 1].forEach(function (sg) { var ey = put(g, new THREE.SphereGeometry(3.3, 24, 16), R, 41, 70, sg * 25.2); ey.scale.set(1, 1, 0.8); });
+    /* fente : rebord surélevé et fond sombre en retrait */
+    var lip = rr(new THREE.Shape(), 40, 11, 5.5); lip.holes.push(rr(new THREE.Path(), 30, 4.2, 2.1));
+    g.add(mk(ext([lip], 9.8, { bevel: 0.7, seg: 24, dx: -4, z0: 92 }), B));
+    g.add(mk(ext([rr(new THREE.Shape(), 30, 4.2, 2.1)], 7.2, { seg: 24, dx: -4, z0: 93 }), R));
+    /* prénom sur le flanc */
+    layout(text, { maxW: 46, maxH: 20, cap: 14, cx: -3, cy: 57 }).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 11.8, { upright: true, bevel: 0.3, bseg: 1, seg: 8, dx: it.dx, dy: it.dy, z0: 30 }), R));
+    });
+    return root;
   }
 
   /* panneau debout sur un socle (Réservé) */
