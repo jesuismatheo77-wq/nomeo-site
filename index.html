@@ -785,7 +785,8 @@ html.cr-open, html.cr-open body { overflow: hidden; }
 @media (max-height: 700px) and (max-width: 899px) { .cr-add { min-height: 46px; min-width: 54px; } .cr-add svg { width: 18px; height: 18px; } .cr-aa { height: 18px; line-height: 18px; } }
 
 /* autres couleurs (boutique, essai 3D, devis) */
-.cmore { flex: none; align-self: center; min-height: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--soft); font: inherit; font-size: .78rem; font-weight: 700; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
+.cbr { flex: 0 0 100%; height: 0; }
+.cmore { flex: none; margin-top: 4px; align-self: center; min-height: 44px; padding: 0 12px; border: 0; border-radius: 999px; background: var(--soft); font: inherit; font-size: .78rem; font-weight: 700; color: var(--ink-2); cursor: pointer; white-space: nowrap; }
 .cmore:hover { background: var(--accent); color: var(--ink); }
 .cmore[aria-expanded="true"] { background: var(--ink); color: #fff; }
 .cpick { display: grid; gap: 10px; margin-top: 8px; padding: 12px; border-radius: 16px; background: var(--soft); }
@@ -1076,6 +1077,8 @@ dialog::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(5px);
   .seg { width: 100%; }
   .seg label { padding: 12px 4px; font-size: .82rem; }
   .chips:not(.many) { width: 100%; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); justify-items: center; gap: 4px 0; }
+  .chips:not(.many) .cbr { display: none; }
+  .chips:not(.many) .cmore { grid-column: 1 / -1; justify-self: start; }
   .p-end { width: 100%; margin-left: 0; flex-direction: column; align-items: stretch; gap: 12px; }
   .p-end .btn { width: 100%; }
   .spec { text-align: left; }
@@ -2922,7 +2925,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       if (open) { var r = host.querySelector('input[type=radio]:checked'); if (r && validCombo(r.value)) { var p = r.value.split('-'); st.a = p[0]; st.b = p[1]; } mark(); }
       panel.hidden = !open; btn.setAttribute('aria-expanded', String(open));
     });
-    host.appendChild(btn); host.parentNode.insertBefore(panel, host.nextSibling);
+    host.appendChild(el('span', { class: 'cbr', 'aria-hidden': 'true' })); host.appendChild(btn); host.parentNode.insertBefore(panel, host.nextSibling);
   }
   var MAP;
   var maker = $('maker'), heroText = $('hero-text'), heroCount = $('hero-count'), comboLabel = $('combo-name');
