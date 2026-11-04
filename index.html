@@ -5446,8 +5446,11 @@ function A77Models(THREE, fontData, allFonts) {
     pl.holes.push(new THREE.Path(hpts.map(function (q) { return new THREE.Vector2(q[0], q[1]); })));
     g.add(mk(ext([pl], wl + 0.2, { upright: true, seg: 10, z0: DP / 2 - wl - 0.2 }), mat.base));
     /* liseré autour du cœur */
-    var ring = tShapes(cexec(ClipperLib.ClipType.ctDifference, orient(cOffset(orient(cpaths([hpts])), 2.6)), orient(cpaths([hpts]))));
-    g.add(mk(ext(ring, 1.6, { upright: true, seg: 14, z0: DP / 2 - 0.2 }), mat.relief));
+    /* cœur en relief : liseré bombé en gradins arrondis autour de l'ouverture */
+    [[4.6, 0], [3.8, 1], [2.8, 2], [1.7, 3]].forEach(function (r) {
+      var rg = tShapes(cexec(ClipperLib.ClipType.ctDifference, orient(cOffset(orient(cpaths([hpts])), r[0])), orient(cpaths([hpts]))));
+      g.add(mk(ext(rg, 1.4, { upright: true, seg: 14, z0: DP / 2 - 0.2 + r[1] * 1.0 }), mat.relief));
+    });
     /* tête, museau, nez, bouche, sourcils, yeux, oreilles */
     var hy = H + 15, hz = 2;
     el(mat.base, 20, 19, 19.4, 0, hy, hz, 0, 0, 0, 72);
