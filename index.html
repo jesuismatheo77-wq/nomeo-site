@@ -2642,7 +2642,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'c-nounours-ballon': { t: 'Nounours au ballon cœur', s: 'Nounours au ballon cœur', one: 'nounours au ballon cœur', many: 'nounours au ballon cœur', ref: 'D6', dims: '10 cm de large, 16 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-nounours', who: 'couples, cadeaux, Saint-Valentin',
       d: 'Un nounours assis, détaillé, avec son écharpe, un cœur sur le ventre et des plantes de pieds, qui tient un grand ballon cœur par un cordon épais. Vos prénoms sont écrits sur le ballon. Imprimé d’un seul bloc sur un socle : yeux, nez et bouche en noir, le reste en deux couleurs au choix.' },
     'c-nounours': { t: 'Nounours à bougie LED', s: 'Nounours à bougie LED', one: 'nounours à bougie LED', many: 'nounours à bougie LED', ref: 'D5', dims: '9 cm de large, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-nounours', who: 'couples, chambres, cadeaux',
-      d: 'Un nounours à poser sur une bougie LED, avec vos prénoms sur le ventre : la lumière passe par le cœur découpé. Le dessous est ouvert pour glisser la bougie. Bougie LED à piles (non fournie), jamais de vraie flamme sous le plastique.' },
+      d: 'Un nounours assis qui serre un cœur dans ses pattes, avec son écharpe. Son corps est creux et ouvert dessous : on le pose sur une bougie LED et la lumière douce traverse le plastique. Vos prénoms sont écrits devant, sur le socle. Bougie LED à piles (non fournie), jamais de vraie flamme sous le plastique.' },
     tirelire: { t: 'Tirelire cochon', s: 'Tirelire cochon', one: 'tirelire cochon', many: 'tirelires cochon', ref: 'B3', dims: '13 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-tirelire', who: 'enfants, naissances, cadeaux',
       d: 'Un cochon avec son prénom sur le flanc et une fente pour les pièces sur le dos. Imprimé d’un seul bloc : un bouchon rond sous le ventre se retire pour sortir l’argent, sans rien casser.' },
     reserve: { t: 'Panneau Réservé', s: 'Panneau Réservé', one: 'panneau Réservé', many: 'panneaux Réservé', ref: 'R1', dims: '112 × 54 mm', max: 'jusqu’à 170 mm de large', q: 6, ico: 'i-reserve', who: 'restaurants, bars, hôtels, salles de réception',
@@ -2736,7 +2736,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'prenom-volume:m': [17.9, 12.5, 11.6, 11.2, 10.8],
     'prenom-volume:l': [23.9, 17.0, 15.9, 15.4, 14.9],
     tirelire: [19.9, 14.9, 13.9, 13.4, 12.9],
-    'c-nounours': [24.9, 18.9, 17.4, 16.4, 15.5],
+    'c-nounours': [29.9, 23.9, 22.4, 21.4, 20.4],
     'c-nounours-ballon': [34.9, 27.9, 26.4, 25.4, 24.4]
   };
   /* un prix qui tombe pile baisse d’un centime (7,00 € devient 6,99 €) */
@@ -5423,37 +5423,61 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
-  /* nounours à bougie LED : un corps creux, ouvert dessous, qui se pose sur une bougie LED ; la lumière passe par un cœur découpé sur le ventre.
-     Tête sphérique posée sur le toit (appui ≥ 45°), oreilles plates, bras relevés à 45° : imprimable corps ouvert vers le plateau */
+  /* nounours veilleuse : un nounours assis dont le corps est une cloche creuse (paroi 2,4 mm) ouverte dessous, posée sur un socle annulaire ;
+     on glisse une bougie LED dessous et la lumière traverse le ventre et le cœur qu'il serre dans ses pattes.
+     Même méthode que le nounours au ballon : chaque volume est enfoncé dans le précédent (appui ≥ 45°), détails modelés dans la même couleur. */
   function nounours(mat, text) {
-    var g = new THREE.Group(), H = 50, WD = 66, DP = 50, wl = 2.4, DK = propMat('#25282E');
-    var outer = orient(shPaths([rr(new THREE.Shape(), WD, DP, 10)], 10)), inner = orient(shPaths([rr(new THREE.Shape(), WD - 2 * wl, DP - 2 * wl, 7.6)], 10));
-    var cut = orient(cpaths([[[-26, -DP / 2 - 6], [26, -DP / 2 - 6], [26, -DP / 2 + wl + 0.2], [-26, -DP / 2 + wl + 0.2]]]));
-    var ring = tShapes(cexec(ClipperLib.ClipType.ctDifference, outer, inner.concat(cut)));
-    g.add(mk(ext(ring, H, { seg: 8 }), mat.base));
-    g.add(mk(ext([rr(new THREE.Shape(), WD, DP, 10)], 2.6, { seg: 10, z0: H - 2.6 }), mat.base));
-    /* ventre : plaque avec un cœur découpé */
-    var pl = rr(new THREE.Shape(), 52, H, 2, 0, H / 2), hp = heartPts(30), ymn = 1e9, ymx = -1e9;
-    hp.forEach(function (q) { ymn = Math.min(ymn, q[1]); ymx = Math.max(ymx, q[1]); });
-    pl.holes.push(new THREE.Path(hp.map(function (q) { return new THREE.Vector2(q[0], q[1] - (ymn + ymx) / 2 + 29); })));
-    g.add(mk(ext([pl], wl + 0.2, { upright: true, seg: 8, z0: DP / 2 - wl - 0.2 }), mat.base));
-    upText(g, mat, text, { maxW: 36, maxH: 8, cap: 6, cx: 0, cy: 0, y: 8, z: DP / 2 - 0.6 });
-    /* tête, museau, yeux, nez, oreilles */
-    var hc = H + 14;
-    put(g, new THREE.SphereGeometry(21, 48, 32), mat.base, 0, hc, 0);
-    var mz = mk(new THREE.SphereGeometry(8.5, 32, 20), mat.relief); mz.scale.z = 0.8; mz.position.set(0, hc - 5.5, 17.6); g.add(mz);
-    [-1, 1].forEach(function (sg) {
-      put(g, new THREE.SphereGeometry(2.6, 20, 14), mat.relief, sg * 7.5, hc + 3, 19.6);
-      put(g, new THREE.CylinderGeometry(7.5, 7.5, 5, 32), mat.base, sg * 15, hc + 14, 1, Math.PI / 2, 0, 0);
-      put(g, new THREE.CylinderGeometry(4.2, 4.2, 1.2, 28), mat.relief, sg * 15, hc + 14, 3.7, Math.PI / 2, 0, 0);
+    var g = new THREE.Group(), DK = propMat('#1B1D22'), WH = propMat('#FFFFFF'), i, k;
+    function el(m, sx, sy, sz, x, y, z, rx, ry, rz, seg) {
+      var e = mk(new THREE.SphereGeometry(1, seg || 40, Math.round((seg || 40) * 0.7)), m); e.scale.set(sx, sy, sz); e.position.set(x, y, z);
+      e.rotation.set(rx || 0, ry || 0, rz || 0); g.add(e); return e;
+    }
+    /* socle annulaire : ouvert au milieu pour la bougie */
+    var base = rr(new THREE.Shape(), 96, 86, 22, 0, -8); base.holes.push(circle(new THREE.Path(), 25.2, 0, 0));
+    g.add(mk(ext([base], 4, { bevel: 1, seg: 28 }), mat.base));
+    layout(text, { maxW: 60, maxH: 8, cap: 6.5, cx: 0, cy: -43 }).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 1.3, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 3.97 }), mat.relief));
     });
-    put(g, new THREE.SphereGeometry(3, 20, 14), DK, 0, hc - 3.2, 24.6);
-    /* bras relevés à 45° vers l'extérieur, pattes avant posées devant */
+    /* corps : cloche creuse en révolution (extérieur et intérieur), fond ouvert */
+    var out = [[29, 3], [29.6, 12], [28.6, 22], [26.2, 32], [22.8, 40], [18.4, 46.5], [13, 51], [7, 53.6], [0, 54.5]];
+    var inn = [[0, 50.2], [5.5, 49.4], [11, 46.6], [16.2, 42], [20.4, 35.8], [23.8, 28], [26.2, 19], [27.2, 10], [26.8, 3]];
+    var prof = out.concat(inn).map(function (p) { return new THREE.Vector2(p[0], p[1]); });
+    g.add(mk(new THREE.LatheGeometry(prof, 72), mat.base));
+    /* cœur serré dans les pattes (relief, à l'avant du ventre) */
+    var hv = heartPts(26), hn = 1e9, hx = -1e9;
+    hv.forEach(function (q) { hn = Math.min(hn, q[1]); hx = Math.max(hx, q[1]); });
+    var hs = new THREE.Shape(hv.map(function (q) { return new THREE.Vector2(q[0], q[1]); }));
+    var hg = ext([hs], 11, { upright: true, bevel: 3.2, seg: 20, bseg: 6, dx: 0, dy: 33 - (hn + hx) / 2, z0: 22 });
+    g.add(mk(hg, mat.relief));
+    /* tête, museau, nez, bouche, sourcils, yeux, oreilles */
+    var hy = 66.5, hz = 3;
+    el(mat.base, 19, 18.2, 18.6, 0, hy, hz, 0, 0, 0, 72);
+    el(mat.base, 8.8, 7, 7.4, 0, hy - 4.5, hz + 16.1, 0, 0, 0, 40);
+    el(DK, 3.5, 2.6, 2.4, 0, hy - 1.1, hz + 22.5, 0, 0, 0, 24);
+    el(WH, 0.9, 0.55, 0.5, -0.9, hy - 0.1, hz + 24.4, 0, 0, 0, 10);
+    var mo = mk(new THREE.TorusGeometry(3.1, 0.95, 10, 24, Math.PI), DK); mo.position.set(0, hy - 7.2, hz + 22.4); mo.rotation.z = Math.PI; g.add(mo);
+    var ph = mk(new THREE.CylinderGeometry(0.85, 0.85, 3.4, 10), DK); ph.position.set(0, hy - 5.2, hz + 22.5); g.add(ph);
     [-1, 1].forEach(function (sg) {
-      var ar = mk(new THREE.SphereGeometry(7, 28, 20), mat.base); ar.scale.set(1, 1.9, 1); ar.position.set(sg * 38, 32, 0); ar.rotation.z = -sg * 0.78; g.add(ar);
-      var ft = mk(new THREE.CylinderGeometry(9, 9, 6, 36), mat.base); ft.position.set(sg * 25, 3, 24); g.add(ft);
-      var fc = mk(new THREE.SphereGeometry(9, 36, 18, 0, TAU, 0, Math.PI / 2), mat.base); fc.scale.y = 0.45; fc.position.set(sg * 25, 6, 24); g.add(fc);
+      el(DK, 2.5, 3, 1.9, sg * 7.4, hy + 5, hz + 16.4, 0, 0, 0, 20);
+      el(WH, 0.85, 0.85, 0.6, sg * 7.4 + 0.8, hy + 6.3, hz + 17.9, 0, 0, 0, 10);
+      var eb = mk(new THREE.CylinderGeometry(0.95, 0.95, 6, 10), DK); eb.rotation.z = Math.PI / 2 - sg * 0.22; eb.position.set(sg * 7.6, hy + 9.6, hz + 15.4); g.add(eb);
+      el(mat.base, 7.6, 7.6, 6.8, sg * 13.6, hy + 15.4, hz - 1, 0, 0, 0, 40);
+      el(mat.relief, 4.8, 4.8, 2.2, sg * 13.6, hy + 15.4, hz + 4.7, 0, 0, 0, 28);
+      /* bras vers l'avant, pattes qui tiennent le cœur */
+      el(mat.base, 7.4, 14, 7.4, sg * 24.5, 38, 14, 0.5, 0, sg * 0.5, 40);
+      el(mat.base, 6.6, 6.6, 6.6, sg * 12.5, 33, 27, 0, 0, 0, 30);
+      /* jambes tendues devant, pieds avec coussinet et quatre orteils */
+      el(mat.base, 11, 9, 15, sg * 15.5, 10, 19, 0.0, sg * -0.18, 0, 40);
+      el(mat.base, 9, 10.5, 6.2, sg * 16.5, 13.2, 29.8, -0.18, sg * -0.18, 0, 44);
+      el(mat.base, 5.4, 6, 1.7, sg * 16.5, 10.6, 35.3, -0.18, sg * -0.18, 0, 32);
+      [[-5.6, 18.4], [-1.9, 21.2], [1.9, 21.2], [5.6, 18.4]].forEach(function (t) { el(mat.base, 2.5, 3, 2.2, sg * 16.5 + t[0], t[1] - 1.2, 33.2, -0.18, 0, 0, 22); });
     });
+    /* écharpe : anneau aplati autour du cou, nœud et deux pans */
+    var sc = mk(new THREE.TorusGeometry(12.8, 4.2, 14, 48), mat.relief); sc.rotation.x = Math.PI / 2; sc.scale.set(1.05, 1.0, 0.72); sc.position.set(0, 50.4, 2.5); g.add(sc);
+    el(mat.relief, 4.4, 9, 2.2, -4.6, 44, 14.8, 0.12, 0, 0.12, 24);
+    el(mat.relief, 4.4, 7, 2.2, 5.2, 45, 14.6, 0.12, 0, -0.18, 24);
+    /* queue */
+    el(mat.base, 7, 7, 7, 0, 12, -26, 0, 0, 0, 24);
     return g;
   }
 
@@ -5508,22 +5532,30 @@ function A77Models(THREE, fontData, allFonts) {
       el(mat.base, 7.6, 7.6, 6.8, sg * 13.6, hy + 15.4, hz - 1, 0, 0, 0, 40);
       el(mat.relief, 4.8, 4.8, 2.2, sg * 13.6, hy + 15.4, hz + 4.7, 0, 0, 0, 28);
     });
-    /* cordon épais qui monte de la main jusqu'au nœud sous le ballon */
-    var cv = new THREE.CatmullRomCurve3([[38.4, 73, 6], [39.5, 86, 6], [37.5, 99, 5], [34.4, 103, 4.8], [33.2, 109, 4.1], [33, 114, 4], [33, 126, 4]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
-    g.add(mk(new THREE.TubeGeometry(cv, 48, 3, 12, false), mat.relief));
-    /* entonnoir : le cordon s'évase en courbe douce (pente ≤ 37°) et s'enfonce dans le ballon, large zone de liaison */
-    var fp = [new THREE.Vector2(0, 109)], fk;
-    for (fk = 0; fk <= 20; fk++) { var ft = fk / 20; fp.push(new THREE.Vector2(3.6 + 9.4 * ft * ft, 111 + 26 * ft)); }
-    fp.push(new THREE.Vector2(0, 137));
-    var fn = mk(new THREE.LatheGeometry(fp, 48), mat.relief); fn.scale.z = 0.78; fn.position.set(33, 0, 4); g.add(fn);
-    /* ballon : un cœur gonflé, bords arrondis, prénoms en relief dessus */
-    var hp = heartPts(46), ymn = 1e9, ymx = -1e9, hsh;
+    /* ballon + cordon d'une seule forme : le cœur gonflé (tranches emboîtées, bords arrondis, dessus plat pour les prénoms)
+       se resserre en col puis devient le cordon, sans aucune pièce rapportée */
+    var hp = heartPts(46), ymn = 1e9, ymx = -1e9, i, k;
     hp.forEach(function (q) { ymn = Math.min(ymn, q[1]); ymx = Math.max(ymx, q[1]); });
-    hsh = new THREE.Shape(hp.map(function (q) { return new THREE.Vector2(q[0], q[1]); }));
-    var by = 123 - ymn, T = 18;
-    g.add(mk(ext([hsh], T, { upright: true, bevel: 6, seg: 28, bseg: 8, dx: 33, dy: by, z0: 4 - T / 2 }), mat.relief));
+    var by = 123 - ymn, BX = 33, BZ = 4, HH = 8.5, RM = 6.5, NS = 14;
+    var heartP = [hp.map(function (q) { return [q[0] + BX, q[1] + by]; })];
+    for (k = 1; k <= NS; k++) {
+      var th = k / NS * Math.PI / 2, d = RM * (1 - Math.cos(th)), hh = HH * Math.sin(th), th0 = (k - 1) / NS * Math.PI / 2;
+      var off = d < 0.01 ? orient(cpaths(heartP)) : cOffset(orient(cpaths(heartP)), -d);
+      var shp = tShapes(cTree(off));
+      if (!shp.length) continue;
+      /* chaque tranche part de la hauteur de la précédente : marches de 0,2 à 1 mm */
+      g.add(mk(ext(shp, 2 * hh, { upright: true, seg: 8, z0: BZ - hh }), mat.relief));
+    }
+    /* col : du cordon rond qui s'élargit en douceur, enfoui dans le dessus du ballon */
+    var np = [new THREE.Vector2(0, 108)];
+    for (k = 0; k <= 16; k++) { var tt = k / 16; np.push(new THREE.Vector2(3 + 1.7 * tt * tt, 110 + 22 * tt)); }
+    np.push(new THREE.Vector2(0, 133));
+    var nk = mk(new THREE.LatheGeometry(np, 40), mat.relief); nk.position.set(BX, 0, BZ); g.add(nk);
+    /* cordon : de la main au col, même rayon */
+    var cv = new THREE.CatmullRomCurve3([[38.4, 73, 6], [39.5, 86, 6], [37.5, 99, 5], [34.6, 106, 4.4], [33, 111, 4]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+    g.add(mk(new THREE.TubeGeometry(cv, 48, 3, 14, false), mat.relief));
     layout(text, { maxW: 34, maxH: 22, cap: 9.5, cx: 0, cy: 0, lines: 2 }).items.forEach(function (it) {
-      g.add(mk(ext(it.shapes, 1.3, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx + 33, dy: it.dy + by + (ymn + ymx) / 2 + 4, z0: 4 + T / 2 - 0.35 }), mat.base));
+      g.add(mk(ext(it.shapes, 1.3, { upright: true, bevel: 0.25, bseg: 1, seg: 6, dx: it.dx + BX, dy: it.dy + by + (ymn + ymx) / 2 + 4, z0: BZ + HH - 0.35 }), mat.base));
     });
     return g;
   }
