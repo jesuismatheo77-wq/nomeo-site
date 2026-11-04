@@ -2614,8 +2614,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Une grande étoile pour le haut du sapin, avec le texte de votre choix en relief. Une douille dessous s’enfile sur la pointe de l’arbre.' },
     'g-casque': { t: 'Support de casque gamer', s: 'Support de casque', one: 'support de casque', many: 'supports de casque', ref: 'G1', dims: '15 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-casque', who: 'joueurs, ados, cadeaux',
       d: 'Un socle stable et un mât qui s’évase en un bras : l’arceau du casque se pose en travers, les écouteurs pendent de chaque côté. Votre pseudo est écrit sur le socle. Le casque de la photo n’est pas fourni.' },
-    'g-manette': { t: 'Support de manette', s: 'Support de manette', one: 'support de manette', many: 'supports de manette', ref: 'G2', dims: '15 × 8 cm, 11 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-manette', who: 'joueurs, ados, cadeaux',
-      d: 'Un plateau et deux tiges qui se glissent dans l’échancrure sous la manette : elle repose dessus et sur ses poignées, debout et stable. Votre pseudo est écrit à plat devant. La manette de la photo n’est pas fournie.' },
+    'g-manette': { t: 'Support de manette', s: 'Support de manette', one: 'support de manette', many: 'supports de manette', ref: 'G2', dims: '15 × 8 cm, 12 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-manette', who: 'joueurs, ados, cadeaux',
+      d: 'Un mur incliné et deux gros bras qui tiennent la manette par-dessous, comme on porte un enfant sous les aisselles : elle reste penchée en arrière, bien calée et stable. Votre pseudo est écrit à plat devant. La manette de la photo n’est pas fournie.' },
     'marque-page': { t: 'Marque-page à son prénom', s: 'Marque-page', one: 'marque-page', many: 'marque-pages', ref: 'B1', dims: '14 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-marque-page', who: 'lecteurs, enfants, classes, cadeaux',
       d: 'Un marque-page fin avec son prénom sur la tête large et une petite étoile. La languette se glisse entre les pages.' },
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
@@ -5320,7 +5320,7 @@ function A77Models(THREE, fontData, allFonts) {
 
   /* manette PS5 (DualSense), debout, face au client : coque blanche, face noire, touchpad à barre bleue, gâchettes, croix, 4 boutons */
   function dualsense(P) {
-    var pad = new THREE.Group(), W = propMat('#F2F4F8'), K = propMat('#1B1D22'), Gy = propMat('#DDE1E8'), Mk = propMat('#8E95A1'), Bl = propMat('#2F5BFF');
+    var pad = new THREE.Group(), W = propMat('#F2F4F8'), K = propMat('#1B1D22'), Gy = propMat('#C3C9D4'), Mk = propMat('#8E95A1'), Bl = propMat('#2F5BFF');
     var half = [[0, 104], [30, 105], [56, 103], [70, 98], [76, 86], [80, 64], [78, 40], [72, 20], [66, 6], [60, 0], [53, 2], [47, 14], [42, 28], [34, 36], [20, 38], [0, 38]];
     var loop = half.map(function (p) { return [p[0], p[1]]; }).concat(half.slice(1, -1).reverse().map(function (p) { return [-p[0], p[1]]; }));
     var curve = new THREE.CatmullRomCurve3(loop.map(function (p) { return new THREE.Vector3(p[0], p[1], 0); }), true);
@@ -5357,19 +5357,25 @@ function A77Models(THREE, fontData, allFonts) {
     return pad;
   }
 
-  /* support de manette : un plateau et deux tiges qui se glissent dans l'échancrure sous la manette (elle repose dessus et sur ses poignées) */
+  /* support de manette : plateau, mur incliné en arrière, et deux gros bras qui sortent du mur et tiennent la manette
+     par-dessous (là où elle a son échancrure), comme on porte un enfant sous les aisselles ; le pseudo est à plat devant */
   function manette(mat, text) {
     var g = new THREE.Group();
-    g.add(mk(ext([rr(new THREE.Shape(), 150, 78, 12)], 6, { bevel: 1.2, seg: 20 }), mat.base));
-    layout(text, { maxW: 110, maxH: 12, cap: 9, cx: 0, cy: -27 }).items.forEach(function (it) {
+    g.add(mk(ext([rr(new THREE.Shape(), 150, 84, 12)], 6, { bevel: 1.2, seg: 20 }), mat.base));
+    layout(text, { maxW: 112, maxH: 13, cap: 10, cx: 0, cy: -30 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.4, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 5.98 }), mat.relief));
     });
+    var G = new THREE.Group();
+    G.rotation.x = -0.3; G.position.set(0, 11, -8);
+    G.add(mk(ext([rr(new THREE.Shape(), 124, 103, 8, 0, 48.5)], 9, { upright: true, bevel: 0.8, seg: 14, z0: -25 }), mat.base));
+    var ap = poly(new THREE.Shape(), [[-18, -5], [-18, 35.5], [15, 35.5], [20, 32], [20, 29]]);
     [-1, 1].forEach(function (sg) {
-      put(g, new THREE.CylinderGeometry(5, 5, 38, 28), mat.base, sg * 28, 6 + 19, 0);
-      put(g, new THREE.SphereGeometry(5, 28, 14), mat.base, sg * 28, 6 + 38, 0);
+      var ag = new THREE.ExtrudeGeometry([ap], { depth: 12 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
+      ag.translate(0, 0, -6 + 0.0); ag.rotateY(-Math.PI / 2); ag.translate(sg * 31, 0, 0);
+      G.add(mk(ag, mat.relief));
     });
-    var pad = dualsense(mat); pad.position.set(0, 6.5, 0);
-    g.add(pad);
+    G.add(dualsense(mat));
+    g.add(G);
     return g;
   }
 
