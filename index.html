@@ -1408,6 +1408,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     <symbol id="i-manette" viewBox="0 0 64 64"><path d="M18 20h28c7 0 11 7 13 17l1.5 9c.8 5-5 7-8 3L46 40H18l-6.5 9c-3 4-8.8 2-8-3L5 37c2-10 6-17 13-17z"/><path d="M20 26v8M16 30h8"/><circle cx="43" cy="28" r="1.8"/><circle cx="48" cy="33" r="1.8"/></symbol>
     <symbol id="i-marque-page" viewBox="0 0 64 64"><path d="M20 6h24v50l-12-9-12 9z"/><path d="M27 16h10M27 23h7"/></symbol>
     <symbol id="i-prenom" viewBox="0 0 64 64"><path d="M6 54h52"/><path d="M10 52l7-26 7 26M12.5 42h9"/><path d="M33 52V26h7a6.5 6.5 0 010 13h-7M33 39h8a6.5 6.5 0 010 13h-8"/></symbol>
+    <symbol id="i-c-nounours" viewBox="0 0 64 64"><circle cx="32" cy="38" r="16"/><circle cx="18" cy="21" r="6"/><circle cx="46" cy="21" r="6"/><circle cx="26" cy="35" r="1.6"/><circle cx="38" cy="35" r="1.6"/><ellipse cx="32" cy="43" rx="6" ry="4.5"/></symbol>
     <symbol id="i-tirelire" viewBox="0 0 64 64"><path d="M14 30c0-9 8-14 18-14s18 5 18 14c0 6-3 10-8 12v8h-8v-4H28v4h-8v-8c-4-2-6-6-6-12z"/><path d="M50 26l6-2v8l-6-1"/><circle cx="40" cy="28" r="1.5"/><path d="M26 16h12M44 14l4-6"/></symbol>
     <symbol id="i-reserve" viewBox="0 0 64 64"><path d="M10 52L20 12h24l10 40z"/><path d="M24 26h16M22 36h20"/></symbol>
     <symbol id="i-wifi" viewBox="0 0 64 64"><path d="M8 26a34 34 0 0148 0M16 35a22 22 0 0132 0M24 44a10 10 0 0116 0"/><circle cx="32" cy="52" r="2.6"/></symbol>
@@ -2638,6 +2639,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un marque-page fin avec son prénom sur la tête large et une petite étoile. La languette se glisse entre les pages.' },
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
       d: 'Les lettres de son prénom, épaisses, qui tiennent debout sur un petit socle : à poser sur une étagère ou une commode. La hauteur des lettres dépend de la longueur du prénom.' },
+    'c-nounours': { t: 'Nounours à bougie LED', s: 'Nounours à bougie LED', one: 'nounours à bougie LED', many: 'nounours à bougie LED', ref: 'D5', dims: '9 cm de large, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-nounours', who: 'couples, chambres, cadeaux',
+      d: 'Un nounours à poser sur une bougie LED, avec vos prénoms sur le ventre : la lumière passe par le cœur découpé. Le dessous est ouvert pour glisser la bougie. Bougie LED à piles (non fournie), jamais de vraie flamme sous le plastique.' },
     tirelire: { t: 'Tirelire cochon', s: 'Tirelire cochon', one: 'tirelire cochon', many: 'tirelires cochon', ref: 'B3', dims: '13 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-tirelire', who: 'enfants, naissances, cadeaux',
       d: 'Un cochon avec son prénom sur le flanc et une fente pour les pièces sur le dos. Imprimé d’un seul bloc : un bouchon rond sous le ventre se retire pour sortir l’argent, sans rien casser.' },
     reserve: { t: 'Panneau Réservé', s: 'Panneau Réservé', one: 'panneau Réservé', many: 'panneaux Réservé', ref: 'R1', dims: '112 × 54 mm', max: 'jusqu’à 170 mm de large', q: 6, ico: 'i-reserve', who: 'restaurants, bars, hôtels, salles de réception',
@@ -2730,7 +2733,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'prenom-volume': [12.9, 8.9, 8.2, 7.9, 7.5],
     'prenom-volume:m': [17.9, 12.5, 11.6, 11.2, 10.8],
     'prenom-volume:l': [23.9, 17.0, 15.9, 15.4, 14.9],
-    tirelire: [19.9, 14.9, 13.9, 13.4, 12.9]
+    tirelire: [19.9, 14.9, 13.9, 13.4, 12.9],
+    'c-nounours': [24.9, 18.9, 17.4, 16.4, 15.5]
   };
   /* un prix qui tombe pile baisse d’un centime (7,00 € devient 6,99 €) */
   /* prix : tous terminés par ,99 (ou ,x9 sous 3 €) et un écart 1 pièce / 10 pièces adouci */
@@ -3715,7 +3719,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     { id: 'g-manette', v3: 1, obj: 1, ml: 12, ph: 'Léo', combos: ['noir-jaune', 'blanc-bleu', 'bleu-jaune', 'noir-rouge'] },
     { id: 'marque-page', v3: 1, obj: 1, ml: 12, ph: 'Chloé', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-jaune', 'noir-jaune'] },
     { id: 'prenom-volume', v3: 1, obj: 1, ml: 9, ph: 'Léa', combos: ['noir-jaune', 'blanc-rouge', 'bleu-jaune', 'sapin-blanc'] },
-    { id: 'tirelire', v3: 1, obj: 1, ml: 10, ph: 'Léa', combos: ['blanc-rouge', 'rouge-blanc', 'jaune-noir', 'gris-noir'] }
+    { id: 'tirelire', v3: 1, obj: 1, ml: 10, ph: 'Léa', combos: ['blanc-rouge', 'rouge-blanc', 'jaune-noir', 'gris-noir'] },
+    { id: 'c-nounours', v3: 1, cp: 1, ml: 12, ph: 'Léa & Noé', combos: ['blanc-rouge', 'rouge-blanc', 'jaune-noir', 'gris-rouge'] }
   ];
   var TOYS_PAUSED = true;   /* jouets en pause : en attente des essais et de la conformité (EN 71) */
   if (TOYS_PAUSED) SHOP = SHOP.filter(function (s) { return !s.toy; });
@@ -5414,6 +5419,40 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* nounours à bougie LED : un corps creux, ouvert dessous, qui se pose sur une bougie LED ; la lumière passe par un cœur découpé sur le ventre.
+     Tête sphérique posée sur le toit (appui ≥ 45°), oreilles plates, bras relevés à 45° : imprimable corps ouvert vers le plateau */
+  function nounours(mat, text) {
+    var g = new THREE.Group(), H = 50, WD = 66, DP = 50, wl = 2.4, DK = propMat('#25282E');
+    var outer = orient(shPaths([rr(new THREE.Shape(), WD, DP, 10)], 10)), inner = orient(shPaths([rr(new THREE.Shape(), WD - 2 * wl, DP - 2 * wl, 7.6)], 10));
+    var cut = orient(cpaths([[[-26, -DP / 2 - 6], [26, -DP / 2 - 6], [26, -DP / 2 + wl + 0.2], [-26, -DP / 2 + wl + 0.2]]]));
+    var ring = tShapes(cexec(ClipperLib.ClipType.ctDifference, outer, inner.concat(cut)));
+    g.add(mk(ext(ring, H, { seg: 8 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), WD, DP, 10)], 2.6, { seg: 10, z0: H - 2.6 }), mat.base));
+    /* ventre : plaque avec un cœur découpé */
+    var pl = rr(new THREE.Shape(), 52, H, 2, 0, H / 2), hp = heartPts(30), ymn = 1e9, ymx = -1e9;
+    hp.forEach(function (q) { ymn = Math.min(ymn, q[1]); ymx = Math.max(ymx, q[1]); });
+    pl.holes.push(new THREE.Path(hp.map(function (q) { return new THREE.Vector2(q[0], q[1] - (ymn + ymx) / 2 + 29); })));
+    g.add(mk(ext([pl], wl + 0.2, { upright: true, seg: 8, z0: DP / 2 - wl - 0.2 }), mat.base));
+    upText(g, mat, text, { maxW: 36, maxH: 8, cap: 6, cx: 0, cy: 0, y: 8, z: DP / 2 - 0.6 });
+    /* tête, museau, yeux, nez, oreilles */
+    var hc = H + 14;
+    put(g, new THREE.SphereGeometry(21, 48, 32), mat.base, 0, hc, 0);
+    var mz = mk(new THREE.SphereGeometry(8.5, 32, 20), mat.relief); mz.scale.z = 0.8; mz.position.set(0, hc - 5.5, 17.6); g.add(mz);
+    [-1, 1].forEach(function (sg) {
+      put(g, new THREE.SphereGeometry(2.6, 20, 14), mat.relief, sg * 7.5, hc + 3, 19.6);
+      put(g, new THREE.CylinderGeometry(7.5, 7.5, 5, 32), mat.base, sg * 15, hc + 14, 1, Math.PI / 2, 0, 0);
+      put(g, new THREE.CylinderGeometry(4.2, 4.2, 1.2, 28), mat.relief, sg * 15, hc + 14, 3.7, Math.PI / 2, 0, 0);
+    });
+    put(g, new THREE.SphereGeometry(3, 20, 14), DK, 0, hc - 3.2, 24.6);
+    /* bras relevés à 45° vers l'extérieur, pattes avant posées devant */
+    [-1, 1].forEach(function (sg) {
+      var ar = mk(new THREE.SphereGeometry(7, 28, 20), mat.base); ar.scale.set(1, 1.9, 1); ar.position.set(sg * 38, 32, 0); ar.rotation.z = -sg * 0.78; g.add(ar);
+      var ft = mk(new THREE.CylinderGeometry(9, 9, 6, 36), mat.base); ft.position.set(sg * 25, 3, 24); g.add(ft);
+      var fc = mk(new THREE.SphereGeometry(9, 36, 18, 0, TAU, 0, Math.PI / 2), mat.base); fc.scale.y = 0.45; fc.position.set(sg * 25, 6, 24); g.add(fc);
+    });
+    return g;
+  }
+
   /* marque-page : une tête large pour le prénom, une languette fine qui se glisse entre les pages */
   function marquePage(text) {
     var head = rr(new THREE.Shape(), 58, 30, 6, 0, 50), strip = rr(new THREE.Shape(), 26, 124, 5, 0, -12);
@@ -5597,6 +5636,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'marque-page': return toGroup(marquePage(T('CHLOÉ')), mat);
       case 'prenom-volume': return prenomVol(mat, T('LÉA'));
       case 'tirelire': return tirelire(mat, T('LÉA'));
+      case 'c-nounours': return nounours(mat, T('LÉA & NOÉ'));
       case 'reserve': return signSocle(mat, T('RÉSERVÉ'), { W: 112, H: 54, cap: 15 });
       case 'wifi': return qr(mat, 'WI-FI');
       case 'badge-nom': return toGroup(badgeNom(T('SOPHIE')), mat);
@@ -6512,6 +6552,7 @@ function A77Studio(THREE, M) {
     'marque-page': { el: 0.84, az: -1.1, c: ['sapin', 'blanc'], aspect: 1.3 },
     'prenom-volume': { el: 0.34, az: -0.4, c: ['noir', 'jaune'], aspect: 1.6 },
     tirelire: { el: 0.28, az: -0.5, c: ['blanc', 'rouge'] },
+    'c-nounours': { el: 0.26, az: -0.45, c: ['blanc', 'rouge'] },
     reserve: { el: 0.3, az: -0.45, c: ['noir', 'jaune'], aspect: 1.3 },
     wifi: { el: 0.3, az: -0.5, c: ['blanc', 'noir'] },
     'badge-nom': { el: 0.84, az: -0.3, c: ['noir', 'blanc'], aspect: 1.6 },
