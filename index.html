@@ -3982,6 +3982,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   function closeCard() {
     if (!spOpen) return;
     var a = spOpen; a.classList.remove('is-open');
+    $$('.cpick', a).forEach(function (p) { p.hidden = true; }); $$('.cmore', a).forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
     if (spPh && spPh.parentNode) { spPh.parentNode.insertBefore(a, spPh); spPh.parentNode.removeChild(spPh); }
     spOpen = null; spPh = null; spHost.hidden = true; document.documentElement.classList.remove('sp-lock');
     if (spFocus && spFocus.focus) try { spFocus.focus({ preventScroll: true }); } catch (x) { /* sans effet */ }
