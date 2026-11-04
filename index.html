@@ -1314,9 +1314,12 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
 .steps-list h3 { font-size: 1.08rem; letter-spacing: -.015em; line-height: 1.2; padding-top: 6px; }
 .steps-list p { margin-top: 4px; color: var(--ink-2); font-size: .95rem; line-height: 1.45; }
 .steps-note { margin-top: 14px; color: var(--ink-2); font-size: .95rem; }
+.steps-list { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); }
+#comment.steps { padding-block: 0 clamp(44px, 5.5vw, 80px); }
+html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !important; }
 .steps-note a { font-weight: 650; color: var(--ink); text-underline-offset: 3px; }
-@media (max-width: 760px) {
-  .steps-list { grid-template-columns: minmax(0, 1fr); padding: 18px; }
+@media (max-width: 1099px) {
+  .steps-list { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); padding: 18px; }
   .steps-list li { padding: 0 0 16px; }
   .steps-list li + li { padding-left: 0; border-left: 0; }
   .steps-list li:last-child { padding-bottom: 0; }
@@ -1558,17 +1561,6 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
     </div>
   </section>
 
-  <section class="steps only-part" id="comment" aria-labelledby="t-comment">
-    <div class="wrap">
-      <h2 class="steps-h" id="t-comment">Comment commander</h2>
-      <ol class="steps-list">
-        <li><b>1</b><div><h3>Choisissez et écrivez</h3><p>Un objet, votre texte, vos couleurs. L’aperçu 3D vous montre le résultat.</p></div></li>
-        <li><b>2</b><div><h3>Envoyez votre panier</h3><p>En un message, depuis le panier. Rien à payer sur le site.</p></div></li>
-        <li><b>3</b><div><h3>Je confirme et j’imprime</h3><p>Je vous confirme le prix, le délai et le paiement, puis je vous remets la commande en main propre ou par colis.</p></div></li>
-      </ol>
-    </div>
-  </section>
-
   <section class="sec sec-shop only-part" id="boutique" aria-labelledby="t-shop">
     <div class="wrap">
       <div class="shop-head">
@@ -1587,7 +1579,20 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
       <div class="shop-grid" id="shop-grid2"></div>
       <h3 class="shop-sub" id="b-packs">Les packs<small>Plusieurs objets assortis, mêmes couleurs et mêmes prénoms partout, en un seul clic.</small></h3>
       <div class="pk-grid" id="shop-packs"></div>
-      <p class="shop-note">Prix par pièce, dégressifs à partir de 10 pièces du même modèle. Une grosse commande, un logo, une série pour votre entreprise ? <a href="#devis" data-mode-go="pro">Demandez un devis</a>. Envie d’un modèle unique ? <a href="#creer">Dessinez-le vous-même</a>. Une autre idée ? <a data-mail-special href="#boutique">Écrivez-moi</a>.</p>
+      <p class="shop-note">Prix par pièce, dégressifs à partir de 10 pièces du même modèle. Une grosse commande, un logo, une série pour votre entreprise ? <a href="#devis" data-mode-go="pro">Demandez un devis</a>. Envie d’un modèle unique ? <a href="#creer">Dessinez-le vous-même</a>. Une autre idée ? <a data-mail-special href="#boutique">Écrivez-nous</a>.</p>
+    </div>
+  </section>
+
+  <section class="steps only-part" id="comment" aria-labelledby="t-comment">
+    <div class="wrap">
+      <h2 class="steps-h" id="t-comment">Comment commander</h2>
+      <ol class="steps-list">
+        <li><b>1</b><div><h3>Choisissez et personnalisez</h3><p>Un objet, votre texte, vos couleurs. L’aperçu 3D vous montre le résultat.</p></div></li>
+        <li class="pay-off-only"><b>2</b><div><h3>Envoyez votre commande</h3><p>En un message, depuis le panier. Le paiement en ligne arrive bientôt.</p></div></li>
+        <li class="pay-on-only"><b>2</b><div><h3>Payez en ligne</h3><p>Directement sur le site, au moment de commander.</p></div></li>
+        <li><b>3</b><div><h3>Recevez l’aperçu 3D</h3><p>On vous envoie l’aperçu 3D de votre pièce avant de l’imprimer.</p></div></li>
+        <li><b>4</b><div><h3>On imprime et on livre</h3><p>Votre pièce est imprimée, puis remise en main propre ou envoyée par colis.</p></div></li>
+      </ol>
     </div>
   </section>
 
@@ -1614,8 +1619,8 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
       <h2 class="steps-h" id="t-pro">Votre devis en trois étapes</h2>
       <ol class="steps-list">
         <li><b>1</b><div><h3>Choisissez vos objets</h3><p>Ajoutez-les à votre demande de devis, avec une photo de votre logo.</p></div></li>
-        <li><b>2</b><div><h3>Recevez la maquette</h3><p>Je vous envoie une maquette 3D, le prix et le délai. Gratuit et sans engagement.</p></div></li>
-        <li><b>3</b><div><h3>Validez, je fabrique</h3><p>J’imprime la série à vos couleurs et je vous la livre en main propre ou par colis.</p></div></li>
+        <li><b>2</b><div><h3>Recevez la maquette</h3><p>On vous envoie une maquette 3D, le prix et le délai. Gratuit et sans engagement.</p></div></li>
+        <li><b>3</b><div><h3>Validez, on fabrique</h3><p>On imprime la série à vos couleurs et on vous la livre en main propre ou par colis.</p></div></li>
       </ol>
       <p class="steps-note">Juste quelques pièces, sans logo&nbsp;? <a href="#boutique" data-mode-go="part">La boutique</a> est plus rapide.</p>
     </div>
@@ -2038,13 +2043,13 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
       <div class="who">
         <h2 id="t-atelier">À propos de Noméo</h2>
         <p class="big">Noméo est un atelier d’objets personnalisés imprimés en 3D.</p>
-        <p>L’idée est simple&nbsp;: un prénom, un logo ou un message rend un objet unique. Porte-clés, plaques, supports, décorations, cadeaux ou objets pour votre boutique&nbsp;: je les dessine, je les imprime et je les prépare moi-même, une pièce ou une série à la fois.</p>
-        <p>Vous parlez toujours à la même personne, du premier message jusqu’à la livraison&nbsp;: je réponds à vos questions, je prépare le devis, je lance l’impression et je vous remets la commande.</p>
-        <p>L’impression 3D n’a pas besoin de moule&nbsp;: on peut fabriquer une pièce comme cent, et chaque série est faite pour vous. Un doute, une idée, un logo à tester&nbsp;? Écrivez-moi, c’est gratuit et sans engagement.</p>
+        <p>L’idée est simple&nbsp;: un prénom, un logo ou un message rend un objet unique. Porte-clés, plaques, supports, décorations, cadeaux ou objets pour votre boutique&nbsp;: on les dessine, on les imprime et on les prépare nous-mêmes, une pièce ou une série à la fois.</p>
+        <p>Vous avez toujours le même interlocuteur, du premier message jusqu’à la livraison&nbsp;: les questions, le devis, l’impression et la remise de la commande.</p>
+        <p>L’impression 3D n’a pas besoin de moule&nbsp;: on peut fabriquer une pièce comme cent, et chaque série est faite pour vous. Un doute, une idée, un logo à tester&nbsp;? Écrivez-nous, c’est gratuit et sans engagement.</p>
       </div>
       <div class="how about-contact">
         <h3>Une question, une idée&nbsp;?</h3>
-        <p>Écrivez-moi, par e-mail ou en message privé.</p>
+        <p>Écrivez-nous, par e-mail ou en message privé.</p>
         <dl class="contacts" data-contacts></dl>
       </div>
     </div>
@@ -2054,9 +2059,9 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
     <div class="wrap">
       <h2 id="t-questions">Questions fréquentes</h2>
       <div class="faq">
-        <details class="qa only-part"><summary>Comment je paie&nbsp;?</summary><p>Rien à payer sur le site. Vous m’envoyez votre panier, je vous confirme le prix et le délai, et on convient ensemble du moyen de paiement.</p></details>
-        <details class="qa only-part"><summary>Quand vais-je recevoir ma commande&nbsp;?</summary><p>Je vous donne le délai en confirmant la commande. Pour Noël, commandez avant la date limite indiquée en haut de la boutique.</p></details>
-        <details class="qa only-part"><summary>L’objet ressemble-t-il à l’aperçu&nbsp;?</summary><p>Oui, l’aperçu 3D est fidèle à l’objet imprimé. Seules les teintes peuvent varier légèrement par rapport à votre écran.</p></details>
+        <details class="qa only-part"><summary>Comment je paie&nbsp;?</summary><p class="pay-off-only">Le paiement en ligne arrive bientôt. En attendant, envoyez-nous votre panier&nbsp;: on vous confirme le prix et le délai, et on convient ensemble du moyen de paiement.</p><p class="pay-on-only">En ligne, directement sur le site, au moment de commander.</p></details>
+        <details class="qa only-part"><summary>Quand vais-je recevoir ma commande&nbsp;?</summary><p>On vous donne le délai en confirmant la commande. Pour Noël, commandez avant la date limite indiquée en haut de la boutique.</p></details>
+        <details class="qa only-part"><summary>L’objet ressemble-t-il à l’aperçu&nbsp;?</summary><p>Oui, l’aperçu 3D est fidèle à l’objet imprimé, et on vous envoie celui de votre pièce avant de l’imprimer. Seules les teintes peuvent varier légèrement par rapport à votre écran.</p></details>
         <details class="qa only-part"><summary>Puis-je modifier ou annuler&nbsp;?</summary><p>Oui, tant que l’impression n’a pas commencé&nbsp;: un simple message suffit. Ensuite, l’objet étant fait à votre nom, il ne peut plus être annulé.</p></details>
         <details class="qa only-pro"><summary>Combien ça coûte&nbsp;?</summary><p>Ça dépend de la taille, du temps d’impression et de la quantité. Les prix de base sont dans «&nbsp;Les tarifs&nbsp;», et le devis est gratuit&nbsp;: vous connaissez le prix avant de valider.</p></details>
         <details class="qa only-pro"><summary>Combien de temps faut-il&nbsp;?</summary><p>Le délai dépend du modèle et du nombre de pièces, il est indiqué sur le devis. Si vous avez une date d’événement, dites-la-nous dès le départ.</p></details>
@@ -2291,7 +2296,7 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
       </div>
       <p class="cart-state" id="c-state" role="status"></p>
       <p class="cart-fine cart-deadline" id="cart-deadline" hidden></p>
-      <p class="cart-fine">Le paiement en ligne arrive bientôt. Pour l’instant, on vous confirme par retour de message la commande, le délai, la livraison et le règlement.</p>
+      <p class="cart-fine">Le paiement en ligne arrive bientôt. Pour l’instant, on vous confirme par retour de message la commande, le délai, la livraison et le règlement, puis on vous envoie l’aperçu 3D de votre pièce avant de l’imprimer.</p>
     </form>
   </div>
 </dialog>
@@ -2341,6 +2346,12 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
     mediateurSite: '',// ex. 'https://www.cm2c.net'
     paiement: ''      // ex. 'virement, espèces ou carte (SumUp) à la remise'
   };
+
+  /* ---------- paiement en ligne ----------
+     À passer à true quand le paiement sur le site sera branché : « Comment commander »
+     et la question « Comment je paie ? » afficheront alors la version « Payez en ligne ». */
+  var PAIEMENT_EN_LIGNE = false;
+  document.documentElement.classList.toggle('pay-on', PAIEMENT_EN_LIGNE);
 
   var FIL = {
     jaune: { n: 'jaune', hex: '#FFC61A' },
@@ -3597,7 +3608,7 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
       '<button type="button" class="btn btn-y sp-open" aria-haspopup="dialog">Personnaliser</button>' +
       (s.two ? '<input class="sp-t" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 1, ex. Léa" aria-label="Premier prénom pour ' + c.one + '" spellcheck="false" autocomplete="off"><input class="sp-t sp-t2" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 2, ex. Noé" aria-label="Second prénom pour ' + c.one + '" spellcheck="false" autocomplete="off">' : '<input class="sp-t" type="text" maxlength="' + (s.ml || A.TEXTML[s.hero] || (s.obj ? 18 : 40)) + '" placeholder="' + (s.logo ? 'Nom du logo, ex. ' : 'Votre texte, ex. ') + s.ph + '" aria-label="' + (s.logo ? 'Nom de votre logo pour ' : 'Texte à écrire sur ') + c.one + '" spellcheck="false" autocomplete="off">') +
       (s.logo ? '' : '<label class="sp-fw"><span>Police</span><select class="sp-f" aria-label="Police d’écriture">' + FONTS.map(function (f) { return '<option value="' + f.k + '">' + f.n + '</option>'; }).join('') + '</select></label>') +
-      (s.logo ? '<p class="sp-n">Vous m’envoyez votre logo par e-mail après la commande.</p>' : '') +
+      (s.logo ? '<p class="sp-n">Vous nous envoyez votre logo par e-mail après la commande.</p>' : '') +
       '<div class="sp-c" role="radiogroup" aria-label="Couleurs">' + s.combos.map(function (v, i) { return chip(v, i === 0, 'sc-' + s.id); }).join('') + '</div>' +
       '<div class="sp-b"><div class="stepper" role="group" aria-label="Quantité"><button type="button" data-st="-1" aria-label="Une pièce de moins">−</button><input type="number" class="sp-q" value="1" min="1" max="999" inputmode="numeric" aria-label="Quantité"><button type="button" data-st="1" aria-label="Une pièce de plus">+</button></div><button type="button" class="btn btn-y sp-add">Ajouter</button></div>' +
       (s.hero ? '<button type="button" class="sp-3d" data-hero="' + s.id + '">Personnaliser en 3D</button>' : '');
