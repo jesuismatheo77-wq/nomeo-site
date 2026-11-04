@@ -2613,9 +2613,9 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-cimier': { t: 'Étoile de cimier', s: 'Étoile de cimier', one: 'étoile de cimier', many: 'étoiles de cimier', ref: 'N7', dims: '12 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-cimier', who: 'particuliers, familles, restaurants, commerces',
       d: 'Une grande étoile pour le haut du sapin, avec le texte de votre choix en relief. Une douille dessous s’enfile sur la pointe de l’arbre.' },
     'g-casque': { t: 'Support de casque gamer', s: 'Support de casque', one: 'support de casque', many: 'supports de casque', ref: 'G1', dims: '15 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-casque', who: 'joueurs, ados, cadeaux',
-      d: 'Un socle stable et un bras arrondi sur lequel on pose l’arceau du casque. Votre pseudo est écrit sur le socle. Le casque de la photo n’est pas fourni.' },
-    'g-manette': { t: 'Support de manette', s: 'Support de manette', one: 'support de manette', many: 'supports de manette', ref: 'G2', dims: '12 × 8 cm, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-manette', who: 'joueurs, ados, cadeaux',
-      d: 'Deux bras en crochet qui reçoivent les poignées de la manette, sur un socle à votre pseudo. Le bureau reste rangé, la manette ne traîne plus par terre. La manette de la photo n’est pas fournie.' },
+      d: 'Un socle stable et un mât qui s’évase en un bras : l’arceau du casque se pose en travers, les écouteurs pendent de chaque côté. Votre pseudo est écrit sur le socle. Le casque de la photo n’est pas fourni.' },
+    'g-manette': { t: 'Support de manette', s: 'Support de manette', one: 'support de manette', many: 'supports de manette', ref: 'G2', dims: '15 × 8 cm, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-manette', who: 'joueurs, ados, cadeaux',
+      d: 'Un plateau, un rebord devant et un dossier derrière : la manette se pose debout sur ses poignées et ne bascule pas. Votre pseudo est écrit sur le rebord. La manette de la photo n’est pas fournie.' },
     'marque-page': { t: 'Marque-page à son prénom', s: 'Marque-page', one: 'marque-page', many: 'marque-pages', ref: 'B1', dims: '14 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-marque-page', who: 'lecteurs, enfants, classes, cadeaux',
       d: 'Un marque-page fin avec son prénom sur la tête large et une petite étoile. La languette se glisse entre les pages.' },
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
@@ -5294,51 +5294,65 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
-  /* support de casque : socle, mât et bras arrondi sur lequel on pose l'arceau */
+  /* support de casque : un mât qui s'évase à 45° en un bras posé en travers (de l'avant à l'arrière) ;
+     l'arceau du casque se pose en travers de ce bras, les deux écouteurs pendent de chaque côté du mât */
   function casque(mat, text) {
     var g = new THREE.Group();
     g.add(mk(ext([rr(new THREE.Shape(), 100, 92, 16)], 7, { bevel: 1.2, seg: 20 }), mat.base));
-    var tp = poly(new THREE.Shape(), [[-7, 6], [7, 6], [7, 96], [37, 126], [44, 138], [40, 148], [24, 142], [0, 138], [-24, 142], [-40, 148], [-44, 138], [-37, 126], [-7, 96]]);
-    var tg = new THREE.ExtrudeGeometry([tp], { depth: 16 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
-    tg.translate(0, 0, -15.2); g.add(mk(tg, mat.base));
+    var tp = poly(new THREE.Shape(), [[-7, 6], [7, 6], [7, 92], [36, 121], [44, 133], [41, 143], [22, 139], [0, 137], [-22, 139], [-41, 143], [-44, 133], [-36, 121], [-7, 92]]);
+    var tg = new THREE.ExtrudeGeometry([tp], { depth: 18 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
+    tg.translate(0, 0, -9 + 0.0); tg.rotateY(-Math.PI / 2); tg.translate(0, 0, -8);
+    g.add(mk(tg, mat.base));
     layout(text, { maxW: 76, maxH: 12, cap: 9, cx: 0, cy: -33 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 6.98 }), mat.relief));
     });
-    /* le casque posé dessus (illustration, non fourni) */
+    /* le casque (illustration, non fourni) : arceau en travers du bras, écouteurs qui pendent */
     var P = propMat('#B9BEC6'), D = propMat('#4A4E57');
-    var hb = new THREE.CatmullRomCurve3([[-62, 112], [-58, 134], [-40, 152], [-18, 158], [0, 159], [18, 158], [40, 152], [58, 134], [62, 112]].map(function (p) { return new THREE.Vector3(p[0], p[1], -8); }));
-    g.add(mk(new THREE.TubeGeometry(hb, 56, 5, 12, false), P));
+    var hb = new THREE.CatmullRomCurve3([[-64, 104], [-60, 126], [-42, 143], [-18, 150], [0, 152], [18, 150], [42, 143], [60, 126], [64, 104]].map(function (p) { return new THREE.Vector3(p[0], p[1], 0); }));
+    var band = mk(new THREE.TubeGeometry(hb, 64, 4.2, 12, false), P);
+    band.scale.z = 6; band.position.z = -8; g.add(band);
     [-1, 1].forEach(function (sg) {
-      put(g, new THREE.CylinderGeometry(25, 25, 20, 48), P, sg * 70, 94, -8, 0, 0, Math.PI / 2);
-      put(g, new THREE.CylinderGeometry(22, 22, 8, 48), D, sg * 56, 94, -8, 0, 0, Math.PI / 2);
+      put(g, new THREE.CylinderGeometry(26, 26, 22, 56), P, sg * 71, 82, -8, 0, 0, Math.PI / 2);
+      put(g, new THREE.CylinderGeometry(23, 23, 8, 56), D, sg * 57, 82, -8, 0, 0, Math.PI / 2);
     });
     return g;
   }
 
-  /* support de manette : un socle et deux bras en J qui reçoivent les poignées */
+  /* manette PS5 (DualSense), debout, face au client : coque blanche, face noire, pavé tactile, sticks, croix et boutons */
+  function dualsense(P) {
+    var pad = new THREE.Group(), W = propMat('#EEF0F4'), K = propMat('#22252B'), G = propMat('#CDD1D8'), Dk = propMat('#14161A');
+    var half = [[0, 100], [28, 103], [50, 100], [64, 92], [74, 78], [80, 60], [80, 40], [75, 20], [66, 6], [55, 0], [46, 5], [41, 17], [35, 27], [22, 33], [0, 35]];
+    var loop = half.map(function (p) { return [p[0], p[1]]; }).concat(half.slice(1, -1).reverse().map(function (p) { return [-p[0], p[1]]; }));
+    var curve = new THREE.CatmullRomCurve3(loop.map(function (p) { return new THREE.Vector3(p[0], p[1], 0); }), true);
+    var pts = curve.getPoints(260).map(function (v) { return new THREE.Vector2(v.x, v.y); });
+    var shell = new THREE.ExtrudeGeometry([new THREE.Shape(pts)], { depth: 30, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 11, bevelSize: 11, bevelOffset: -11, bevelSegments: 7 });
+    shell.translate(0, 0, -15);
+    pad.add(mk(shell, W));
+    var face = new THREE.ExtrudeGeometry([new THREE.Shape(pts.map(function (v) { return new THREE.Vector2(v.x * 0.8, 60 + (v.y - 60) * 0.8); }))], { depth: 2, steps: 1, curveSegments: 4, bevelEnabled: false });
+    face.translate(0, 0, 25);
+    pad.add(mk(face, K));
+    var tp = new THREE.ExtrudeGeometry([rr(new THREE.Shape(), 54, 20, 7, 0, 80)], { depth: 1.2, steps: 1, curveSegments: 10, bevelEnabled: false });
+    tp.translate(0, 0, 26.6); pad.add(mk(tp, G));
+    [-1, 1].forEach(function (sg) {
+      put(pad, new THREE.CylinderGeometry(12.5, 12.5, 3, 36), Dk, sg * 22, 38, 27.5, Math.PI / 2, 0, 0);
+      put(pad, new THREE.CylinderGeometry(9.5, 9.5, 9, 36), K, sg * 22, 38, 31, Math.PI / 2, 0, 0);
+    });
+    var cross = function (cx, cy) { put(pad, new THREE.BoxGeometry(24, 8, 3.4), W, cx, cy, 28); put(pad, new THREE.BoxGeometry(8, 24, 3.4), W, cx, cy, 28); };
+    cross(-50, 62);
+    [[50, 74, '#7BC043'], [50, 50, '#2552D6'], [38, 62, '#F28BB5'], [62, 62, '#D7332A']].forEach(function (b) { put(pad, new THREE.CylinderGeometry(5.2, 5.2, 3, 24), propMat(b[2]), b[0], b[1], 27.8, Math.PI / 2, 0, 0); });
+    put(pad, new THREE.CylinderGeometry(3.4, 3.4, 2.6, 20), W, 0, 56, 27.6, Math.PI / 2, 0, 0);
+    return pad;
+  }
+
+  /* support de manette : un plateau, un rebord devant, un dossier derrière ; la manette tient debout sur ses poignées */
   function manette(mat, text) {
     var g = new THREE.Group();
-    g.add(mk(ext([rr(new THREE.Shape(), 118, 78, 14)], 6, { bevel: 1.2, seg: 20 }), mat.base));
-    var arm = poly(new THREE.Shape(), [[-7, 0], [7, 0], [7, 52], [27, 72], [27, 86], [9, 86], [-2, 76], [-7, 62]]);
-    [-1, 1].forEach(function (sg) {
-      var shp = sg > 0 ? arm : poly(new THREE.Shape(), [[7, 0], [-7, 0], [-7, 52], [-27, 72], [-27, 86], [-9, 86], [2, 76], [7, 62]]);
-      var geo = new THREE.ExtrudeGeometry([shp], { depth: 14 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
-      geo.translate(sg * -37, 5.8, -7 + 0.8 - 6);
-      g.add(mk(geo, mat.base));
-    });
-    layout(text, { maxW: 90, maxH: 12, cap: 9, cx: 0, cy: -29 }).items.forEach(function (it) {
-      g.add(mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 5.98 }), mat.relief));
-    });
-    /* la manette posée sur les crochets, poignées de chaque côté des bras (illustration, non fournie) */
-    var P = propMat('#D5D8DE'), D = propMat('#4A4E57');
-    put(g, new THREE.SphereGeometry(1, 48, 32), P, 0, 101, -6).scale.set(60, 15, 33);
-    [-1, 1].forEach(function (sg) {
-      put(g, new THREE.CylinderGeometry(11, 12.5, 46, 32), P, sg * 55, 82, -6, 0, 0, sg * 0.28);
-      put(g, new THREE.SphereGeometry(12.5, 28, 18), P, sg * 61.4, 60, -6);
-    });
-    put(g, new THREE.CylinderGeometry(7, 7, 5, 28), D, -26, 114, -2);
-    put(g, new THREE.CylinderGeometry(7, 7, 5, 28), D, 12, 113.5, 10);
-    [[30, -12], [38, -4], [30, 4], [22, -4]].forEach(function (b) { put(g, new THREE.CylinderGeometry(3.4, 3.4, 4, 20), mat.relief, b[0], 114, b[1] - 4); });
+    g.add(mk(ext([rr(new THREE.Shape(), 150, 78, 12)], 6, { bevel: 1.2, seg: 20 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 124, 88, 8, 0, 44)], 8, { upright: true, bevel: 0.8, seg: 14, z0: -31 }), mat.base));
+    g.add(mk(ext([rr(new THREE.Shape(), 124, 15, 4, 0, 7.5)], 7, { upright: true, bevel: 0.6, seg: 10, z0: 30 }), mat.base));
+    upText(g, mat, text, { maxW: 100, maxH: 8, cap: 6.5, cx: 0, cy: 0, y: 7, z: 36.4 });
+    var pad = dualsense(mat); pad.scale.z = 0.62; pad.position.set(0, 6, 2);
+    g.add(pad);
     return g;
   }
 
