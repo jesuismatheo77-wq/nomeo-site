@@ -5475,11 +5475,14 @@ function A77Models(THREE, fontData, allFonts) {
     hv.forEach(function (q) { hmn = Math.min(hmn, q[1]); hmx = Math.max(hmx, q[1]); });
     g.add(mk(ext([new THREE.Shape(hv.map(function (q) { return new THREE.Vector2(q[0], q[1]); }))], 1.8, { upright: true, bevel: 0.5, seg: 14, dx: 0, dy: 22 - (hmn + hmx) / 2, z0: 22.6 }), mat.relief));
     el(mat.base, 7, 7, 7, 0, 12, -22, 0, 0, 0, 24);
-    /* jambes tendues devant, plantes des pieds et orteils dans la couleur d'accent */
+    /* jambes tendues devant, pieds ovales avec coussinet et quatre orteils (même couleur, modelés en relief) */
     [-1, 1].forEach(function (sg) {
-      el(mat.base, 11, 9, 16, sg * 15, 10, 20, 0.0, sg * -0.22, 0, 40);
-      el(mat.relief, 6.5, 7.5, 1.8, sg * 16, 12, 34.6, 0, sg * -0.22, 0, 28);
-      [[-4.8, 19.4], [0, 21.8], [4.8, 19.4]].forEach(function (t) { el(mat.relief, 2.3, 2.3, 2, sg * 16 + t[0], t[1] - 1.4, 34.2, 0, 0, 0, 14); });
+      el(mat.base, 11, 9, 15, sg * 15.5, 10, 19, 0.0, sg * -0.18, 0, 40);
+      el(mat.base, 9, 10.5, 6.2, sg * 16.5, 13.2, 29.8, -0.18, sg * -0.18, 0, 44);
+      el(mat.base, 5.4, 6, 1.7, sg * 16.5, 10.6, 35.3, -0.18, sg * -0.18, 0, 32);
+      [[-5.6, 18.4], [-1.9, 21.2], [1.9, 21.2], [5.6, 18.4]].forEach(function (t) {
+        el(mat.base, 2.5, 3, 2.2, sg * 16.5 + t[0], t[1] - 1.2, 33.2, -0.18, 0, 0, 22);
+      });
     });
     /* bras gauche collé au corps, bras droit levé qui tient le cordon ; pattes arrondies */
     el(mat.base, 8, 15, 8, -22, 35, 7, 0, 0, -0.35, 40);
