@@ -2612,10 +2612,10 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Le texte de votre choix en relief, livrée avec son fil doré pour l’attacher au cadeau.' },
     'noel-cimier': { t: 'Étoile de cimier', s: 'Étoile de cimier', one: 'étoile de cimier', many: 'étoiles de cimier', ref: 'N7', dims: '12 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-cimier', who: 'particuliers, familles, restaurants, commerces',
       d: 'Une grande étoile pour le haut du sapin, avec le texte de votre choix en relief. Une douille dessous s’enfile sur la pointe de l’arbre.' },
-    'g-casque': { t: 'Support de casque gamer', s: 'Support de casque', one: 'support de casque', many: 'supports de casque', ref: 'G1', dims: '17 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-casque', who: 'joueurs, ados, cadeaux',
-      d: 'Un socle stable et un bras arrondi sur lequel on pose l’arceau du casque. Votre pseudo est écrit sur le socle.' },
+    'g-casque': { t: 'Support de casque gamer', s: 'Support de casque', one: 'support de casque', many: 'supports de casque', ref: 'G1', dims: '15 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-casque', who: 'joueurs, ados, cadeaux',
+      d: 'Un socle stable et un bras arrondi sur lequel on pose l’arceau du casque. Votre pseudo est écrit sur le socle. Le casque de la photo n’est pas fourni.' },
     'g-manette': { t: 'Support de manette', s: 'Support de manette', one: 'support de manette', many: 'supports de manette', ref: 'G2', dims: '12 × 8 cm, 9 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-manette', who: 'joueurs, ados, cadeaux',
-      d: 'Deux bras en crochet qui reçoivent les poignées de la manette, sur un socle à votre pseudo. Le bureau reste rangé, la manette ne traîne plus par terre.' },
+      d: 'Deux bras en crochet qui reçoivent les poignées de la manette, sur un socle à votre pseudo. Le bureau reste rangé, la manette ne traîne plus par terre. La manette de la photo n’est pas fournie.' },
     'marque-page': { t: 'Marque-page à son prénom', s: 'Marque-page', one: 'marque-page', many: 'marque-pages', ref: 'B1', dims: '14 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-marque-page', who: 'lecteurs, enfants, classes, cadeaux',
       d: 'Un marque-page fin avec son prénom sur la tête large et une petite étoile. La languette se glisse entre les pages.' },
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
@@ -5278,6 +5278,8 @@ function A77Models(THREE, fontData, allFonts) {
     g.add(m);
     return m;
   }
+  var PROPM = {};   /* matières neutres des objets montrés à titre d'illustration (casque, manette) */
+  function propMat(hex) { return PROPM[hex] || (PROPM[hex] = new THREE.MeshStandardMaterial({ color: new THREE.Color(hex).convertSRGBToLinear(), roughness: 0.55, side: THREE.DoubleSide })); }
   function orient(paths) { return paths.map(function (pp) { return ClipperLib.Clipper.Orientation(pp) ? pp : pp.slice().reverse(); }); }
 
   /* étoile de cimier : une grande étoile debout sur une douille qui s'enfile sur la pointe du sapin */
@@ -5302,6 +5304,14 @@ function A77Models(THREE, fontData, allFonts) {
     layout(text, { maxW: 76, maxH: 12, cap: 9, cx: 0, cy: -33 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 6.98 }), mat.relief));
     });
+    /* le casque posé dessus (illustration, non fourni) */
+    var P = propMat('#B9BEC6'), D = propMat('#4A4E57');
+    var hb = new THREE.CatmullRomCurve3([[-62, 112], [-58, 134], [-40, 152], [-18, 158], [0, 159], [18, 158], [40, 152], [58, 134], [62, 112]].map(function (p) { return new THREE.Vector3(p[0], p[1], -8); }));
+    g.add(mk(new THREE.TubeGeometry(hb, 56, 5, 12, false), P));
+    [-1, 1].forEach(function (sg) {
+      put(g, new THREE.CylinderGeometry(25, 25, 20, 48), P, sg * 70, 94, -8, 0, 0, Math.PI / 2);
+      put(g, new THREE.CylinderGeometry(22, 22, 8, 48), D, sg * 56, 94, -8, 0, 0, Math.PI / 2);
+    });
     return g;
   }
 
@@ -5319,6 +5329,16 @@ function A77Models(THREE, fontData, allFonts) {
     layout(text, { maxW: 90, maxH: 12, cap: 9, cx: 0, cy: -29 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 5.98 }), mat.relief));
     });
+    /* la manette posée sur les crochets, poignées de chaque côté des bras (illustration, non fournie) */
+    var P = propMat('#D5D8DE'), D = propMat('#4A4E57');
+    put(g, new THREE.SphereGeometry(1, 48, 32), P, 0, 101, -6).scale.set(60, 15, 33);
+    [-1, 1].forEach(function (sg) {
+      put(g, new THREE.CylinderGeometry(11, 12.5, 46, 32), P, sg * 55, 82, -6, 0, 0, sg * 0.28);
+      put(g, new THREE.SphereGeometry(12.5, 28, 18), P, sg * 61.4, 60, -6);
+    });
+    put(g, new THREE.CylinderGeometry(7, 7, 5, 28), D, -26, 114, -2);
+    put(g, new THREE.CylinderGeometry(7, 7, 5, 28), D, 12, 113.5, 10);
+    [[30, -12], [38, -4], [30, 4], [22, -4]].forEach(function (b) { put(g, new THREE.CylinderGeometry(3.4, 3.4, 4, 20), mat.relief, b[0], 114, b[1] - 4); });
     return g;
   }
 
