@@ -2621,7 +2621,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'prenom-volume': { t: 'Prénom en volume', s: 'Prénom en volume', one: 'prénom en volume', many: 'prénoms en volume', ref: 'B2', dims: '10, 14 ou 17 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-prenom', who: 'chambres d’enfant, naissances, mariages, cadeaux',
       d: 'Les lettres de son prénom, épaisses, qui tiennent debout sur un petit socle : à poser sur une étagère ou une commode. La hauteur des lettres dépend de la longueur du prénom.' },
     tirelire: { t: 'Tirelire cochon', s: 'Tirelire cochon', one: 'tirelire cochon', many: 'tirelires cochon', ref: 'B3', dims: '13 cm de long', max: 'sur mesure sur demande', q: 1, ico: 'i-tirelire', who: 'enfants, naissances, cadeaux',
-      d: 'Un cochon avec son prénom sur le flanc, une fente pour les pièces sur le dos et un bouchon sous le ventre pour les récupérer.' },
+      d: 'Un cochon avec son prénom sur le flanc et une fente pour les pièces sur le dos. Imprimé d’un seul bloc : un bouchon rond sous le ventre se retire pour sortir l’argent, sans rien casser.' },
     reserve: { t: 'Panneau Réservé', s: 'Panneau Réservé', one: 'panneau Réservé', many: 'panneaux Réservé', ref: 'R1', dims: '112 × 54 mm', max: 'jusqu’à 170 mm de large', q: 6, ico: 'i-reserve', who: 'restaurants, bars, hôtels, salles de réception',
       d: 'Un panneau debout pour les tables réservées, avec le mot de votre choix ou le nom du client. Il tient tout seul sur son socle.' },
     wifi: { t: 'Présentoir Wi-Fi', s: 'Présentoir Wi-Fi', one: 'présentoir Wi-Fi', many: 'présentoirs Wi-Fi', ref: 'R2', dims: '90 × 110 mm', max: 'jusqu’à 150 × 170 mm', q: 2, ico: 'i-wifi', who: 'restaurants, bars, hôtels, commerces',
@@ -5347,7 +5347,7 @@ function A77Models(THREE, fontData, allFonts) {
   }
 
   /* tirelire cochon : corps lisse, pattes soudées au corps, vraie fente avec rebord, prénom sur le flanc.
-     Pensé pour s'imprimer en deux moitiés (plan de coupe au milieu) posées à plat. */
+     Imprimé d'un seul bloc, creux, avec un bouchon rond sous le ventre : on le retire pour sortir l'argent (rien à casser). */
   function tirelire(mat, text) {
     var root = new THREE.Group(), g = new THREE.Group(), B = mat.base, R = mat.relief, V = THREE.Vector2;
     g.position.y = -8; root.add(g);
@@ -5382,6 +5382,9 @@ function A77Models(THREE, fontData, allFonts) {
     var lip = rr(new THREE.Shape(), 40, 11, 5.5); lip.holes.push(rr(new THREE.Path(), 30, 4.2, 2.1));
     g.add(mk(ext([lip], 9.8, { bevel: 0.7, seg: 24, dx: -4, z0: 92 }), B));
     g.add(mk(ext([rr(new THREE.Shape(), 30, 4.2, 2.1)], 7.2, { seg: 24, dx: -4, z0: 93 }), R));
+    /* bouchon sous le ventre : disque à bague, qui se retire pour vider la tirelire */
+    var plug = lathe([[0, 0], [17.5, 0], [19, 1.2], [19, 3.2], [20.6, 3.2], [20.6, 5.4], [0, 5.4]], 56);
+    put(g, plug, B, 0, CY - RY - 0.9, 0);
     /* prénom sur le flanc */
     layout(text, { maxW: 46, maxH: 20, cap: 14, cx: -3, cy: 57 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 11.8, { upright: true, bevel: 0.3, bseg: 1, seg: 8, dx: it.dx, dy: it.dy, z0: 30 }), R));
