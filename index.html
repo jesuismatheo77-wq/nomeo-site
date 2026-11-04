@@ -4879,18 +4879,18 @@ function A77Models(THREE, fontData, allFonts) {
     s = s || 1;
     var W = 70 * s, hp = heartPts(W), t = clean(text) || 'LÉA & NOÉ 2026';
     var lay = layoutAuto(t, { maxW: W * 0.5, maxH: W * 0.26, cap: 8 * s, cx: 0, cy: W * 0.04 });
-    var T = 10 * s, RM = 9 * s, NS = 14, k;
+    var T = 14 * s, RM = 8 * s, NS = 14, k;
     var top = lobeTop(hp), hx = top[0] * 0.88, hy = top[1] - W * 0.1;
     var heart = orient(cpaths([hp])), holeP = cpaths([circPts(hx, hy, 2.0, 24)]);
     var geos = [], caps = [], baseS;
-    /* vrai cœur bombé : tranches empilées dont le contour rentre en suivant un quart de cercle (bords arrondis, sommet plat pour le prénom) */
+    /* vrai cœur bombé des deux côtés, sans face plate : tranches empilées dont le contour rentre en suivant un quart de cercle (bords arrondis, sommet plat pour le prénom) */
     for (k = 1; k <= NS; k++) {
-      var th = k / NS * Math.PI / 2, d = RM * (1 - Math.cos(th)), hh = T * Math.sin(th);
+      var th = k / NS * Math.PI / 2, d = RM * (1 - Math.cos(th)), hh = T / 2 * Math.sin(th);
       var off = d < 0.01 ? heart : orient(cOffset(heart, -d));
       var cut = cexec(ClipperLib.ClipType.ctDifference, off, holeP);
       var shp = tShapes(cut);
       if (!shp.length) continue;
-      geos.push(ext(shp, hh, { seg: 18 }));
+      geos.push(ext(shp, 2 * hh, { seg: 18, z0: T / 2 - hh }));
       if (k === 1) baseS = shp;
     }
     caps.push(capGeo(baseS, { seg: 18 }));
