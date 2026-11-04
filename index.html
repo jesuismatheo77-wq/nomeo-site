@@ -5296,10 +5296,9 @@ function A77Models(THREE, fontData, allFonts) {
   function casque(mat, text) {
     var g = new THREE.Group();
     g.add(mk(ext([rr(new THREE.Shape(), 100, 92, 16)], 7, { bevel: 1.2, seg: 20 }), mat.base));
-    g.add(cylY(8, 8, 118, mat.base, 0, 5, -8, 28));
-    var cr = new THREE.CatmullRomCurve3([[-40, 140], [-24, 128], [0, 123], [24, 128], [40, 140]].map(function (p) { return new THREE.Vector3(p[0], p[1], -8); }));
-    g.add(mk(new THREE.TubeGeometry(cr, 32, 7, 14, false), mat.base));
-    [-40, 40].forEach(function (x) { put(g, new THREE.SphereGeometry(7, 18, 12), mat.base, x, 140, -8); });
+    var tp = poly(new THREE.Shape(), [[-7, 6], [7, 6], [7, 96], [37, 126], [44, 138], [40, 148], [24, 142], [0, 138], [-24, 142], [-40, 148], [-44, 138], [-37, 126], [-7, 96]]);
+    var tg = new THREE.ExtrudeGeometry([tp], { depth: 16 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
+    tg.translate(0, 0, -15.2); g.add(mk(tg, mat.base));
     layout(text, { maxW: 76, maxH: 12, cap: 9, cx: 0, cy: -33 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: 6.98 }), mat.relief));
     });
@@ -5310,9 +5309,9 @@ function A77Models(THREE, fontData, allFonts) {
   function manette(mat, text) {
     var g = new THREE.Group();
     g.add(mk(ext([rr(new THREE.Shape(), 118, 78, 14)], 6, { bevel: 1.2, seg: 20 }), mat.base));
-    var arm = poly(new THREE.Shape(), [[-7, 0], [7, 0], [7, 54], [13, 68], [27, 74], [27, 86], [9, 86], [-2, 76], [-7, 62]]);
+    var arm = poly(new THREE.Shape(), [[-7, 0], [7, 0], [7, 52], [27, 72], [27, 86], [9, 86], [-2, 76], [-7, 62]]);
     [-1, 1].forEach(function (sg) {
-      var shp = sg > 0 ? arm : poly(new THREE.Shape(), [[7, 0], [-7, 0], [-7, 54], [-13, 68], [-27, 74], [-27, 86], [-9, 86], [2, 76], [7, 62]]);
+      var shp = sg > 0 ? arm : poly(new THREE.Shape(), [[7, 0], [-7, 0], [-7, 52], [-27, 72], [-27, 86], [-9, 86], [2, 76], [7, 62]]);
       var geo = new THREE.ExtrudeGeometry([shp], { depth: 14 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
       geo.translate(sg * -37, 5.8, -7 + 0.8 - 6);
       g.add(mk(geo, mat.base));
