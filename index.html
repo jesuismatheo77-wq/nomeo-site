@@ -5509,10 +5509,13 @@ function A77Models(THREE, fontData, allFonts) {
       el(mat.relief, 4.8, 4.8, 2.2, sg * 13.6, hy + 15.4, hz + 4.7, 0, 0, 0, 28);
     });
     /* cordon épais qui monte de la main jusqu'au nœud sous le ballon */
-    var cv = new THREE.CatmullRomCurve3([[38.4, 73, 6], [39.5, 86, 6], [37.5, 99, 5], [34.5, 109, 4.5], [33, 116, 4], [33, 124, 4]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
+    var cv = new THREE.CatmullRomCurve3([[38.4, 73, 6], [39.5, 86, 6], [37.5, 99, 5], [34.4, 103, 4.8], [33.2, 109, 4.1], [33, 114, 4], [33, 126, 4]].map(function (p) { return new THREE.Vector3(p[0], p[1], p[2]); }));
     g.add(mk(new THREE.TubeGeometry(cv, 48, 3, 12, false), mat.relief));
-    el(mat.relief, 5.4, 4.4, 5.4, 33, 117.2, 4, 0, 0, 0, 24);
-    var nk = mk(new THREE.CylinderGeometry(7.2, 3.8, 10, 32), mat.relief); nk.position.set(33, 122.5, 4); g.add(nk);
+    /* entonnoir : le cordon s'évase en courbe douce (pente ≤ 37°) et s'enfonce dans le ballon, large zone de liaison */
+    var fp = [new THREE.Vector2(0, 109)], fk;
+    for (fk = 0; fk <= 20; fk++) { var ft = fk / 20; fp.push(new THREE.Vector2(3.6 + 9.4 * ft * ft, 111 + 26 * ft)); }
+    fp.push(new THREE.Vector2(0, 137));
+    var fn = mk(new THREE.LatheGeometry(fp, 48), mat.relief); fn.scale.z = 0.78; fn.position.set(33, 0, 4); g.add(fn);
     /* ballon : un cœur gonflé, bords arrondis, prénoms en relief dessus */
     var hp = heartPts(46), ymn = 1e9, ymx = -1e9, hsh;
     hp.forEach(function (q) { ymn = Math.min(ymn, q[1]); ymx = Math.max(ymx, q[1]); });
