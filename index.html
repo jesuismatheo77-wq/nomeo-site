@@ -5376,6 +5376,13 @@ function A77Models(THREE, fontData, allFonts) {
     });
     G.add(dualsense(mat));
     g.add(G);
+    /* deux cales triangulaires dans le dos du mur, qui le relient au plateau */
+    var rp = poly(new THREE.Shape(), [[-28, 5], [-64, 5], [-64, 9], [-45, 46], [-30, 46]]);
+    [-1, 1].forEach(function (sg) {
+      var rg = new THREE.ExtrudeGeometry([rp], { depth: 10 - 1.6, steps: 1, curveSegments: 4, bevelEnabled: true, bevelThickness: 0.8, bevelSize: 0.8, bevelOffset: -0.8, bevelSegments: 2 });
+      rg.translate(0, 0, -5); rg.rotateY(-Math.PI / 2); rg.translate(sg * 40, 0, 0);
+      g.add(mk(rg, mat.base));
+    });
     return g;
   }
 
