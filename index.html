@@ -1457,6 +1457,19 @@ html { -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%;
 @media (pointer: coarse) { input:not([type=radio]):not([type=checkbox]):not([type=range]), textarea, select { font-size: max(16px, 1em) !important; } }
 button, [role="button"], summary { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
 button:active:not(:disabled), .btn:active { transform: scale(.98); }
+
+/* ---------- entrée du haut de page (une seule fois) ---------- */
+:root { --ease-out: cubic-bezier(.23, 1, .32, 1); }
+@keyframes enter { from { opacity: 0; transform: translateY(var(--dy, 14px)); } to { opacity: 1; transform: none; } }
+@keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
+.hero-text h1 { --dy: 26px; animation: enter .75s var(--ease-out) .05s both; }
+.hero-text .lead:not([hidden]) { --dy: 16px; animation: enter .65s var(--ease-out) .22s both; }
+.hero-text .actions { --dy: 12px; animation: enter .6s var(--ease-out) .34s both; }
+.hero-panel .panel { --dy: 20px; animation: enter .7s var(--ease-out) .46s both; }
+#stage-canvas { animation: enter-fade 1s ease-out .1s both; }
+@media (prefers-reduced-motion: reduce) {
+  .hero-text h1, .hero-text .lead, .hero-text .actions, .hero-panel .panel { animation: enter-fade .2s ease both; animation-delay: 0s; }
+}
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
