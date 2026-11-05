@@ -2661,7 +2661,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-essuie-tout': { t: 'Porte-essuie-tout bonnet de Père Noël', s: 'Porte-essuie-tout Noël', one: 'porte-essuie-tout de Noël', many: 'porte-essuie-tout de Noël', ref: 'N26', dims: '37 cm de haut, base de 17 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, cuisines, cadeaux, boutiques',
       d: 'Un porte-essuie-tout pour la cuisine de Noël : une base ronde bordée de boules de neige, un grand mât avec trois anneaux, et un gros bonnet de Père Noël penché au sommet, avec sa collerette de boules et son pompon. On enfile le rouleau sur le mât et on pose le bonnet dessus. Votre nom est écrit en relief sur la base. Il s’imprime en trois pièces (base, mât, bonnet) qui s’emboîtent.' },
     'noel-cheminee-deco': { t: 'Cheminée de Noël lumineuse', s: 'Cheminée lumineuse', one: 'cheminée de Noël lumineuse', many: 'cheminées de Noël lumineuses', ref: 'N27', dims: '15 cm de large, 11 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, salons, cadeaux, boutiques',
-      d: 'Une cheminée de Noël toute simple, en briques en relief, avec sa grande arche et ses bûches noires. L’arche traverse la cheminée de part en part : derrière les bûches, il y a une petite place pour la bougie LED, fournie, qu’on glisse par l’arrière. Elle fait le feu qui danse. Votre nom est écrit en relief sur le manteau.' },
+      d: 'Une cheminée de Noël en briques en relief, avec sa grande arche et ses bûches noires. L’arche traverse la cheminée de part en part : derrière les bûches, il y a une petite place pour la bougie LED, fournie, qu’on glisse par l’arrière. Elle fait le feu qui danse. Sur le manteau, une guirlande, une bougie rouge et de petits cadeaux, et votre nom écrit devant.' },
     'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
       d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
@@ -6530,12 +6530,18 @@ function A77Models(THREE, fontData, allFonts) {
     [-1, 1].forEach(function (sg) {
       brickRows(BD, function (a, b, y) { var bk = mk(new THREE.BoxGeometry(1.8, 7, b - a), mat.base); bk.position.set(sg * (BW / 2 + 0.7), y, (a + b) / 2); g.add(bk); });
     });
+    /* briques de l'arche : claveaux autour de l'ouverture */
+    for (i = 0; i <= 8; i++) {
+      var an = Math.PI - i * Math.PI / 8 + 0.0, rad = OW + 4.6, ax = Math.cos(an) * rad, ay = Y0 + 3 + 28 + Math.sin(an) * rad;
+      var kv = mk(new THREE.BoxGeometry(8, 7.4, 1.8), mat.base); kv.position.set(ax, ay, BD / 2 + 0.7); kv.rotation.z = an - Math.PI / 2; g.add(kv);
+    }
     /* manteau */
     var mt = mk(new THREE.BoxGeometry(142, 12, 98), GR); mt.position.set(0, Y0 + BH + 6, 0); g.add(mt);
     layout(text, { maxW: 112, maxH: 8, cap: 6.6, cx: 0, cy: Y0 + BH + 6 }).items.forEach(function (it) {
       var t3 = mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 8, dx: it.dx, dy: it.dy, upright: true }), mat.relief); t3.position.z = 49 - 0.1; g.add(t3);
     });
-        /* feu : bûches noires, bougie LED allumée derrière, flammes qui dansent */
+    var TOP = Y0 + BH + 12;
+    /* feu : bûches noires, bougie LED allumée derrière, flammes qui dansent */
     var fy = Y0 + 3;
     var wax = mk(new THREE.CylinderGeometry(15.4, 15.8, 13, 40), propMat('#F4EFE4')); wax.position.set(0, fy + 6.5, -10); g.add(wax);
     var lrim = new THREE.Mesh(new THREE.TorusGeometry(13.8, 0.8, 8, 40), new THREE.MeshBasicMaterial({ color: 0xFFE2A6 })); lrim.rotation.x = Math.PI / 2; lrim.position.set(0, fy + 13, -10); g.add(lrim);
@@ -6547,6 +6553,14 @@ function A77Models(THREE, fontData, allFonts) {
       [-1, 1].forEach(function (sg) { var ec = mk(new THREE.CircleGeometry(3.4, 16), GR); ec.rotation.y = sg * Math.PI / 2 + L[2]; ec.position.set(L[0] * 0.3 + sg * 18.1, fy + 4.4, L[0] > 0 ? 10 : 4); g.add(ec); });
     });
     var lg2 = mk(new THREE.CylinderGeometry(4, 4, 34, 18), BK); lg2.rotation.z = Math.PI / 2; lg2.rotation.y = -0.5; lg2.position.set(0, fy + 11.6, 7); g.add(lg2);
+    /* sur le manteau : guirlande de boules, bougie rouge, petits cadeaux */
+    for (i = -6; i <= 6; i++) { elG(g, GN, 4.6, 4.2, 4.6, i * 9.4, TOP + 3.4, 40 - (i % 2 ? 2 : 0), 0, 0, 0, 14); if (i % 3 === 0) elG(g, RD, 3.2, 3.2, 3.2, i * 9.4 + 2, TOP + 6.4, 43, 0, 0, 0, 14); }
+    cylG(g, RD, 5.2, 5.2, 24, -54, TOP + 12, -4, 0, 0, 0, 24); elG(g, YL, 2.2, 4.4, 2.2, -54, TOP + 27.4, -4, 0, 0, 0, 12);
+    [[34, 4.4, GN, RD, 8], [47, 3.6, BL, YL, 6], [53, 6.2, RD, WH, -14]].forEach(function (gf) {
+      var bx = mk(new THREE.BoxGeometry(gf[1] * 2, gf[1] * 2, gf[1] * 2), gf[2]); bx.position.set(gf[0], TOP + gf[1], gf[4]); g.add(bx);
+      var rb1 = mk(new THREE.BoxGeometry(gf[1] * 2 + 0.5, 1, 1.4), gf[3]); rb1.position.set(gf[0], TOP + gf[1] * 2 - 0.2, gf[4]); g.add(rb1);
+      var rb2 = mk(new THREE.BoxGeometry(1.4, 1, gf[1] * 2 + 0.5), gf[3]); rb2.position.set(gf[0], TOP + gf[1] * 2 - 0.2, gf[4]); g.add(rb2);
+    });
     return g;
   }
 
