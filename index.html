@@ -6371,7 +6371,7 @@ function A77Models(THREE, fontData, allFonts) {
       var pts = [[0, -26.5], [0, 10]]; for (i = 0; i <= 12; i++) { var t = Math.PI - i * Math.PI / 12; pts.push([8.2 + Math.cos(t) * 8.2, 10 + Math.sin(t) * 8.2]); }
       pts.push([16.4, 4]); var cn = []; for (i = 0; i < pts.length - 1; i++) cn.push(CAP(pts[i], pts[i + 1], 4.4, 4.4));
       body = U(cn); hx = 8.2; hy = 27; body = U([body, CI(8.2, 25, 4.4)]);
-      var st = []; for (i = 0; i < 9; i++) st.push(PP(ROT([[-30, -2.2], [30, -2.2], [30, 2.2], [-30, 2.2]], 0.8)).map(function (p) { return p.map(function (q) { return { X: q.X, Y: q.Y + (i * 7.4 - 29) * CLS }; }); }));
+      var st = []; for (i = 0; i < 9; i++) st.push(PP(ROT([[-30, -1.3], [30, -1.3], [30, 1.3], [-30, 1.3]], 0.8)).map(function (p) { return p.map(function (q) { return { X: q.X, Y: q.Y + (i * 7.4 - 29) * CLS }; }); }));
       det = [IN(IN(body, U(st)), U([PP([[-30, -30], [30, -30], [30, 8], [-30, 8]]), PP([[-30, -30], [-30, -30], [-30, -30]])]))];
       det = [DF(IN(IN(U(st), body), PP([[-40, -24.4], [40, -24.4], [40, 40], [-40, 40]])), CI(hx, hy, 2.6))];
     } else if (which === 'houx') {
