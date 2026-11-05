@@ -6632,14 +6632,17 @@ function A77Models(THREE, fontData, allFonts) {
     var hw2 = Math.asin(21 / RH), fr = -Math.PI / 2;
     wall(HW, FL, 0, TAU - 1e-4);
     wall(HT - FL, FL, fr + hw2, fr - hw2 + TAU);
-    /* les 6 sous-verres empilés */
-    for (i = 0; i < 6; i++) {
-      var y0 = FL + 0.2 + i * (TH + 0.3);
-      var cr = mk(ext([ringSh], TH, {}), mat.relief); cr.position.y = y0; g.add(cr);
-      var cd = mk(new THREE.CylinderGeometry(RI2, RI2, TH - TOP, 90), mat.base); cd.position.y = y0 + (TH - TOP) / 2; g.add(cd);
-      if (shA.length) { var ca = mk(ext(shA, TOP, { seg: 10 }), mat.base); ca.position.y = y0 + TH - TOP; g.add(ca); }
-      if (shM.length) { var cm = mk(ext(shM, TOP, { seg: 10 }), mat.relief); cm.position.y = y0 + TH - TOP; g.add(cm); }
+    /* 5 sous-verres dans le support, et le 6e sorti, posé debout contre le devant du support pour montrer le dessin */
+    function addCoaster(par, y0) {
+      var cr = mk(ext([ringSh], TH, {}), mat.relief); cr.position.y = y0; par.add(cr);
+      var cd = mk(new THREE.CylinderGeometry(RI2, RI2, TH - TOP, 90), mat.base); cd.position.y = y0 + (TH - TOP) / 2; par.add(cd);
+      if (shA.length) { var ca = mk(ext(shA, TOP, { seg: 10 }), mat.base); ca.position.y = y0 + TH - TOP; par.add(ca); }
+      if (shM.length) { var cm = mk(ext(shM, TOP, { seg: 10 }), mat.relief); cm.position.y = y0 + TH - TOP; par.add(cm); }
     }
+    for (i = 0; i < 5; i++) addCoaster(g, FL + 0.2 + i * (TH + 0.3));
+    var pv = new THREE.Group(), TL = 1.2566;
+    addCoaster(pv, -TH / 2);
+    pv.rotation.x = TL; pv.position.set(-24, RC * Math.sin(TL) + 1.4, 41.5); g.add(pv);
     return g;
   }
 
