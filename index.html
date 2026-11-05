@@ -1,6 +1,7 @@
 <title>Noméo · Cadeaux personnalisés imprimés en 3D</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+<script>(function(d){var h=d.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;h.classList.add('an-wait');var g=function(){if(h.classList.contains('an-go'))return;requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.remove('an-wait');h.classList.add('an-go')})})};addEventListener('load',function(){setTimeout(g,150)});setTimeout(g,4000)})(document)</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Cadeaux personnalisés imprimés en 3D : boules de Noël, cœurs, magnets et porte-clés à votre prénom. Pour les particuliers et les professionnels.">
 <meta property="og:type" content="website">
@@ -1460,15 +1461,18 @@ button:active:not(:disabled), .btn:active { transform: scale(.98); }
 
 /* ---------- entrée du haut de page (une seule fois) ---------- */
 :root { --ease-out: cubic-bezier(.23, 1, .32, 1); }
-@keyframes enter { from { opacity: 0; transform: translateY(var(--dy, 14px)); } to { opacity: 1; transform: none; } }
+@keyframes enter { from { opacity: 0; transform: translateY(var(--dy, 14px)); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
 @keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
-.hero-text h1 { --dy: 26px; animation: enter .75s var(--ease-out) .05s both; }
-.hero-text .lead:not([hidden]) { --dy: 16px; animation: enter .65s var(--ease-out) .22s both; }
-.hero-text .actions { --dy: 12px; animation: enter .6s var(--ease-out) .34s both; }
-.hero-panel .panel { --dy: 20px; animation: enter .7s var(--ease-out) .46s both; }
-#stage-canvas { animation: enter-fade 1s ease-out .1s both; }
+@keyframes enter-obj { from { opacity: 0; transform: scale(.88) translateY(24px); } to { opacity: 1; transform: none; } }
+html.an-go .hero-text h1 { --dy: 56px; animation: enter .9s var(--ease-out) .15s both; }
+html.an-go .hero-text .lead:not([hidden]) { --dy: 32px; animation: enter .8s var(--ease-out) .4s both; }
+html.an-go .hero-text .actions { --dy: 24px; animation: enter .75s var(--ease-out) .58s both; }
+html.an-go .hero-panel .panel { --dy: 44px; animation: enter .9s var(--ease-out) .72s both; }
+html.an-go #stage-canvas { animation: enter-obj 1.2s var(--ease-out) .3s both; }
+html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-text .actions, html.an-wait .hero-panel .panel, html.an-wait #stage-canvas { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
-  .hero-text h1, .hero-text .lead, .hero-text .actions, .hero-panel .panel { animation: enter-fade .2s ease both; animation-delay: 0s; }
+  html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-text .actions, html.an-wait .hero-panel .panel, html.an-wait #stage-canvas { opacity: 1; }
+  html.an-go .hero-text h1, html.an-go .hero-text .lead, .hero-text .actions, .hero-panel .panel, #stage-canvas { animation: enter-fade .2s ease both; animation-delay: 0s; }
 }
 </style>
 
