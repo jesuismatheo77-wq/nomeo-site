@@ -67,6 +67,30 @@ input, textarea, select { caret-color: var(--ink); accent-color: var(--ink); }
 p, li, dd { text-wrap: pretty; }
 .sp-p, .sp-p small, .cl-p, .cart-total, .line-p, [class*="price"], [class*="total"] { font-variant-numeric: tabular-nums; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+/* ---- rythme de la page : un temps fort jaune, un temps fort noir ---- */
+#comment.steps { background: var(--accent); padding-block: clamp(56px, 7vw, 104px); margin-top: clamp(40px, 5vw, 72px); }
+#comment .steps-h { font-size: clamp(2.2rem, 1.3rem + 3.4vw, 4.2rem); font-weight: 780; letter-spacing: -.035em; line-height: .98; color: var(--on-accent); margin-bottom: clamp(24px, 3vw, 44px); }
+#comment .steps-list { background: transparent; box-shadow: none; padding: 0; gap: clamp(16px, 2vw, 28px); grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+#comment .steps-list li { display: flex; flex-direction: column; gap: 10px; padding: 22px 22px 24px; border: 0; border-radius: 22px; background: rgba(255, 255, 255, .92); box-shadow: 0 1px 2px rgba(22, 24, 27, .08), 0 18px 30px -22px rgba(22, 24, 27, .45); }
+#comment .steps-list li + li { padding-left: 22px; border-left: 0; }
+#comment .steps-list b { width: auto; height: auto; display: block; border-radius: 0; background: none; color: var(--ink); font-size: clamp(3rem, 2rem + 3vw, 4.6rem); line-height: .9; font-weight: 800; letter-spacing: -.04em; }
+#comment .steps-list h3 { font-size: 1.2rem; padding-top: 0; }
+#comment .steps-list p { color: var(--ink-2); }
+#comment .steps-note { color: var(--on-accent); }
+@media (max-width: 1099px) { #comment .steps-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { #comment .steps-list { grid-template-columns: minmax(0, 1fr); } #comment .steps-list li { flex-direction: row; align-items: flex-start; gap: 16px; padding: 18px; } #comment .steps-list b { font-size: 2.6rem; min-width: 1.1ch; } }
+
+.dark-band { --white: #1D2024; --soft: #262A30; --soft-2: #2E333A; --ink: #F6F7F8; --ink-hi: #FFFFFF; --ink-2: rgba(246, 247, 248, .78); --grey: rgba(246, 247, 248, .62); --rule: rgba(255, 255, 255, .14); --field: #262A30; --field-line: rgba(255, 255, 255, .2); background: #121417; color: var(--ink); }
+.dark-band .how li { background: #1D2024; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
+.dark-band .who h2 { font-size: clamp(2.2rem, 1.3rem + 3.4vw, 4.2rem); font-weight: 780; letter-spacing: -.035em; color: var(--accent); }
+.dark-band .who .big { color: var(--ink-hi); }
+.dark-band a { color: var(--accent); }
+.dark-band .copy-mini { background: #2E333A; color: var(--ink); }
+.dark-band .copy-mini:hover { background: #3A4048; }
+.foot.dark-band { border-top: 0; background: #0D0F11; }
+.foot.dark-band .foot-brand p, .foot.dark-band .foot-in { color: var(--ink-2); }
+.foot.dark-band ul a { color: var(--ink); }
 </style>
 <style>
 @property --glow { syntax: "<color>"; inherits: true; initial-value: #12B04A; }
@@ -2253,7 +2277,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     </div>
   </section>
 
-  <section class="band" id="atelier" aria-labelledby="t-atelier">
+  <section class="band dark-band" id="atelier" aria-labelledby="t-atelier">
     <div class="wrap about">
       <div class="who">
         <h2 id="t-atelier">À propos de Noméo</h2>
@@ -2395,7 +2419,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   </section>
 </main>
 
-<footer class="foot">
+<footer class="foot dark-band">
   <div class="wrap foot-in">
     <div class="foot-brand">
       <a class="logo" href="#haut" aria-label="Noméo, haut de page"><svg class="mark" viewBox="0 0 88 82" aria-hidden="true"><rect class="top" x="0" y="0" width="22" height="14" rx="7"/><rect class="top" x="66" y="0" width="22" height="14" rx="7"/><rect class="lay" x="0" y="17" width="38.5" height="14" rx="7"/><rect class="lay" x="66" y="17" width="22" height="14" rx="7"/><rect class="lay" x="0" y="34" width="22" height="14" rx="7"/><rect class="lay" x="33" y="34" width="22" height="14" rx="7"/><rect class="lay" x="66" y="34" width="22" height="14" rx="7"/><rect class="lay" x="0" y="51" width="22" height="14" rx="7"/><rect class="lay" x="49.5" y="51" width="38.5" height="14" rx="7"/><rect class="lay" x="0" y="68" width="22" height="14" rx="7"/><rect class="lay" x="66" y="68" width="22" height="14" rx="7"/></svg><svg class="word" viewBox="20 22 438 100" role="img" aria-label="Noméo"><g transform="translate(19.5 119)"><path class="wd" d="M2.5 -57.3H25.4L29.3 -33.6V0H6.4V-37.1ZM49.7 -59Q58.1 -59 63.9 -55.7Q69.7 -52.4 72.85 -46.35Q76 -40.3 76 -32.2V0H53V-28.9Q53 -34.5 50.05 -37.5Q47.1 -40.5 41.7 -40.5Q37.9 -40.5 35.1 -38.9Q32.3 -37.3 30.8 -34.4Q29.3 -31.5 29.3 -27.4L22.4 -31Q23.7 -40.3 27.65 -46.5Q31.6 -52.7 37.3 -55.85Q43 -59 49.7 -59Z M119.5 1.7Q108.4 1.7 100 -2.1Q91.6 -5.9 86.9 -12.75Q82.2 -19.6 82.2 -28.6Q82.2 -37.8 86.9 -44.65Q91.6 -51.5 100 -55.25Q108.4 -59 119.6 -59Q130.7 -59 139.1 -55.25Q147.5 -51.5 152.15 -44.65Q156.8 -37.8 156.8 -28.6Q156.8 -19.6 152.15 -12.75Q147.5 -5.9 139.1 -2.1Q130.7 1.7 119.5 1.7ZM119.6 -15.1Q124.1 -15.1 127.25 -16.7Q130.4 -18.3 132.05 -21.35Q133.7 -24.4 133.7 -28.6Q133.7 -32.9 132.05 -35.95Q130.4 -39 127.25 -40.6Q124.1 -42.2 119.6 -42.2Q115.1 -42.2 111.9 -40.6Q108.7 -39 107.05 -35.95Q105.4 -32.9 105.4 -28.7Q105.4 -24.4 107.05 -21.35Q108.7 -18.3 111.9 -16.7Q115.1 -15.1 119.6 -15.1Z M160.6 -57.3H183.5L187.4 -33.6V0H164.5V-37.1ZM206.7 -59Q214.7 -59 220.3 -55.7Q225.9 -52.4 228.85 -46.35Q231.8 -40.3 231.8 -32.2V0H208.9V-28.9Q208.9 -34.5 206.25 -37.5Q203.6 -40.5 198.7 -40.5Q195.2 -40.5 192.65 -38.9Q190.1 -37.3 188.75 -34.4Q187.4 -31.5 187.4 -27.4L180.5 -31Q181.8 -40.3 185.55 -46.5Q189.3 -52.7 194.8 -55.85Q200.3 -59 206.7 -59ZM251 -59Q259 -59 264.65 -55.7Q270.3 -52.4 273.25 -46.35Q276.2 -40.3 276.2 -32.2V0H253.3V-28.9Q253.3 -34.5 250.65 -37.5Q248 -40.5 243.1 -40.5Q239.6 -40.5 237.05 -38.9Q234.5 -37.3 233.15 -34.4Q231.8 -31.5 231.8 -27.4L224.9 -31Q226.2 -40.3 229.95 -46.5Q233.7 -52.7 239.15 -55.85Q244.6 -59 251 -59Z M319.2 1.7Q308.6 1.7 300.3 -2.1Q292 -5.9 287.2 -12.8Q282.4 -19.7 282.4 -28.9Q282.4 -37.9 287.05 -44.7Q291.7 -51.5 299.75 -55.25Q307.8 -59 317.8 -59Q328.3 -59 335.7 -54.65Q343.1 -50.3 347.05 -42.3Q351 -34.3 351 -23.5H301.1V-34.8H337.8L331.1 -31Q330.6 -35.3 328.95 -38.15Q327.3 -41 324.55 -42.5Q321.8 -44 318 -44Q313.8 -44 310.85 -42.2Q307.9 -40.4 306.35 -37.2Q304.8 -34 304.8 -29.9Q304.8 -24.8 307.05 -21.3Q309.3 -17.8 313.9 -15.95Q318.5 -14.1 325.3 -14.1Q331.8 -14.1 338.05 -15.8Q344.3 -17.5 349.5 -20.8V-7.4Q343.4 -3 335.4 -0.65Q327.4 1.7 319.2 1.7Z M392.9 1.7Q381.8 1.7 373.4 -2.1Q365 -5.9 360.3 -12.75Q355.6 -19.6 355.6 -28.6Q355.6 -37.8 360.3 -44.65Q365 -51.5 373.4 -55.25Q381.8 -59 393 -59Q404.1 -59 412.5 -55.25Q420.9 -51.5 425.55 -44.65Q430.2 -37.8 430.2 -28.6Q430.2 -19.6 425.55 -12.75Q420.9 -5.9 412.5 -2.1Q404.1 1.7 392.9 1.7ZM393 -15.1Q397.5 -15.1 400.65 -16.7Q403.8 -18.3 405.45 -21.35Q407.1 -24.4 407.1 -28.6Q407.1 -32.9 405.45 -35.95Q403.8 -39 400.65 -40.6Q397.5 -42.2 393 -42.2Q388.5 -42.2 385.3 -40.6Q382.1 -39 380.45 -35.95Q378.8 -32.9 378.8 -28.7Q378.8 -24.4 380.45 -21.35Q382.1 -18.3 385.3 -16.7Q388.5 -15.1 393 -15.1Z"/><rect x="298.18" y="-86.5" width="45.28" height="15" rx="7.5" class="ac" transform="rotate(-27 320.82 -79)"/></g></svg></a>
