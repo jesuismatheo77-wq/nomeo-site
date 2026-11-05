@@ -1188,6 +1188,9 @@ body[data-mode="part"] .only-pro, body[data-mode="pro"] .only-part { display: no
 .sp .sp-b { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 0 4px; }
 .sp .sp-b .stepper { flex: none; }
 .sp .sp-b .btn { flex: 1 1 100%; min-height: 46px; padding: 0 12px; white-space: normal; }
+.sp .sp-lw2 { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px; }
+.sp .sp-lw2 .sp-l { width: 30px; min-width: 0; flex: none; height: 36px; padding: 0; margin: 0; text-align: center; font-weight: 700; font-size: 1rem; text-transform: uppercase; border: 1.5px solid #c9ced6; border-radius: 8px; background: #fff; color: inherit; }
+.sp .sp-lw2 .sp-l:focus { outline: 2px solid #1b1d22; outline-offset: 1px; }
 .sp .sp-rw { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; padding: 6px 4px 0; font-size: .86rem; }
 .sp .sp-rw span { grid-column: 1 / -1; color: var(--mut, #5b6270); }
 .sp .sp-rw input[type=range] { width: 100%; accent-color: var(--ink, #1b1d22); }
@@ -3623,7 +3626,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     shId = id;
     $('sh-title').textContent = c.t;
     $('sh-ref').textContent = c.ref ? 'Réf. ' + c.ref : '';
-    $('sh-dims').textContent = c.max ? c.dims + ' · sur mesure ' + c.max : c.dims;
+    $('sh-dims').textContent = c.max ? c.dims + ' · ' + (/^sur mesure/.test(c.max) ? '' : 'sur mesure ') + c.max : c.dims;
     $('sh-desc').textContent = c.d;
     $('sh-for').textContent = c.who ? 'Pour les ' + c.who.replace(/, /g, ', les ').replace(/, les ([^,]+)$/, ' et les $1') : '';
     shIco.setAttribute('href', '#' + c.ico);
@@ -3887,7 +3890,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       (L ? '<div class="sp-s" role="radiogroup" aria-label="Taille">' + L.map(function (z, i) { return '<label><input type="radio" name="sz-' + s.id + '" value="' + z.k + '"' + (i === 0 ? ' checked' : '') + '><span><b>' + z.l + '</b><small>' + z.d + '</small></span></label>'; }).join('') + '</div>' : '') +
       '<p class="sp-p">dès ' + eur(P[0]).replace(',00', '') + '<small>' + eur(P[1]) + ' la pièce dès 10</small></p>' +
       '<button type="button" class="btn btn-y sp-open" aria-haspopup="dialog">Personnaliser</button>' +
-      (s.two ? '<input class="sp-t" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 1, ex. Léa" aria-label="Premier prénom pour ' + c.one + '" spellcheck="false" autocomplete="off"><input class="sp-t sp-t2" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 2, ex. Noé" aria-label="Second prénom pour ' + c.one + '" spellcheck="false" autocomplete="off">' : '<input class="sp-t" type="text" maxlength="' + (s.ml || A.TEXTML[s.hero] || (s.obj ? 18 : 40)) + '" placeholder="' + (s.logo ? 'Nom du logo, ex. ' : 'Votre texte, ex. ') + s.ph + '" aria-label="' + (s.logo ? 'Nom de votre logo pour ' : 'Texte à écrire sur ') + c.one + '" spellcheck="false" autocomplete="off">') +
+      (c.qmax ? '<input class="sp-t" type="hidden" value="' + s.ph + '"><div class="sp-lw2" role="group" aria-label="Une lettre par bonnet"></div><p class="sp-n">Une case par bonnet : choisissez la lettre de chacun.</p>' : s.two ? '<input class="sp-t" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 1, ex. Léa" aria-label="Premier prénom pour ' + c.one + '" spellcheck="false" autocomplete="off"><input class="sp-t sp-t2" type="text" maxlength="' + (s.hero === 'duo' ? 10 : 8) + '" placeholder="Prénom 2, ex. Noé" aria-label="Second prénom pour ' + c.one + '" spellcheck="false" autocomplete="off">' : '<input class="sp-t" type="text" maxlength="' + (s.ml || A.TEXTML[s.hero] || (s.obj ? 18 : 40)) + '" placeholder="' + (s.logo ? 'Nom du logo, ex. ' : 'Votre texte, ex. ') + s.ph + '" aria-label="' + (s.logo ? 'Nom de votre logo pour ' : 'Texte à écrire sur ') + c.one + '" spellcheck="false" autocomplete="off">') +
       (s.logo ? '' : '<label class="sp-fw"><span>Police</span><select class="sp-f" aria-label="Police d’écriture">' + FONTS.map(function (f) { return '<option value="' + f.k + '">' + f.n + '</option>'; }).join('') + '</select></label>') +
       (s.logo ? '<p class="sp-n">Vous nous envoyez votre logo par e-mail après la commande.</p>' : '') +
       '<div class="sp-c" role="radiogroup" aria-label="Couleurs">' + s.combos.map(function (v, i) { return chip(v, i === 0, 'sc-' + s.id); }).join('') + '</div>' +
@@ -4028,7 +4031,27 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     return { id: id, q: q, text: tx, combo: r ? r.value : '', sz: z ? z.value : '', fo: f ? foOf(f.value) : '' };
   }
   function syncRange(a) { var r = a.querySelector('.sp-r'), q = a.querySelector('.sp-q'); if (r && q) { r.value = q.value; var o = a.querySelector('.sp-ro'); if (o) o.textContent = q.value; } }
+  /* une case par bonnet, une lettre chacune ; le texte caché reprend les lettres dans l’ordre ('_' = bonnet sans lettre) */
+  function lettersSync(a) {
+    var h = a.querySelector('.sp-t'), w = a.querySelector('.sp-lw2'); if (!h || !w) return;
+    var v = Array.from(w.querySelectorAll('.sp-l')).map(function (i) { return i.value || '_'; }).join('');
+    h.value = v;
+  }
+  function lettersBuild(a) {
+    var w = a.querySelector('.sp-lw2'), h = a.querySelector('.sp-t'); if (!w || !h) return;
+    var q = clampFor(a.getAttribute('data-id'), a.querySelector('.sp-q').value), have = w.querySelectorAll('.sp-l').length;
+    if (have === q) return;
+    var old = have ? Array.from(w.querySelectorAll('.sp-l')).map(function (i) { return i.value; }) : Array.from(h.value).map(function (c) { return c === '_' ? '' : c; });
+    w.innerHTML = '';
+    for (var i = 0; i < q; i++) {
+      var inp = document.createElement('input');
+      inp.type = 'text'; inp.className = 'sp-l'; inp.maxLength = 1; inp.value = old[i] || ''; inp.autocomplete = 'off'; inp.spellcheck = false; inp.setAttribute('aria-label', 'Lettre du bonnet ' + (i + 1)); inp.setAttribute('autocapitalize', 'characters');
+      w.appendChild(inp);
+    }
+    lettersSync(a);
+  }
   function shopPrices() {
+    $$('.sp[data-id]').forEach(lettersBuild);
     $$('.sp[data-id]').forEach(function (a) {
       var s = cardState(a), pk = pkey(s.id, s.sz), up = unitPrice(pk, cartQty(pk) + s.q), P = PRICES[pk], pe = a.querySelector('.sp-p');
       pe.innerHTML = 'dès ' + eur(P[0]).replace(',00', '') + '<small>' + eur(P[1]) + ' la pièce dès 10</small>';
@@ -4082,7 +4105,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     if (e.target.closest('.sp-3d')) { var s0 = cardState(a); closeCard(); personalize(s0.id, s0.text, s0.combo, s0.sz, s0.fo); return; }
     if (e.target.closest('.sp-add')) {
       var s = cardState(a), t = a.querySelector('.sp-t');
-      if (!s.text.trim()) { t.focus(); t.placeholder = CAT[s.id].logo ? 'Indiquez le nom de votre logo' : 'Écrivez votre texte ici'; t.style.borderColor = '#c4262b'; return; }
+      if (!s.text.replace(/_/g, '').trim()) { var fl = a.querySelector('.sp-l'); (fl || t).focus(); t.placeholder = CAT[s.id].logo ? 'Indiquez le nom de votre logo' : 'Écrivez votre texte ici'; t.style.borderColor = '#c4262b'; return; }
       t.style.borderColor = '';
       cartAdd(s.id, { text: s.text, combo: s.combo, qty: s.q, sz: s.sz, fo: s.fo });
       a.querySelector('.sp-q').value = CAT[s.id].q || 1; syncRange(a);
@@ -4104,8 +4127,9 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   var recTimer = 0;
   function recolorSoon(a) { clearTimeout(recTimer); recTimer = setTimeout(function () { recolorCard(a); }, 380); }
   [shopGrid, shopGrid2, shopGrid3, shopGrid4, spHost].forEach(function (g) {
+    g.addEventListener('keydown', function (e) { var t = e.target; if (t.classList && t.classList.contains('sp-l') && e.key === 'Backspace' && !t.value && t.previousElementSibling) { t.previousElementSibling.focus(); } });
     g.addEventListener('change', function (e) { var t = e.target; if (t.closest && (t.closest('.sp-c') || t.closest('.sp-f') || t.classList.contains('sp-f'))) recolorCard(t.closest('.sp')); });
-    g.addEventListener('input', function (e) { var t = e.target; if (t.classList && t.classList.contains('sp-r')) { var ca = t.closest('.sp'); ca.querySelector('.sp-q').value = t.value; syncRange(ca); shopPrices(); return; } if (t.classList && t.classList.contains('sp-q')) { var cb = t.closest('.sp'); if (cb) { var vq = parseInt(t.value, 10); if (!isNaN(vq)) { var rr2 = cb.querySelector('.sp-r'); if (rr2) { rr2.value = Math.max(+rr2.min, Math.min(+rr2.max, vq)); var oo = cb.querySelector('.sp-ro'); if (oo) oo.textContent = rr2.value; } shopPrices(); } } return; } if (t.classList && (t.classList.contains('sp-t') || t.classList.contains('sp-t2'))) recolorSoon(t.closest('.sp')); });
+    g.addEventListener('input', function (e) { var t = e.target; if (t.classList && t.classList.contains('sp-l')) { t.value = t.value.replace(/\s/g, '').toUpperCase().slice(0, 1); var ca0 = t.closest('.sp'); lettersSync(ca0); if (t.value && t.nextElementSibling) t.nextElementSibling.focus(); recolorSoon(ca0); return; } if (t.classList && t.classList.contains('sp-r')) { var ca = t.closest('.sp'); ca.querySelector('.sp-q').value = t.value; syncRange(ca); shopPrices(); return; } if (t.classList && t.classList.contains('sp-q')) { var cb = t.closest('.sp'); if (cb) { var vq = parseInt(t.value, 10); if (!isNaN(vq)) { var rr2 = cb.querySelector('.sp-r'); if (rr2) { rr2.value = Math.max(+rr2.min, Math.min(+rr2.max, vq)); var oo = cb.querySelector('.sp-ro'); if (oo) oo.textContent = rr2.value; } shopPrices(); } } return; } if (t.classList && (t.classList.contains('sp-t') || t.classList.contains('sp-t2'))) recolorSoon(t.closest('.sp')); });
   });
   document.addEventListener('a77:studio', function () {
     $$('.sp[data-id]').forEach(function (a) { var s = cardState(a); if (s.text.trim() || (A.stillDefault && s.combo && A.stillDefault(s.id) !== s.combo)) recolorCard(a); });
@@ -6041,7 +6065,7 @@ function A77Models(THREE, fontData, allFonts) {
 
   /* lot de 5 mini bonnets de Père Noël : bord de fourrure, bonnet rouge qui retombe, pompon ; une lettre par bonnet */
   function miniBonnets(mat, text) {
-    var g = new THREE.Group(), E = SC.ell, C = SC.cap, i, chars = Array.from(text || '').filter(function (c) { return c !== ' '; }).slice(0, 8);
+    var g = new THREE.Group(), E = SC.ell, C = SC.cap, i, chars = Array.from(text || '').slice(0, 8);
     var body = [C([0, 4, 0], [0.4, 10, -0.4], 10, 8.4, 2), C([0.4, 10, -0.4], [1.8, 17, -1.7], 8.4, 5.2, 2), C([1.8, 17, -1.7], [4.8, 22.4, -3.6], 5.2, 2.8, 2), C([4.8, 22.4, -3.6], [8.2, 22.8, -6.4], 2.8, 2.0, 2)];
     var bb = [1e3, 1e3, 1e3, -1e3, -1e3, -1e3];
     body.forEach(function (p) { for (var q = 0; q < 3; q++) { bb[q] = Math.min(bb[q], p.box[q]); bb[q + 3] = Math.max(bb[q + 3], p.box[q + 3]); } });
@@ -6078,7 +6102,7 @@ function A77Models(THREE, fontData, allFonts) {
     }
     var nh = Math.max(4, Math.min(8, chars.length)), cols = 4;
     for (i = 0; i < nh; i++) {
-      var h = new THREE.Group(), flip = i % 2 ? -1 : 1, lf = chars[i] ? letterField(chars[i]) : null;
+      var h = new THREE.Group(), flip = i % 2 ? -1 : 1, lf = (chars[i] && chars[i] !== '_' && chars[i] !== ' ') ? letterField(chars[i]) : null;
       var fr = lf ? function (x, y, z) { return Math.max(gbc(x, y, z), -lf.f(x, y, z)); } : gbc;
       h.add(mk(SC.mesh(fr, bb, 0.5), mat.base));
       if (lf) h.add(mk(SC.mesh(lf.f, lf.box, 0.3), mat.relief));
