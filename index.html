@@ -2615,8 +2615,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Une maison de village de 24 petites portes numérotées de 1 à 24, avec son toit enneigé, sa cheminée et son étoile. Votre prénom est écrit sur la plinthe, devant. Chaque porte se retire à la main pour glisser derrière un petit mot, un jeton « bon pour » ou un mini-objet. Livré vide, sans friandises.' },
     'noel-bonhomme-art': { t: 'Bonhomme de neige articulé', s: 'Bonhomme de neige articulé', one: 'bonhomme de neige articulé', many: 'bonhommes de neige articulés', ref: 'N8', dims: '10 cm de haut, 16 cm de large bras ouverts', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-bonhomme', who: 'enfants, familles, cadeaux',
       d: 'Un bonhomme de neige à bonnet et écharpe : trois boules séparées, reliées par des rotules visibles, et des bras à épaule et coude articulés, avec un balai. Vos prénoms sont écrits sur le socle, devant. Imprimé en pièces qui s’emboîtent à la main.' },
-    'noel-pere-noel': { t: 'Père Noël', s: 'Père Noël', one: 'Père Noël', many: 'Pères Noël', ref: 'N9', dims: '10 cm de haut, socle de 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
-      d: 'Un Père Noël rondouillard, avec sa grande barbe, son bonnet replié à pompon, sa ceinture et son sac de cadeaux sur le dos, une main qui salue. Il se tient sur un socle large qui l’empêche de basculer. Votre prénom est écrit en relief sur le socle, devant.' },
+    'noel-pere-noel': { t: 'Père Noël', s: 'Père Noël', one: 'Père Noël', many: 'Pères Noël', ref: 'N9', dims: '10 cm de haut, socle de 6 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
+      d: 'Un petit Père Noël façon lutin nordique : grand bonnet pointu penché, grosse barbe blanche, nez rond, bras rayés rouge et blanc avec leurs moufles, et deux pieds ovales. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant. Bonnet, corps et nez dans une couleur, barbe, rayures et socle dans l’autre.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
       d: 'Un traîneau à coque courbe, patins à volute et banc, plein de cadeaux, tiré par deux rennes attelés : l’un lève une patte, bois ramifiés et nez rouge. Le nom de la famille est écrit sur le flanc du traîneau. Imprimé d’un seul bloc sur un socle, sans pièce rapportée.' },    'c-coeurduo': { t: 'Collier cœur en deux morceaux', s: 'Collier cœur duo', one: 'collier cœur en deux morceaux', many: 'colliers cœur en deux morceaux', ref: 'D1', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-coeurduo', who: 'couples, amis, famille',
       d: 'Un cœur coupé en deux moitiés qui s’emboîtent, un prénom sur chacune et une chaîne pour chaque morceau : un collier pour vous, un pour l’autre. Vendu par paire, avec les deux chaînes argentées.' },
@@ -5693,52 +5693,45 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
-  /* Père Noël : manteau en cloche, grande barbe, bonnet replié, sac de cadeaux ; une main salue */
+  /* Père Noël lutin (façon peluche nordique) : grand bonnet pointu penché, grosse barbe, nez rond, bras rayés à moufles, pieds ovales */
   function pereNoel(mat, text) {
-    var g = new THREE.Group(), DK = propMat('#1B1D22'), YL = propMat('#F5C518'), SH = 4, k;
-    g.add(mk(ext([rr(new THREE.Shape(), 78, 66, 14, 0, -2)], SH, { bevel: 0.8, seg: 14 }), mat.base));
-    /* bottes */
-    [-1, 1].forEach(function (sg) { elG(g, DK, 8.2, 6.2, 12, sg * 9.5, SH + 4.4, 3.6, 0, sg * -0.1, 0, 28); });
-    /* manteau : lathe en cloche, liseré blanc en bas, ceinture noire, boucle */
-    var prof = [[0, SH], [24, SH], [24.2, SH + 3], [22.4, SH + 14], [20.6, SH + 26], [18.6, SH + 38], [15.4, SH + 49], [11.6, SH + 56], [0, SH + 59]].map(function (p) { return new THREE.Vector2(p[0], p[1]); });
-    var coat = mk(new THREE.LatheGeometry(prof, 56), mat.base); coat.scale.z = 0.86; g.add(coat);
-    var hem = mk(new THREE.TorusGeometry(23.4, 3.3, 14, 56), mat.relief); hem.rotation.x = Math.PI / 2; hem.position.y = SH + 3.2; hem.scale.set(1, 0.86, 1); g.add(hem);
-    var bl = mk(new THREE.CylinderGeometry(19.6, 19.9, 5.4, 56), DK); bl.position.y = SH + 32; bl.scale.z = 0.88; g.add(bl);
-    var bk = mk(new THREE.BoxGeometry(9.4, 8, 2.4), YL); bk.position.set(0, SH + 32, 17.4); g.add(bk);
-    var bi = mk(new THREE.BoxGeometry(5, 4, 3), DK); bi.position.set(0, SH + 32, 17.8); g.add(bi);
-    /* liseré central, boutons */
-    elG(g, mat.relief, 2.6, 15, 0.9, 0, SH + 17.5, 20.2, -0.05, 0, 0, 20);
-    elG(g, mat.relief, 2.6, 8, 0.9, 0, SH + 44, 14.6, -0.3, 0, 0, 20);
-    /* bras : gauche tendu et salue, droit tient le sac */
-    elG(g, mat.base, 6.4, 13.5, 6.4, -20.4, SH + 40, 1, 0, 0, -0.5, 28);
-    elG(g, mat.relief, 7, 3.4, 7, -27.6, SH + 29, 1, 0, 0, -0.5, 22);
-    elG(g, DK, 5.4, 5.4, 5.4, -29.2, SH + 25.4, 2, 0, 0, 0, 22);
-    elG(g, mat.base, 6.4, 13.5, 6.4, 20.4, SH + 44, 1, 0, 0, 2.5, 28);
-    elG(g, mat.relief, 7, 3.4, 7, 31, SH + 56, 1, 0, 0, 2.5, 22);
-    elG(g, DK, 5.4, 5.4, 5.4, 34, SH + 59.5, 1, 0, 0, 0, 22);
-    /* sac de cadeaux dans le dos, à droite */
-    elG(g, mat.relief, 12.5, 15, 10, 19, SH + 18, -15, 0.1, 0, -0.1, 28);
-    var tie = mk(new THREE.TorusGeometry(5.2, 1.5, 10, 24), mat.base); tie.rotation.x = Math.PI / 2; tie.position.set(19.4, SH + 31.2, -15); g.add(tie);
-    /* tête, grande barbe en plusieurs mèches, moustache, nez, yeux, sourcils */
-    var hy = SH + 69;
-    elG(g, mat.relief, 10, 10.6, 9.6, 0, hy, 0, 0, 0, 0, 40);
-    elG(g, mat.relief, 12.4, 10.2, 7.2, 0, hy - 6.6, 5.6, 0.1, 0, 0, 40);
-    elG(g, mat.relief, 9.6, 9.6, 6.2, 0, hy - 14.6, 6.4, 0.1, 0, 0, 36);
-    elG(g, mat.relief, 5.4, 7.6, 5.0, -5.4, hy - 12.6, 6.4, 0.1, 0, 0.2, 28);
-    elG(g, mat.relief, 5.4, 7.6, 5.0, 5.4, hy - 12.6, 6.4, 0.1, 0, -0.2, 28);
-    [-1, 1].forEach(function (sg) {
-      elG(g, mat.relief, 5.2, 2.7, 3.2, sg * 4.0, hy - 2.0, 9.7, 0, 0, -sg * 0.28, 18);
-      elG(g, DK, 1.2, 1.4, 1.0, sg * 3.8, hy + 3.0, 9.0, 0, 0, 0, 12);
-      elG(g, mat.relief, 3.4, 1.0, 1.2, sg * 3.8, hy + 5.6, 8.6, 0, 0, -sg * 0.3, 10);
-      elG(g, mat.base, 2.5, 1.9, 1.0, sg * 6.9, hy + 0.2, 8.0, 0, 0, 0, 14);
+    var g = new THREE.Group(), SH = 4.5, sg;
+    function seg(m, p0, p1, r) {
+      var a = new THREE.Vector3(p0[0], p0[1], p0[2]), b = new THREE.Vector3(p1[0], p1[1], p1[2]), d = b.clone().sub(a), L = d.length();
+      var c = mk(new THREE.CylinderGeometry(r, r, L + 0.06, 24), m); c.position.copy(a.clone().add(b).multiplyScalar(0.5));
+      c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); g.add(c);
+    }
+    /* socle de neige rond ; le prénom y est écrit devant les pieds */
+    g.add(mk(ext([circle(new THREE.Shape(), 29, 0, 0)], SH, { bevel: 1.1, seg: 44 }), mat.relief));
+    /* pieds en feutre, ovales et plats */
+    [-1, 1].forEach(function (s) { elG(g, mat.base, 7.4, 3.6, 9.4, s * 8.2, SH + 2.6, 8.4, 0, s * 0.12, 0, 30); });
+    /* corps rond, barbe qui le recouvre presque (trois masses qui s'effilent) */
+    elG(g, mat.base, 15.5, 17.5, 13.2, 0, SH + 19.5, 0, 0, 0, 0, 44);
+    elG(g, mat.relief, 14.0, 12.6, 8.6, 0, SH + 24.5, 8.0, -0.08, 0, 0, 40);
+    elG(g, mat.relief, 11.0, 12.4, 7.6, 0, SH + 14.6, 8.4, -0.06, 0, 0, 36);
+    elG(g, mat.relief, 6.6, 8.6, 5.6, 0, SH + 6.6, 9.6, -0.05, 0, 0, 30);
+    [-1, 1].forEach(function (s) { elG(g, mat.relief, 5.4, 12, 6.2, s * 11.4, SH + 22.4, 6.4, 0, 0, s * 0.18, 26); });
+    /* nez rond */
+    elG(g, mat.base, 5.2, 5.2, 5.0, 0, SH + 27.4, 15.0, 0, 0, 0, 28);
+    /* bonnet : grosse bordure moelleuse, puis long cône penché sur le côté */
+    var br = mk(new THREE.TorusGeometry(13.0, 3.6, 18, 48), mat.base); br.rotation.x = Math.PI / 2; br.position.set(0, SH + 36.2, 1.2); br.scale.set(1, 1.0, 0.98); g.add(br);
+    var piv = new THREE.Group(); piv.position.set(0, SH + 35.6, 1.0); piv.rotation.z = -0.34; g.add(piv);
+    var cone = mk(new THREE.ConeGeometry(13.0, 56, 44), mat.base); cone.position.y = 28; piv.add(cone);
+    var cone2 = mk(new THREE.SphereGeometry(1, 20, 14), mat.base); cone2.scale.set(2.6, 2.6, 2.6); cone2.position.y = 56; piv.add(cone2);
+    /* bras rayés (rouge et blanc), qui s'écartent du corps, moufles arrondies */
+    [-1, 1].forEach(function (s) {
+      var d = new THREE.Vector3(s * 0.86, -0.34, 0.38).normalize(), p = new THREE.Vector3(s * 12.6, SH + 26.0, 2.4), n = 6, st = 3.2;
+      for (var i = 0; i < n; i++) {
+        var a = p.clone().add(d.clone().multiplyScalar(i * st)), b = p.clone().add(d.clone().multiplyScalar((i + 1) * st));
+        seg(i % 2 === 0 ? mat.relief : mat.base, [a.x, a.y, a.z], [b.x, b.y, b.z], 3.7);
+      }
+      var e = p.clone().add(d.clone().multiplyScalar(n * st - 0.4));
+      var mt = elG(g, mat.base, 5.4, 6.6, 4.0, e.x + s * 1.8, e.y - 1.8, e.z + 0.8, 0, 0, -s * 0.72, 24);
+      elG(g, mat.base, 4.2, 4.2, 4.2, p.x - s * 1.0, p.y, p.z - 0.4, 0, 0, 0, 20);
     });
-    elG(g, mat.base, 2.6, 2.4, 2.4, 0, hy + 0.2, 10.6, 0, 0, 0, 18);
-    /* bonnet : cône courbé qui retombe, bord blanc, pompon */
-    var ht = mk(new THREE.ConeGeometry(11.2, 20, 36), mat.base); ht.position.set(-1.8, hy + 13.8, -0.4); ht.rotation.z = 0.32; g.add(ht);
-    tubeG(g, mat.base, [[-2.4, hy + 18, -0.4], [-6.8, hy + 24, -1], [-11.4, hy + 24.4, -1.4]], 3.2);
-    elG(g, mat.relief, 3.9, 3.9, 3.9, -13.2, hy + 22.6, -1.4, 0, 0, 0, 20);
-    var tm = mk(new THREE.TorusGeometry(10.2, 2.6, 14, 40), mat.relief); tm.rotation.x = Math.PI / 2; tm.position.set(0, hy + 6.0, 0); tm.scale.set(1, 1, 0.94); g.add(tm);
-    nameOnSocle(g, mat, text, 7, 54, -(33 - 9 + 2), SH - 0.03);
+    layout(text, { maxW: 40, maxH: 8, cap: 6.2, cx: 0, cy: -23 }).items.forEach(function (it) {
+      g.add(mk(ext(it.shapes, 1.4, { bevel: 0.3, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: SH - 0.03 }), mat.base));
+    });
     return g;
   }
 
