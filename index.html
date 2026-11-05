@@ -2618,7 +2618,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-pere-noel': { t: 'Père Noël', s: 'Père Noël', one: 'Père Noël', many: 'Pères Noël', ref: 'N9', dims: '12 cm de haut, socle de 6 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
       d: 'Un Père Noël debout, détaillé, comme une statuette : manteau à liseré de fourrure, ceinture noire à boucle dorée, bottes, grande barbe bouclée et bonnet au houx. Il tient une cloche dorée d’une main et un sac de cadeaux sur l’épaule de l’autre. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant.' },
     'noel-lutin': { t: 'Lutin de Noël', s: 'Lutin de Noël', one: 'lutin de Noël', many: 'lutins de Noël', ref: 'N11', dims: '10 cm de haut, socle de 6 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'enfants, familles, cadeaux, boutiques',
-      d: 'Un petit lutin de Noël façon peluche nordique : grand bonnet pointu penché, grosse barbe blanche, nez rond, bras rayés rouge et blanc avec leurs moufles, et deux pieds ovales. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant. Bonnet, corps et nez dans une couleur, barbe, rayures et socle dans l’autre.' },
+      d: 'Un petit lutin de Noël façon peluche nordique : grand bonnet pointu penché, barbe blanche en pointe, nez rond, ventre rouge avec sa ceinture noire à boucle dorée, bras rayés rouge et blanc avec leurs moufles, et deux pieds ovales. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
       d: 'Un traîneau à coque courbe, patins à volute et banc, plein de cadeaux, tiré par deux rennes attelés : l’un lève une patte, bois ramifiés et nez rouge. Le nom de la famille est écrit sur le flanc du traîneau. Imprimé d’un seul bloc sur un socle, sans pièce rapportée.' },    'c-coeurduo': { t: 'Collier cœur en deux morceaux', s: 'Collier cœur duo', one: 'collier cœur en deux morceaux', many: 'colliers cœur en deux morceaux', ref: 'D1', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-coeurduo', who: 'couples, amis, famille',
       d: 'Un cœur coupé en deux moitiés qui s’emboîtent, un prénom sur chacune et une chaîne pour chaque morceau : un collier pour vous, un pour l’autre. Vendu par paire, avec les deux chaînes argentées.' },
@@ -5785,12 +5785,15 @@ function A77Models(THREE, fontData, allFonts) {
     g.add(mk(ext([circle(new THREE.Shape(), 29, 0, 0)], SH, { bevel: 1.1, seg: 44 }), mat.relief));
     /* pieds en feutre, ovales et plats */
     [-1, 1].forEach(function (s) { elG(g, mat.base, 7.4, 3.6, 9.4, s * 8.2, SH + 2.6, 8.4, 0, s * 0.12, 0, 30); });
-    /* corps rond, barbe qui le recouvre presque (trois masses qui s'effilent) */
+    /* corps rond bien rouge, ceinture noire à boucle, barbe courte en V sous le nez (le ventre reste visible) */
     elG(g, mat.base, 15.5, 17.5, 13.2, 0, SH + 19.5, 0, 0, 0, 0, 44);
-    elG(g, mat.relief, 14.0, 12.6, 8.6, 0, SH + 24.5, 8.0, -0.08, 0, 0, 40);
-    elG(g, mat.relief, 11.0, 12.4, 7.6, 0, SH + 14.6, 8.4, -0.06, 0, 0, 36);
-    elG(g, mat.relief, 6.6, 8.6, 5.6, 0, SH + 6.6, 9.6, -0.05, 0, 0, 30);
-    [-1, 1].forEach(function (s) { elG(g, mat.relief, 5.4, 12, 6.2, s * 11.4, SH + 22.4, 6.4, 0, 0, s * 0.18, 26); });
+    var belt = mk(new THREE.CylinderGeometry(1, 1, 3.4, 48), propMat('#1B1D22')); belt.scale.set(13.6, 1, 11.7); belt.position.set(0, SH + 9.8, 0); g.add(belt);
+    var bkl = mk(new THREE.BoxGeometry(5.4, 4.6, 1.6), propMat('#F5C518')); bkl.position.set(0, SH + 9.8, 11.9); g.add(bkl);
+    elG(g, mat.relief, 11.2, 8.6, 6.6, 0, SH + 23.8, 9.6, -0.1, 0, 0, 40);
+    elG(g, mat.relief, 7.4, 8.2, 5.4, 0, SH + 17.4, 10.8, -0.06, 0, 0, 34);
+    elG(g, mat.relief, 3.6, 5.4, 3.6, 0, SH + 12.6, 11.4, 0, 0, 0, 24);
+    /* bandes de fourrure en bas du corps */
+    var hm = mk(new THREE.TorusGeometry(13.2, 1.9, 10, 44), mat.relief); hm.rotation.x = Math.PI / 2; hm.position.set(0, SH + 3.8, 0); hm.scale.set(1, 0.86, 1); g.add(hm);
     /* nez rond */
     elG(g, mat.base, 5.2, 5.2, 5.0, 0, SH + 27.4, 15.0, 0, 0, 0, 28);
     /* bonnet : grosse bordure moelleuse, puis long cône penché sur le côté */
