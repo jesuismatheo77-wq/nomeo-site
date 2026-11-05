@@ -5603,6 +5603,80 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* ===== sculpture lissée : champ de distance + maillage (surface nets), pour des formes organiques ===== */
+  var SC = (function () {
+    function smin(a, b, k) { var h = Math.max(k - Math.abs(a - b), 0) / k; return Math.min(a, b) - h * h * k * 0.25; }
+    function ell(cx, cy, cz, rx, ry, rz, k) {
+      var pad = k + 3;
+      return { k: k, box: [cx - rx - pad, cy - ry - pad, cz - rz - pad, cx + rx + pad, cy + ry + pad, cz + rz + pad], f: function (x, y, z) {
+        var qx = (x - cx) / rx, qy = (y - cy) / ry, qz = (z - cz) / rz, k0 = Math.sqrt(qx * qx + qy * qy + qz * qz);
+        var k1 = Math.sqrt(qx * qx / (rx * rx) + qy * qy / (ry * ry) + qz * qz / (rz * rz));
+        return k1 < 1e-9 ? -Math.min(rx, ry, rz) : k0 * (k0 - 1) / k1;
+      } };
+    }
+    function cap(a, b, ra, rb, k) {
+      var pad = k + Math.max(ra, rb) + 3, dx = b[0] - a[0], dy = b[1] - a[1], dz = b[2] - a[2], L2 = dx * dx + dy * dy + dz * dz || 1;
+      return { k: k, box: [Math.min(a[0], b[0]) - pad, Math.min(a[1], b[1]) - pad, Math.min(a[2], b[2]) - pad, Math.max(a[0], b[0]) + pad, Math.max(a[1], b[1]) + pad, Math.max(a[2], b[2]) + pad], f: function (x, y, z) {
+        var t = ((x - a[0]) * dx + (y - a[1]) * dy + (z - a[2]) * dz) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+        var px = a[0] + dx * t - x, py = a[1] + dy * t - y, pz = a[2] + dz * t - z;
+        return Math.sqrt(px * px + py * py + pz * pz) - (ra + (rb - ra) * t);
+      } };
+    }
+    /* anneau (tore) horizontal, écrasé en z par sz */
+    function tor(cx, cy, cz, R, r, sz, k) {
+      var pad = k + r + 3;
+      return { k: k, box: [cx - R - pad, cy - r - pad, cz - R * sz - pad, cx + R + pad, cy + r + pad, cz + R * sz + pad], f: function (x, y, z) {
+        var qx = x - cx, qz = (z - cz) / sz, l = Math.sqrt(qx * qx + qz * qz) - R, qy = y - cy;
+        return Math.sqrt(l * l + qy * qy) - r;
+      } };
+    }
+    function group(list) {
+      return function (x, y, z) {
+        var d = 1e3, i, p, b;
+        for (i = 0; i < list.length; i++) {
+          p = list[i]; b = p.box;
+          if (x < b[0] || x > b[3] || y < b[1] || y > b[4] || z < b[2] || z > b[5]) continue;
+          var v = p.f(x, y, z);
+          d = d > 999 ? v : smin(d, v, p.k);
+        }
+        return d;
+      };
+    }
+    /* maillage par surface nets sur la boîte [x0..x1]×[y0..y1]×[z0..z1] au pas h */
+    function mesh(f, b, h) {
+      var nx = Math.ceil((b[3] - b[0]) / h), ny = Math.ceil((b[4] - b[1]) / h), nz = Math.ceil((b[5] - b[2]) / h), sx = nx + 1, sy = ny + 1;
+      var F = new Float32Array((nx + 1) * (ny + 1) * (nz + 1)), i, j, k;
+      for (k = 0; k <= nz; k++) for (j = 0; j <= ny; j++) for (i = 0; i <= nx; i++) F[i + sx * (j + sy * k)] = f(b[0] + i * h, b[1] + j * h, b[2] + k * h);
+      var cid = new Int32Array(nx * ny * nz).fill(-1), pos = [], idx = [];
+      var cx = [0, 1, 0, 1, 0, 1, 0, 1], cy = [0, 0, 1, 1, 0, 0, 1, 1], cz = [0, 0, 0, 0, 1, 1, 1, 1];
+      var ed = [[0, 1], [2, 3], [4, 5], [6, 7], [0, 2], [1, 3], [4, 6], [5, 7], [0, 4], [1, 5], [2, 6], [3, 7]];
+      for (k = 0; k < nz; k++) for (j = 0; j < ny; j++) for (i = 0; i < nx; i++) {
+        var v = [], m = 0, c;
+        for (c = 0; c < 8; c++) { v[c] = F[(i + cx[c]) + sx * ((j + cy[c]) + sy * (k + cz[c]))]; if (v[c] < 0) m++; }
+        if (m === 0 || m === 8) continue;
+        var ax = 0, ay = 0, az = 0, n = 0;
+        for (c = 0; c < 12; c++) {
+          var e0 = ed[c][0], e1 = ed[c][1], a = v[e0], bb = v[e1];
+          if ((a < 0) !== (bb < 0)) { var t = a / (a - bb); ax += cx[e0] + (cx[e1] - cx[e0]) * t; ay += cy[e0] + (cy[e1] - cy[e0]) * t; az += cz[e0] + (cz[e1] - cz[e0]) * t; n++; }
+        }
+        cid[i + nx * (j + ny * k)] = pos.length / 3;
+        pos.push(b[0] + (i + ax / n) * h, b[1] + (j + ay / n) * h, b[2] + (k + az / n) * h);
+      }
+      function quad(a0, a1, a2, a3, flip) { if (a0 < 0 || a1 < 0 || a2 < 0 || a3 < 0) return; if (flip) idx.push(a0, a1, a2, a0, a2, a3); else idx.push(a0, a2, a1, a0, a3, a2); }
+      function C(i, j, k) { return (i < 0 || j < 0 || k < 0 || i >= nx || j >= ny || k >= nz) ? -1 : cid[i + nx * (j + ny * k)]; }
+      for (k = 1; k < nz; k++) for (j = 1; j < ny; j++) for (i = 1; i < nx; i++) {
+        var s0 = F[i + sx * (j + sy * k)] < 0;
+        if (s0 !== (F[(i + 1) + sx * (j + sy * k)] < 0)) quad(C(i, j - 1, k - 1), C(i, j, k - 1), C(i, j, k), C(i, j - 1, k), s0);
+        if (s0 !== (F[i + sx * ((j + 1) + sy * k)] < 0)) quad(C(i - 1, j, k - 1), C(i - 1, j, k), C(i, j, k), C(i, j, k - 1), s0);
+        if (s0 !== (F[i + sx * (j + sy * (k + 1))] < 0)) quad(C(i - 1, j - 1, k), C(i, j - 1, k), C(i, j, k), C(i - 1, j, k), s0);
+      }
+      var g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); g.computeVertexNormals();
+      return g;
+    }
+    return { ell: ell, cap: cap, tor: tor, group: group, mesh: mesh, smin: smin };
+  })();
+
   /* ===== objets de Noël en 3D (v3) ===== */
   function elG(g, m, sx, sy, sz, x, y, z, rx, ry, rz, seg) {
     var e = mk(new THREE.SphereGeometry(1, seg || 36, Math.round((seg || 36) * 0.7)), m); e.scale.set(sx, sy, sz); e.position.set(x, y, z);
@@ -5699,74 +5773,67 @@ function A77Models(THREE, fontData, allFonts) {
 
   /* Père Noël debout, d'après une statuette classique : manteau à liseré de fourrure, ceinture à boucle, bottes, sac sur l'épaule, cloche à la main, barbe bouclée */
   function pereNoel(mat, text) {
-    var g = new THREE.Group(), DK = propMat('#1B1D22'), YL = propMat('#F5C518'), GY = propMat('#9A9DA3'), GR = propMat('#12B04A'), RD = propMat('#D7332A'), SH = 5, i, r, k;
+    var g = new THREE.Group(), DK = propMat('#1B1D22'), YL = propMat('#F5C518'), GY = propMat('#9A9DA3'), GR = propMat('#12B04A'), SH = 5, Y = SH, hy = SH + 83, i, r, k;
+    var E = SC.ell, C = SC.cap, T = SC.tor;
     /* socle de neige, rond */
     g.add(mk(ext([circle(new THREE.Shape(), 31, 0, 0)], SH, { bevel: 1.2, seg: 44 }), mat.relief));
-    /* bottes noires et pantalon */
-    [-1, 1].forEach(function (sg) {
-      var x = sg * 6.2;
-      cylG(g, DK, 5.2, 5.6, 11, x, SH + 5.2, -0.4, 0, 0, 0, 24);
-      elG(g, DK, 5.4, 3.9, 8.8, x, SH + 3.6, 3.2, 0, sg * -0.08, 0, 26);
-      cylG(g, mat.base, 5.0, 5.7, 31, x + sg * 0.3, SH + 26.5, 0, 0, 0, -sg * 0.03, 24);
-    });
-    /* manteau : légèrement évasé, liseré de fourrure en bas et au milieu, ceinture noire à boucle dorée */
-    var prof = [[0, SH + 42], [15.2, SH + 42], [14.6, SH + 50], [13.4, SH + 62], [12.4, SH + 70], [10.4, SH + 77], [6.4, SH + 80.6], [0, SH + 81.5]].map(function (p) { return new THREE.Vector2(p[0], p[1]); });
-    var coat = mk(new THREE.LatheGeometry(prof, 56), mat.base); coat.scale.z = 0.8; g.add(coat);
-    var hem = mk(new THREE.TorusGeometry(15.2, 2.1, 12, 56), mat.relief); hem.rotation.x = Math.PI / 2; hem.position.y = SH + 42.6; hem.scale.set(1, 0.82, 1); g.add(hem);
-    var belt = mk(new THREE.CylinderGeometry(14.5, 14.8, 4.6, 56), DK); belt.position.y = SH + 52.6; belt.scale.z = 0.83; g.add(belt);
-    var bk = mk(new THREE.BoxGeometry(7.4, 5.8, 1.9), YL); bk.position.set(2.4, SH + 52.6, 12.6); g.add(bk);
-    var bi = mk(new THREE.BoxGeometry(3.8, 3, 2.3), DK); bi.position.set(2.4, SH + 52.6, 12.8); g.add(bi);
-    elG(g, mat.relief, 2.5, 19, 1.0, -0.6, SH + 62, 11.3, -0.06, 0, 0, 20);
-    elG(g, mat.relief, 2.5, 5.2, 1.0, -0.6, SH + 46, 12.4, -0.05, 0, 0, 20);
-    var col = mk(new THREE.TorusGeometry(7.4, 2.2, 12, 40), mat.relief); col.rotation.x = Math.PI / 2; col.position.set(0, SH + 79, 0.4); col.scale.set(1, 0.9, 1); g.add(col);
-    /* bras gauche (à droite sur l'image) : coude plié, la main tient la cloche à hauteur de hanche */
-    var sx = 14.4, sy = SH + 74;
-    tubeG(g, mat.base, [[sx, sy, 0], [sx + 3.6, sy - 9, 2.6], [sx + 3.8, sy - 17, 6.4], [sx + 1.6, sy - 22.4, 11]], 4.1);
-    elG(g, mat.base, 5, 5, 5, sx, sy, 0, 0, 0, 0, 20);
-    var cf = mk(new THREE.TorusGeometry(4.5, 1.9, 10, 24), mat.relief); cf.position.set(sx + 1.8, sy - 21.6, 10.4); cf.rotation.set(Math.PI / 2 - 0.5, 0, 0); g.add(cf);
-    elG(g, mat.relief, 3.6, 3.6, 3.6, sx + 1.4, sy - 25, 13.2, 0, 0, 0, 16);
-    /* cloche dorée */
-    var bell = mk(new THREE.SphereGeometry(1, 28, 20, 0, TAU, 0, Math.PI * 0.72), YL); bell.scale.set(4.8, 5.4, 4.8); bell.position.set(sx + 0.8, sy - 31.4, 13.6); bell.rotation.x = Math.PI; g.add(bell);
-    elG(g, YL, 1.5, 1.5, 1.5, sx + 0.8, sy - 24.6, 13.6, 0, 0, 0, 10);
-    /* bras droit (à gauche sur l'image) : la main tient la bretelle du sac contre la poitrine */
-    var rx = -14.4;
-    tubeG(g, mat.base, [[rx, sy, 0], [rx - 3.8, sy - 8, 2.2], [rx - 2.4, sy - 14.8, 7], [rx + 3.4, sy - 15.6, 11.4]], 4.1);
-    elG(g, mat.base, 5, 5, 5, rx, sy, 0, 0, 0, 0, 20);
-    var cf2 = mk(new THREE.TorusGeometry(4.3, 1.9, 10, 24), mat.relief); cf2.position.set(rx - 0.6, sy - 15.2, 8.9); cf2.rotation.set(Math.PI / 2 - 0.1, 0, 1.0); g.add(cf2);
-    elG(g, mat.relief, 3.8, 3.4, 3.4, rx + 3.6, sy - 15.8, 12.6, 0, 0, 0, 16);
-    /* sac de cadeaux sur l'épaule, dans le dos, retenu par la main */
-    tubeG(g, GY, [[rx + 3.2, sy - 14.4, 11.4], [rx - 2, sy - 2.4, 8.2], [rx - 1.4, sy + 5.2, 1.4], [rx - 6.4, sy + 1.6, -6.4]], 1.5);
-    elG(g, GY, 7.6, 17, 6.8, rx - 7.6, sy - 8.6, -8.6, 0.15, 0.2, 0.28, 30);
-    var nk = mk(new THREE.TorusGeometry(3.6, 1.2, 8, 20), GY); nk.position.set(rx - 4.4, sy + 3.2, -6.4); nk.rotation.set(0.4, 0.3, 0); g.add(nk);
-    /* tête : visage, yeux, sourcils, nez rouge, moustache */
-    var hy = SH + 91;
-    elG(g, mat.relief, 8.6, 9.6, 8.4, 0, hy, 0, 0, 0, 0, 40);
-    [-1, 1].forEach(function (sg) {
-      elG(g, DK, 0.95, 1.1, 0.8, sg * 3.4, hy + 1.4, 7.6, 0, 0, 0, 10);
-      elG(g, mat.relief, 3.4, 1.1, 1.4, sg * 3.4, hy + 3.6, 7.3, 0, 0, -sg * 0.18, 10);
-      elG(g, mat.base, 2.2, 1.4, 0.9, sg * 5.2, hy - 1.2, 6.8, 0, 0, 0, 10);
-    });
-    elG(g, mat.base, 1.9, 1.9, 1.9, 0, hy - 0.8, 8.6, 0, 0, 0, 12);
-    elG(g, mat.relief, 4.8, 2.2, 2.6, -3.6, hy - 3.7, 8.2, 0, 0, 0.28, 16);
-    elG(g, mat.relief, 4.8, 2.2, 2.6, 3.6, hy - 3.7, 8.2, 0, 0, -0.28, 16);
-    /* barbe bouclée : un fond, puis des boucles en rangées qui s'amenuisent jusqu'à la poitrine */
-    elG(g, mat.relief, 8.2, 13, 5.2, 0, hy - 11.6, 5.0, 0.12, 0, 0, 30);
-    elG(g, mat.relief, 9.6, 7.4, 6.2, 0, hy - 4.8, 3.0, 0.1, 0, 0, 30);
+    var sx = 14, rx = -14;
+    /* --- manteau, jambes, bras, bonnet (rouge) --- */
+    var red = [
+      C([-6.4, Y + 8, -0.2], [-6.2, Y + 30, 0], 5.4, 5.8, 2), C([6.4, Y + 8, -0.2], [6.2, Y + 30, 0], 5.4, 5.8, 2),
+      E(0, Y + 41, 0, 15.2, 9, 12.2, 5), E(0, Y + 54, 0, 14, 15, 11.4, 6), E(0, Y + 65, 0, 13, 7, 10, 5),
+      C([sx - 1, Y + 66, 0], [sx + 3.8, Y + 56, 2.8], 4.6, 4.2, 3), C([sx + 3.8, Y + 56, 2.8], [sx + 2.4, Y + 46, 8.4], 4.2, 3.9, 3),
+      C([rx + 1, Y + 66, 0], [rx - 3.6, Y + 57, 2.4], 4.6, 4.2, 3), C([rx - 3.6, Y + 57, 2.4], [rx + 0.4, Y + 51, 9.6], 4.2, 3.9, 3),
+      C([1.4, hy + 8.4, -0.5], [4.6, hy + 15, -1.2], 9.0, 6.4, 3), C([4.6, hy + 15, -1.2], [8.8, hy + 20, -1.5], 6.4, 3.8, 3), C([8.8, hy + 20, -1.5], [12.2, hy + 17.4, -1.6], 3.8, 3.0, 3)
+    ];
+    /* --- fourrure blanche : tête, barbe, moustache, bord du bonnet, col, ourlet, parements, mains, pompon --- */
+    var wh = [E(0, hy, 0, 8.6, 9.6, 8.4, 3), E(0, hy - 11, 4.4, 8.4, 11, 5.4, 4), E(0, hy - 4.6, 3.0, 9.6, 7.2, 6.2, 4),
+      T(0, hy + 7.2, -0.4, 9.0, 2.6, 0.96, 2), E(12.4, hy + 15.2, -1.6, 4.2, 4.2, 4.2, 2),
+      T(0, Y + 71, 0.4, 7.6, 2.4, 0.9, 2), T(0, Y + 35.4, 0, 15.2, 2.5, 0.82, 2),
+      E(-0.6, Y + 54, 10.6, 2.6, 19, 2.2, 1.5), E(-0.6, Y + 37.4, 12.0, 2.6, 4, 2, 1.5),
+      E(sx + 2.4, Y + 45.6, 8.6, 5, 2.6, 5, 2), E(sx + 2.4, Y + 41.2, 10.6, 3.9, 3.9, 3.9, 2),
+      E(rx + 0.4, Y + 51.4, 10.0, 5, 2.6, 5, 2), E(rx + 3.2, Y + 50.6, 12.6, 3.9, 3.6, 3.7, 2),
+      E(-4.2, hy - 3.7, 8.2, 4.8, 2.2, 2.6, 2.4), E(4.2, hy - 3.7, 8.2, 4.8, 2.2, 2.6, 2.4)];
+    /* boucles de la barbe */
     for (r = 0; r < 6; r++) {
-      var ny = 5 - r, yy = hy - 4.4 - r * 3.7, hw = 8.2 - r * 0.8, zz = 8.2 - r * 0.15;
+      var ny = 5 - r, yy = hy - 4.4 - r * 3.7, hw = 8.2 - r * 0.8, zz = 8.0 - r * 0.15;
       for (k = 0; k < ny + 2; k++) {
-        var u = ny + 1 === 0 ? 0 : (k / (ny + 1) - 0.5) * 2 * hw, jx = ((k * 7 + r * 3) % 5 - 2) * 0.22;
-        elG(g, mat.relief, 2.3, 2.3, 2.3, u + jx, yy - Math.abs(u) * 0.12, zz - Math.abs(u) * 0.22, 0, 0, 0, 10);
+        var u = (k / (ny + 1) - 0.5) * 2 * hw, jx = ((k * 7 + r * 3) % 5 - 2) * 0.22;
+        wh.push(E(u + jx, yy - Math.abs(u) * 0.12, zz - Math.abs(u) * 0.22, 2.5, 2.5, 2.5, 1.4));
       }
     }
-    /* bonnet : bandeau de fourrure, cône courbé, pompon sur le côté, houx */
-    var hat = mk(new THREE.ConeGeometry(9.6, 18, 36), mat.base); hat.position.set(1.6, hy + 14.2, -0.6); hat.rotation.z = -0.28; g.add(hat);
-    tubeG(g, mat.base, [[2.4, hy + 18, -0.6], [6.8, hy + 22, -1.2], [10.4, hy + 18.8, -1.4]], 3.1);
-    elG(g, mat.relief, 3.6, 3.6, 3.6, 11.2, hy + 15.0, -1.4, 0, 0, 0, 18);
-    var tm = mk(new THREE.TorusGeometry(9.0, 2.5, 14, 40), mat.relief); tm.rotation.x = Math.PI / 2; tm.position.set(0, hy + 7.2, -0.4); tm.scale.set(1, 1, 0.96); g.add(tm);
-    elG(g, GR, 2.8, 0.9, 1.6, -3.6, hy + 9.2, 9.4, 0, 0, 0.6, 10); elG(g, GR, 2.8, 0.9, 1.6, -1.2, hy + 10.2, 9.6, 0, 0, -0.5, 10);
-    [[-2.6, 9.0], [-1.4, 9.6], [-2.0, 8.2]].forEach(function (b) { elG(g, RD, 0.8, 0.8, 0.8, b[0], hy + b[1], 10.4, 0, 0, 0, 8); });
-    /* prénom en relief sur le socle, devant les bottes, en couleur de manteau */
+    /* --- noir : bottes, ceinture --- */
+    var blk = [E(-6.4, Y + 4.4, 3.2, 5.9, 4.6, 8.8, 2), E(6.4, Y + 4.4, 3.2, 5.9, 4.6, 8.8, 2), C([-6.4, Y + 5, -0.4], [-6.3, Y + 13, -0.2], 5.9, 5.7, 2), C([6.4, Y + 5, -0.4], [6.3, Y + 13, -0.2], 5.9, 5.7, 2),
+      T(0, Y + 44.4, 0, 14.4, 2.5, 0.84, 1)];
+    /* --- sac gris dans le dos --- */
+    var gy = [E(rx - 7.8, Y + 59, -8.6, 8, 17, 7, 4), C([rx + 3, Y + 52, 10.4], [rx - 2.2, Y + 64, 6.6], 1.5, 1.5, 1), C([rx - 2.2, Y + 64, 6.6], [rx - 3, Y + 71, 0], 1.5, 1.5, 1), C([rx - 3, Y + 71, 0], [rx - 7, Y + 70, -6], 1.5, 1.5, 1), E(rx - 4.6, Y + 71, -6.4, 4.2, 2.0, 3.4, 1)];
+    /* nez et joues */
+    var pk = [E(0, hy - 0.8, 9.0, 2.0, 1.9, 1.9, 0.5), E(-5.2, hy - 1.4, 6.8, 2.3, 1.5, 1.0, 0.5), E(5.2, hy - 1.4, 6.8, 2.3, 1.5, 1.0, 0.5)];
+    var gR = SC.group(red), gW = SC.group(wh), gB = SC.group(blk), gG = SC.group(gy), gP = SC.group(pk);
+    function bnd(l) { var b = [1e3, 1e3, 1e3, -1e3, -1e3, -1e3]; l.forEach(function (p) { for (var q = 0; q < 3; q++) { b[q] = Math.min(b[q], p.box[q]); b[q + 3] = Math.max(b[q + 3], p.box[q + 3]); } }); return b; }
+    var H = 0.85;
+    /* priorité : noir > gris > rose > blanc > rouge */
+    var fR = function (x, y, z) { return Math.max(gR(x, y, z), -gW(x, y, z), -gG(x, y, z), -gP(x, y, z)); };
+    var fW = function (x, y, z) { return Math.max(gW(x, y, z), -gB(x, y, z), -gG(x, y, z), -gP(x, y, z)); };
+    var fG = function (x, y, z) { return Math.max(gG(x, y, z), -gB(x, y, z)); };
+    g.add(mk(SC.mesh(fR, bnd(red), H), mat.base));
+    g.add(mk(SC.mesh(fW, bnd(wh), H), mat.relief));
+    g.add(mk(SC.mesh(gB, bnd(blk), H), DK));
+    g.add(mk(SC.mesh(fG, bnd(gy), H), GY));
+    g.add(mk(SC.mesh(gP, bnd(pk), 0.45), mat.base));
+    /* boucle de ceinture dorée */
+    var bk = mk(new THREE.BoxGeometry(7.2, 5.6, 1.7), YL); bk.position.set(2.4, Y + 44.4, 12.2); g.add(bk);
+    var bi = mk(new THREE.BoxGeometry(3.6, 2.8, 2.1), DK); bi.position.set(2.4, Y + 44.4, 12.4); g.add(bi);
+    /* cloche dorée tenue par la main gauche */
+    elG(g, YL, 1.6, 1.6, 1.6, sx + 2.4, Y + 39, 10.8, 0, 0, 0, 10);
+    var bell = mk(new THREE.SphereGeometry(1, 28, 20, 0, TAU, 0, Math.PI * 0.72), YL); bell.scale.set(4.8, 5.4, 4.8); bell.position.set(sx + 2.4, Y + 33.4, 10.8); bell.rotation.x = Math.PI; g.add(bell);
+    /* yeux, sourcils, houx */
+    [-1, 1].forEach(function (sg) {
+      elG(g, DK, 1.1, 1.3, 0.9, sg * 3.4, hy + 1.6, 8.1, 0, 0, 0, 10);
+    });
+    elG(g, GR, 2.8, 0.9, 1.6, -3.6, hy + 10, 9.2, 0, 0, 0.6, 10); elG(g, GR, 2.8, 0.9, 1.6, -1.2, hy + 11, 9.4, 0, 0, -0.5, 10);
+    [[-2.6, 9.8], [-1.4, 10.4], [-2.0, 9.0]].forEach(function (b) { elG(g, propMat('#D7332A'), 0.8, 0.8, 0.8, b[0], hy + b[1], 10.2, 0, 0, 0, 8); });
+    /* prénom en relief sur le socle */
     layout(text, { maxW: 42, maxH: 8, cap: 6.2, cx: 0, cy: -22.4 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.4, { bevel: 0.3, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: SH - 0.03 }), mat.base));
     });
