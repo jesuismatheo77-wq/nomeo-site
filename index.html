@@ -4859,18 +4859,31 @@ function A77Models(THREE, fontData, allFonts) {
       var rimT2 = cexec(ClipperLib.ClipType.ctDifference, big(shPaths(tShapes(rimT), 4), 1.2), cpaths([circPts(hx * sign, hy, holeR + 2.2, 24)]));
       return { base: tShapes(baseT), rim: tShapes(rimT2) };
     }
-    var hl = half(L, 1), hr = half(R, -1);
-    var lay = [parts[0], parts[1]].map(function (t, k) {
-      var cx = (k ? 1 : -1) * W * 0.25;
-      return layoutAuto(t, { maxW: W * 0.25, maxH: H * 0.22, cap: 5.2 * s, cx: cx + (k ? gap : -gap), cy: W * 0.07 });
+    /* deux demi-cœurs bombés, chacun avec son prénom en relief et son trou pour la chaîne */
+    var T = 9 * s, RM = 5 * s, NS = 10, k, geos = [], caps = [], relS = [], hy2 = top[1] - W * 0.2;
+    var lay = [parts[0], parts[1]].map(function (t, kk) {
+      var cx = (kk ? 1 : -1) * W * 0.25;
+      return layoutAuto(t, { maxW: W * 0.2, maxH: H * 0.18, cap: 4.4 * s, cx: cx, cy: W * 0.1 });
     });
-    var bl = shiftShapes(hl.base, -gap, 0), br = shiftShapes(hr.base, gap, 0);
-    var rl = shiftShapes(hl.rim, -gap, 0), rr_ = shiftShapes(hr.rim, gap, 0);
-    var bh = 2.4, rh = 1.0, items = lay[0].items.concat(lay[1].items);
-    var m = flatModel(bl.concat(br), rl.concat(rr_), items, 24, bh, rh);
-    m.dims = [W + 2 * gap, H, bh + rh];
+    [[L, 1], [R, -1]].forEach(function (pr) {
+      var tree = pr[0], sign = pr[1];
+      var big = function (ps, mn) { return ps.filter(function (q) { return Math.abs(ClipperLib.Clipper.Area(q)) / CLS / CLS > mn; }); };
+      var paths = orient(big(shPaths(tShapes(tree), 4), 6)), hole = cpaths([circPts(hx * sign, hy2, 2.1, 24)]);
+      for (k = 1; k <= NS; k++) {
+        var th = k / NS * Math.PI / 2, d = RM * (1 - Math.cos(th)), hh = T * Math.sin(th);
+        var off = d < 0.01 ? paths : orient(cOffset(paths, -d));
+        var shp = tShapes(cexec(ClipperLib.ClipType.ctDifference, off, hole));
+        if (!shp.length) continue;
+        geos.push(ext(shp, hh, { seg: 14 }));
+        if (k === 1) caps.push(capGeo(shp, { seg: 14 }));
+      }
+    });
+    lay[0].items.concat(lay[1].items).forEach(function (it) { relS = relS.concat(shiftShapes(it.shapes, it.dx, it.dy)); });
+    var m = cust(geos, caps, T, [ext(relS, 1.4, { seg: 8, bevel: 0.2, bseg: 1, z0: T - 0.3 })], [capGeo(relS, { seg: 8 })], 0, T - 0.3);
+    m.relief.y1 = T + 1.1;
+    m.dims = [W, H, T + 1.1];
     m.shrunk = (lay[0].size * CAP) < 5.2 * s * 0.75 || (lay[1].size * CAP) < 5.2 * s * 0.75;
-    m.acc = 'chain'; m.holes = [[hx - gap, hy], [-hx + gap, hy]]; m.edge = [W * 0.11, W * 0.11]; m.thick = bh + rh;
+    m.acc = 'chain'; m.hang = true; m.holes = [[hx, hy2], [-hx, hy2]]; m.edge = [W * 0.11, W * 0.11]; m.thick = T;
     return m;
   }
 
@@ -4880,8 +4893,8 @@ function A77Models(THREE, fontData, allFonts) {
     var W = 70 * s, hp = heartPts(W), t = clean(text) || 'LÉA & NOÉ 2026';
     var lay = layoutAuto(t, { maxW: W * 0.5, maxH: W * 0.26, cap: 8 * s, cx: 0, cy: W * 0.04 });
     var T = 14 * s, RM = 8 * s, NS = 14, k;
-    var top = lobeTop(hp), hx = top[0] * 0.88, hy = top[1] - W * 0.1;
-    var heart = orient(cpaths([hp])), holeP = cpaths([circPts(hx, hy, 2.0, 24)]);
+    var top = lobeTop(hp), hx = top[0] * 0.8, hy = top[1] - W * 0.19;
+    var heart = orient(cpaths([hp])), holeP = cpaths([circPts(hx, hy, 2.5, 28)]);
     var geos = [], caps = [], baseS;
     /* vrai cœur bombé des deux côtés, sans face plate : tranches empilées dont le contour rentre en suivant un quart de cercle (bords arrondis, sommet plat pour le prénom) */
     for (k = 1; k <= NS; k++) {
@@ -5776,12 +5789,9 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-sapin': return G(sapin(T('LÉA')), mat);
       case 'noel-etiquette': return G(etiquette(T('LÉA')), mat);
       case 'noel-bonhomme': return toGroup(snowman(T('LÉA')), mat);
-      case 'c-coeurduo': return G(coeurduo(T('LÉA & NOÉ')), mat);
-      case 'c-coeur': {   /* présenté debout, tenu par la chaîne */
-        var hg = G(coeur(T('LÉA & NOÉ 2026')), mat), up = new THREE.Group();
-        var hp0 = heartPts(70), tp0 = lobeTop(hp0), hx0 = tp0[0] * 0.88, hy0 = tp0[1] - 7, cy0 = hp0.reduce(function (a, p) { return a + p[1]; }, 0) / hp0.length;
-        var inn = new THREE.Group(); inn.add(hg); inn.rotation.y = 0;   /* le centre du cœur passe sous le trou : il pend droit */
-        inn.rotation.order = 'XYZ'; var o2 = new THREE.Group(); o2.add(inn); o2.rotation.x = Math.PI / 2; hg = o2; up.add(hg); up.updateMatrixWorld(true);
+      case 'c-coeur': case 'c-coeurduo': {   /* présentés debout, tenus par la chaîne */
+        var hg = G(id === 'c-coeur' ? coeur(T('LÉA & NOÉ 2026')) : coeurduo(T('LÉA & NOÉ')), mat), up = new THREE.Group();
+        var o2 = new THREE.Group(); o2.add(hg); o2.rotation.x = Math.PI / 2; hg = o2; up.add(hg); up.updateMatrixWorld(true);
         var bx = new THREE.Box3().setFromObject(up); hg.position.y -= bx.min.y; hg.position.z -= (bx.min.z + bx.max.z) / 2;
         return up;
       }
@@ -6647,7 +6657,7 @@ function A77Studio(THREE, M) {
     'noel-sapin': { el: 0.86, az: -0.3, c: ['sapin', 'blanc'] },
     'noel-etiquette': { el: 0.84, az: -0.3, c: ['blanc', 'rouge'], aspect: 1.3 },
     'noel-bonhomme': { el: 0.3, az: -0.42, c: ['blanc', 'rouge'] },
-    'c-coeurduo': { el: 0.84, az: -0.3, c: ['rouge', 'blanc'], aspect: 1.2 },
+    'c-coeurduo': { el: 0.12, az: -0.55, c: ['rouge', 'blanc'], aspect: 0.9 },
     'c-coeur': { el: 0.12, az: -0.55, c: ['rouge', 'blanc'], aspect: 0.8 },
     'c-duo': { el: 0.84, az: -0.3, c: ['blanc', 'bleu'], aspect: 1.6 },
     'c-lampe': { el: 0.26, az: -0.4, c: ['blanc', 'rouge'] },
