@@ -6519,37 +6519,38 @@ function A77Models(THREE, fontData, allFonts) {
       for (r = 0; r < 10; r++) {
         var y = Y0 + 5.5 + r * 8.5, off = r % 2 ? 9 : 0, n = Math.floor(w / 17.4) + 1;
         for (c = -1; c < n + 1; c++) {
-          var x0 = -w / 2 + off + c * 17.4 + 1, x1 = x0 + 16, a = Math.max(x0, -w / 2 + 1.2), b = Math.min(x1, w / 2 - 1.2);
+          var x0 = -w / 2 + off + c * 17.4 + 1, x1 = x0 + 15.9, a = Math.max(x0, -w / 2 + 1.2), b = Math.min(x1, w / 2 - 1.2);
           if (b - a < 4) continue;
           place(a, b, y);
         }
       }
     }
-    var YC = Y0 + 3 + 28, RX = OW + 9 + 1.4;
-    /* briques du mur : celles qui touchent l'arche sont raccourcies pour remplir tout l'espace sans jamais se chevaucher */
+    var YC = Y0 + 3 + 28, ri = OW + 1.2, ro = OW + 9, RX = ro + 1.5;
+    /* briques du mur : rectangle moins la zone de l'arche (cercle + montants, élargie de 1,5 mm) : joint partout identique */
+    var zone = TP(cexec(ClipperLib.ClipType.ctUnion, [PPc(circPts(0, YC, RX, 96)), PPc([[-RX, YC - 80], [RX, YC - 80], [RX, YC], [-RX, YC]])], null, false));
     brickRows(BW, function (a, b, y) {
-      var lo = y - 3.5, hi = y + 3.5, hw;
-      if (hi <= YC) hw = RX; else if (lo >= YC) { var dm = lo - YC; hw = dm < RX ? Math.sqrt(RX * RX - dm * dm) : 0; } else hw = RX;
-      var segs = hw > 0 ? [[a, Math.min(b, -hw)], [Math.max(a, hw), b]] : [[a, b]];
-      segs.forEach(function (sg) {
-        if (sg[1] - sg[0] < 2.6) return;
-        var bk = mk(new THREE.BoxGeometry(sg[1] - sg[0], 7, 1.8), mat.base); bk.position.set((sg[0] + sg[1]) / 2, y, BD / 2 + 0.7); g.add(bk);
+      var rp = [PPc([[a, y - 3.5], [b, y - 3.5], [b, y + 3.5], [a, y + 3.5]])];
+      var shs = tShapes(cexec(ClipperLib.ClipType.ctDifference, rp, zone, false)).filter(function (sh) {
+        var xs = sh.extractPoints(6).shape, mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9; xs.forEach(function (p) { mnx = Math.min(mnx, p.x); mxx = Math.max(mxx, p.x); mny = Math.min(mny, p.y); mxy = Math.max(mxy, p.y); });
+        return mxx - mnx >= 3 && mxy - mny >= 3;
       });
+      if (shs.length) { var bm = mk(ext(shs, 1.8, { upright: true, seg: 8 }), mat.base); bm.position.z = BD / 2 - 0.2; g.add(bm); }
     });
     [-1, 1].forEach(function (sg) {
       brickRows(BD, function (a, b, y) { var bk = mk(new THREE.BoxGeometry(1.8, 7, b - a), mat.base); bk.position.set(sg * (BW / 2 + 0.7), y, (a + b) / 2); g.add(bk); });
     });
-    /* pierres de l'arche : claveaux en secteurs et montants, sans se toucher */
-    var NV = 9, GAP = 0.05, ri = OW + 1.2, ro = OW + 9;
+    /* pierres de l'arche : claveaux en secteurs et montants, tous séparés de 1,5 mm */
+    var NV = 9, GH = 1.5 / (ri + ro) / 1;
     for (i = 0; i < NV; i++) {
-      var s0 = Math.PI - i * Math.PI / NV - GAP, s1 = Math.PI - (i + 1) * Math.PI / NV + GAP, vs = new THREE.Shape();
+      var s0 = Math.PI - i * Math.PI / NV - GH, s1 = Math.PI - (i + 1) * Math.PI / NV + GH, vs = new THREE.Shape();
       vs.absarc(0, 0, ro, s0, s1, true); vs.absarc(0, 0, ri, s1, s0, false); vs.closePath();
       var vg = new THREE.ExtrudeGeometry(vs, { depth: 1.8, bevelEnabled: false, curveSegments: 6 }); vg.translate(0, YC, BD / 2 - 0.2);
       g.add(mk(vg, mat.base));
     }
+    var JH = (28 - 0.75 - 3) / 3;
     [-1, 1].forEach(function (sg) {
       for (r = 0; r < 3; r++) {
-        var jy = Y0 + 3.6 + r * 8.3 + 3.55, jb = mk(new THREE.BoxGeometry(ro - ri, 7.1, 1.8), mat.base); jb.position.set(sg * (ri + ro) / 2, jy, BD / 2 + 0.7); g.add(jb);
+        var jb = mk(new THREE.BoxGeometry(ro - ri, JH, 1.8), mat.base); jb.position.set(sg * (ri + ro) / 2, Y0 + 3 + JH / 2 + r * (JH + 1.5), BD / 2 + 0.7); g.add(jb);
       }
     });
     /* manteau */
