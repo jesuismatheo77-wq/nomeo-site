@@ -2658,6 +2658,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un ornement de sapin plat et léger : une étoile filante avec sa longue queue, avec ses détails dans la deuxième couleur. Une petite plaquette en bas porte votre prénom en relief. Livré avec un cordon rouge pour l’accrocher au sapin. Vous pouvez en commander plusieurs, dans des couleurs et avec des prénoms différents.' },
     'noel-cadeau': { t: 'Grosse boîte cadeau', s: 'Boîte cadeau', one: 'boîte cadeau', many: 'boîtes cadeau', ref: 'N25', dims: '3 tailles : 10, 14 ou 18 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
       d: 'Une grosse boîte cadeau vide, avec son couvercle qui s’emboîte : un ruban dans la deuxième couleur et un gros nœud sur le dessus. Votre prénom est écrit en relief sur les deux côtés. On y glisse un petit cadeau, des bonbons ou un mot, et elle se range ensuite d’une année sur l’autre.' },
+    'noel-essuie-tout': { t: 'Porte-essuie-tout bonnet de Père Noël', s: 'Porte-essuie-tout Noël', one: 'porte-essuie-tout de Noël', many: 'porte-essuie-tout de Noël', ref: 'N26', dims: '37 cm de haut, base de 17 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, cuisines, cadeaux, boutiques',
+      d: 'Un porte-essuie-tout pour la cuisine de Noël : une base ronde bordée de boules de neige, un grand mât avec trois anneaux, et un gros bonnet de Père Noël penché au sommet, avec sa collerette de boules et son pompon. On enfile le rouleau sur le mât et on pose le bonnet dessus. Votre nom est écrit en relief sur la base. Il s’imprime en trois pièces (base, mât, bonnet) qui s’emboîtent.' },
     'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
       d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
@@ -2773,6 +2775,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-cadeau': [24.9, 21.9, 20.4, 19.4, 18.4],
     'noel-cadeau:m': [44.9, 38.9, 36.4, 34.9, 33.4],
     'noel-cadeau:l': [69.9, 59.9, 56.4, 54.4, 52.4],
+    'noel-essuie-tout': [49.9, 44.9, 42.9, 41.4, 39.9],
     'noel-boule-neige': [29.9, 24.9, 23.4, 22.4, 21.4],
     'noel-bougeoir': [24.9, 19.9, 18.9, 18.4, 17.9],
     'noel-mini-bonnets': [2.9, 2.5, 2.3, 2.2, 2.1],
@@ -3794,6 +3797,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     { id: 'noel-orn-renne', v3: 1, ml: 9, ph: 'Léa', combos: ['noir-rouge', 'rouge-blanc', 'sapin-blanc', 'blanc-rouge'] },
     /* retiré à la demande */ // { id: 'noel-orn-comete', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-cadeau', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-rouge', 'bleu-jaune'] },
+    { id: 'noel-essuie-tout', v3: 1, ml: 10, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-boule-neige', v3: 1, ml: 12, ph: 'Famille', combos: ['bleu-blanc', 'sapin-blanc', 'rouge-blanc', 'blanc-rouge'] },
     { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
@@ -6468,6 +6472,29 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* porte-essuie-tout : base ronde bordée de boules de neige, grand mât, bonnet de Père Noël penché au sommet avec sa collerette de boules */
+  function porteEssuieTout(mat, text) {
+    var g = new THREE.Group(), C = SC.cap, i, YP = 262;
+    cylG(g, mat.base, 85, 87, 10, 0, 5, 0, 0, 0, 0, 72);
+    cylG(g, mat.base, 30, 40, 6, 0, 13, 0, 0, 0, 0, 56);
+    for (i = 0; i < 28; i++) { var an = i / 28 * TAU; elG(g, mat.relief, 8.6, 8.6, 8.6, Math.cos(an) * 78, 11, Math.sin(an) * 78, 0, 0, 0, 16); }
+    layout(text, { maxW: 62, maxH: 14, cap: 12, cx: 0, cy: -50 }).items.forEach(function (it) {
+      var t3 = mk(ext(it.shapes, 1.8, { bevel: 0.3, bseg: 1, seg: 8, dx: it.dx, dy: it.dy }), mat.relief); t3.position.y = 10; g.add(t3);
+    });
+    /* mât */
+    cylG(g, mat.base, 17, 17, 250, 0, 135, 0, 0, 0, 0, 48);
+    [60, 120, 180].forEach(function (y) { cylG(g, mat.relief, 18.4, 18.4, 9, 0, y, 0, 0, 0, 0, 48); });
+    /* bonnet : creux dessous pour coiffer le mât, bout qui retombe */
+    var hat = SC.group([C([0, YP + 6, 0], [0, YP + 30, 0], 54, 46, 12), C([0, YP + 30, 0], [-3, YP + 56, 0], 46, 35, 12), C([-3, YP + 56, 0], [-12, YP + 80, 2], 35, 24, 12), C([-12, YP + 80, 2], [-28, YP + 94, 6], 24, 15, 10), C([-28, YP + 94, 6], [-44, YP + 88, 10], 15, 9, 8)]);
+    var fh = function (x, y, z) { var cav = Math.max(Math.sqrt(x * x + z * z) - 18.6, y - (YP + 40)); return Math.max(hat(x, y, z), -cav, YP - y); };
+    g.add(mk(SC.mesh(fh, [-72, YP - 2, -64, 62, YP + 118, 64], 1.5), mat.base));
+    /* collerette de fourrure en boules et gros pompon */
+    for (i = 0; i < 24; i++) { var a2 = i / 24 * TAU; elG(g, mat.relief, 11.5, 11.5, 11.5, Math.cos(a2) * 55, YP + 6, Math.sin(a2) * 55, 0, 0, 0, 16); }
+    for (i = 0; i < 20; i++) { var a3 = (i + 0.5) / 20 * TAU; elG(g, mat.relief, 10, 10, 10, Math.cos(a3) * 50, YP + 16, Math.sin(a3) * 50, 0, 0, 0, 16); }
+    elG(g, mat.relief, 16, 16, 16, -46, YP + 84, 10, 0, 0, 0, 32);
+    return g;
+  }
+
   /* Père Noël lutin (façon peluche nordique) : grand bonnet pointu penché, grosse barbe, nez rond, bras rayés à moufles, pieds ovales */
   function lutinNoel(mat, text) {
     var g = new THREE.Group(), SH = 4.5, sg;
@@ -6768,6 +6795,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-cheminee': return cheminee(mat, T('FAMILLE'));
       case 'noel-boule-neige': return bouleNeige(mat, T('FAMILLE'));
       case 'noel-cadeau': return boiteCadeau(mat, T('LÉA'));
+      case 'noel-essuie-tout': return porteEssuieTout(mat, T('FAMILLE'));
       case 'noel-orn-sapin': return ornementSimple(mat, T('LÉA'), 'sapin');
       case 'noel-orn-flocon': return ornementSimple(mat, T('LÉA'), 'flocon');
       case 'noel-orn-cloche': return ornementSimple(mat, T('LÉA'), 'cloche');
@@ -7692,6 +7720,7 @@ function A77Studio(THREE, M) {
     'noel-orn-renne': { el: 0.05, az: -0.3, c: ['sapin', 'blanc'], aspect: 0.8 },
     'noel-orn-comete': { el: 0.05, az: -0.3, c: ['sapin', 'blanc'], aspect: 0.8 },
     'noel-cadeau': { el: 0.35, az: -0.55, c: ['rouge', 'blanc'], aspect: 1 },
+    'noel-essuie-tout': { el: 0.14, az: -0.45, c: ['rouge', 'blanc'], aspect: 0.62 },
     'noel-boule-neige': { el: 0.24, az: -0.4, c: ['sapin', 'blanc'], aspect: 1.2 },
     'noel-cheminee': { el: 0.28, az: -0.5, c: ['rouge', 'blanc'], aspect: 0.85 },
     'noel-lutin': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
