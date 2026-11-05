@@ -6180,13 +6180,14 @@ function A77Models(THREE, fontData, allFonts) {
       RO(0, 53.6, 23.6, 5.2, 2.4), CI(19.2, 64.6, 3.6), CI(-22.2, 51.2, 4.5), CI(22.6, 49.2, 4.5), RO(0, 16.4, 28, 3.6, 1.6), RO(0, 29, 3.8, 22, 1.6)]);
     var boots = U([RO(-6.2, 3.2, 12, 6.4, 2.8), RO(6.2, 3.2, 12, 6.4, 2.8)]), belt = RO(0, 24.6, 28, 4.8, 1.6), buckle = RO(0, 24.6, 6.6, 5, 1.2);
     var S2 = 0.82, SX = 22, Z0 = -18;
-    layer(SCL(red, S2), 3.0, Z0, SX, BH, mat.base);
-    layer(SCL(wht, S2), 4.4, Z0, SX, BH, mat.relief);
-    layer(SCL(boots, S2), 3.4, Z0, SX, BH, DK);
-    layer(SCL(belt, S2), 4.2, Z0, SX, BH, DK);
-    layer(SCL(buckle, S2), 4.9, Z0, SX, BH, YL);
-    layer(SCL(U([CI(-3.7, 48.6, 1.2), CI(3.7, 48.6, 1.2)]), S2), 5.3, Z0, SX, BH, DK);
-    layer(SCL(CI(0, 45.6, 2.7), S2), 5.6, Z0, SX, BH, mat.base);
+    var eyes = U([CI(-3.7, 48.6, 1.2), CI(3.7, 48.6, 1.2)]), nose = CI(0, 45.6, 2.7);
+    /* aucune surface ne se recouvre : chaque couche est découpée par celles qui sont au-dessus (pas de polygones superposés) */
+    var order = [[nose, 5.6, mat.base], [eyes, 5.3, DK], [buckle, 4.9, YL], [belt, 4.2, DK], [boots, 3.4, DK], [wht, 4.4, mat.relief], [red, 3.0, mat.base]], above = [];
+    order.forEach(function (o) {
+      var pth = above.length ? DF(o[0], U(above)) : o[0];
+      layer(SCL(pth, S2), o[1], Z0, SX, BH, o[2]);
+      above.push(o[0]);
+    });
     /* prénom devant la bougie */
     layout(text, { maxW: 34, maxH: 6, cap: 5, cx: 0, cy: -42.2 }).items.forEach(function (it) {
       g.add(mk(ext(it.shapes, 1.2, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: BH - 0.03 }), mat.base));
