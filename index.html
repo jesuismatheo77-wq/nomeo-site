@@ -6594,11 +6594,24 @@ function A77Models(THREE, fontData, allFonts) {
     function PPc(pts) { return orient(cpaths([pts]))[0]; }
     function UN(list, eo) { return TP(cexec(ClipperLib.ClipType.ctUnion, list, null, !!eo)); }
     var RC = 46.5, RI2 = 42.5, TH = 4.2, TOP = 1.0, FL = 3, RH = 52, RHi = 48.8, HW = 10, HT = 25;
-    /* dessin : sapin de Noël, étoile, flocons ronds et prénom */
-    var motif = [PPc([[-20, -22], [20, -22], [7.5, -4], [-7.5, -4]]), PPc([[-15.5, -9], [15.5, -9], [5.5, 8], [-5.5, 8]]), PPc([[-11, 2], [11, 2], [0, 19]]), PPc(starPts(0, 25, 8, 3.4, 5))];
-    [[-31, 18], [-29, 2], [-33, -10], [31, 18], [29, 2], [33, -10], [-22, 30], [22, 30], [-10, 35], [10, 35], [-16, -14], [16, -14]].forEach(function (d, n) { if (n < 10) motif.push(PPc(circPts(d[0], d[1], 1.7, 14))); });
+    /* dessin : sapin décoré (boules en creux, étoile), neige au sol, flocons, couronne de perles et prénom */
+    function RR(cx, cy, w, h, ang) { var c = Math.cos(ang), s2 = Math.sin(ang), pts = [[-w / 2, -h / 2], [w / 2, -h / 2], [w / 2, h / 2], [-w / 2, h / 2]].map(function (q) { return [cx + q[0] * c - q[1] * s2, cy + q[0] * s2 + q[1] * c]; }); return PPc(pts); }
+    function flake(cx, cy, r) {
+      var L = [], q2;
+      for (q2 = 0; q2 < 3; q2++) L.push(RR(cx, cy, 2 * r, 1.5, q2 * Math.PI / 3));
+      for (q2 = 0; q2 < 6; q2++) { var an = q2 * Math.PI / 3, bx = cx + Math.cos(an) * r * 0.62, by = cy + Math.sin(an) * r * 0.62; L.push(RR(bx + Math.cos(an + 0.8) * r * 0.17, by + Math.sin(an + 0.8) * r * 0.17, r * 0.4, 1.2, an + 0.8), RR(bx + Math.cos(an - 0.8) * r * 0.17, by + Math.sin(an - 0.8) * r * 0.17, r * 0.4, 1.2, an - 0.8)); }
+      L.push(PPc(circPts(cx, cy, 1.5, 12)));
+      return UN(L);
+    }
+    var tiers = UN([PPc([[-21, -12], [21, -12], [0, 8]]), PPc([[-16, -1], [16, -1], [0, 17]]), PPc([[-11, 9], [11, 9], [0, 26]]), PPc([[-3.4, -20], [3.4, -20], [3.4, -11], [-3.4, -11]])]);
+    var baub = [[-9, -8, 2.3], [9, -8, 2.3], [0, -5.5, 2.1], [-6, 3, 2], [6, 3, 2], [0, 8, 1.8], [-3.6, 14.5, 1.6], [3.6, 14.5, 1.6], [0, 20, 1.4]].map(function (d) { return PPc(circPts(d[0], d[1], d[2], 16)); });
+    var tree = TP(cexec(ClipperLib.ClipType.ctDifference, tiers, baub, false));
+    var ground = PPc((function () { var o = []; for (var q = 0; q < 40; q++) { var t = q / 40 * TAU; o.push([Math.cos(t) * 27, -21 + Math.sin(t) * 3.4]); } return o; })());
+    var motif = [tree, [ground], [PPc(starPts(0, 31.5, 6.4, 2.7, 5))], flake(-26, 16, 5), flake(25, 22, 4.4), flake(-28, -2, 5.4), flake(28, 3, 5.4), flake(-17, 31, 3.2), flake(17, 31, 3.2)].reduce(function (a2, b2) { return a2.concat(b2); }, []);
+    for (i = 0; i < 40; i++) { var tt = i / 40 * TAU; motif.push(PPc(circPts(Math.cos(tt) * 39.3, Math.sin(tt) * 39.3, 0.95, 10))); }
+    [[-33, 9], [33, 12], [-22, 26], [23, 12], [-10, 36], [11, 35]].forEach(function (d) { motif.push(PPc(circPts(d[0], d[1], 1.1, 10))); });
     var tp = [];
-    layout(text, { maxW: 44, maxH: 8, cap: 6, cx: 0, cy: -31 }).items.forEach(function (it) {
+    layout(text, { maxW: 36, maxH: 7, cap: 5.4, cx: 0, cy: -31.5 }).items.forEach(function (it) {
       it.shapes.forEach(function (sh) {
         var ex = sh.extractPoints(6);
         [ex.shape].concat(ex.holes).forEach(function (pts) { tp.push(cpaths([pts.map(function (q) { return [q.x + it.dx, q.y + it.dy]; })])[0]); });
