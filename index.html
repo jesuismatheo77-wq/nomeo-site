@@ -3777,7 +3777,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     /* retiré : doublon avec l’ornement */ // { id: 'noel-boule-bonhomme', v3: 1, ml: 10, ph: 'Léa', combos: ['rouge-blanc', 'bleu-blanc', 'sapin-blanc', 'noir-blanc'] },
     /* retiré : doublon avec l’ornement */ // { id: 'noel-boule-pere-noel', v3: 1, ml: 10, ph: 'Léa', combos: ['blanc-rouge', 'gris-rouge', 'jaune-rouge', 'sapin-rouge'] },
     { id: 'noel-orn-bonhomme', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
-    { id: 'noel-orn-pere-noel', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
+    /* retiré à la demande */ // { id: 'noel-orn-pere-noel', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
     { id: 'noel-mini-bonnets', v3: 1, ml: 20, ph: 'NOËL', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-bougeoir', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-orn-sapin', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
@@ -6105,11 +6105,7 @@ function A77Models(THREE, fontData, allFonts) {
     if (bk.length) fg.add(mk(SC.mesh(gB, bnd(bk), H), DK));
     (function () {
       var px = which === 'bonhomme' ? 9.6 : 9.2, py = which === 'bonhomme' ? BY + 37.6 : BY + 43.8, pz = -0.6;
-      elG(fg, mat.relief, 2.5, 2.5, 2.5, px, py, pz, 0, 0, 0, 14);
-      for (var q = 0; q < 12; q++) {
-        var ph = Math.acos(1 - 2 * (q + 0.5) / 12), th = q * 2.39996, rr2 = 2.3;
-        elG(fg, mat.relief, 1.45, 1.45, 1.45, px + Math.sin(ph) * Math.cos(th) * rr2, py + Math.cos(ph) * rr2, pz + Math.sin(ph) * Math.sin(th) * rr2, 0, 0, 0, 10);
-      }
+      elG(fg, mat.relief, 3.7, 3.7, 3.7, px - 0.4, py - 0.4, pz, 0, 0, 0, 32);
     })();
     if (which === 'bonhomme') {
       [-1, 1].forEach(function (sg) { elG(fg, DK, 0.9, 1.0, 0.8, sg * 3, BY + 27.6, 7.7, 0, 0, 0, 10); });
