@@ -60,6 +60,13 @@
   .sw label { width: 44px; height: 44px; }
   .chips label, .sp-c label { min-width: 44px; min-height: 44px; }
 }
+
+/* finitions du navigateur et du texte */
+html { scrollbar-color: rgba(22, 24, 27, .32) transparent; scrollbar-width: thin; }
+input, textarea, select { caret-color: var(--ink); accent-color: var(--ink); }
+p, li, dd { text-wrap: pretty; }
+.sp-p, .sp-p small, .cl-p, .cart-total, .line-p, [class*="price"], [class*="total"] { font-variant-numeric: tabular-nums; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 </style>
 <style>
 @property --glow { syntax: "<color>"; inherits: true; initial-value: #12B04A; }
@@ -274,7 +281,7 @@ section[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 92px); }
 
 .hero-text { position: relative; z-index: 2; grid-row: 1; padding-top: calc(env(safe-area-inset-top, 0px) + 150px); pointer-events: none; }
 .hero-text > div { display: grid; gap: 24px; max-width: 540px; pointer-events: auto; }
-.hero h1 { font-size: clamp(2.4rem, 1.2rem + 3.5vw, 4.5rem); line-height: .98; letter-spacing: -.045em; font-weight: 780; }
+.hero h1 { font-size: clamp(2.4rem, 1.2rem + 3.5vw, 4.5rem); line-height: .98; letter-spacing: -.035em; font-weight: 780; }
 .lead { font-size: clamp(1.05rem, .98rem + .3vw, 1.2rem); color: var(--ink-2); max-width: 42ch; }
 .actions { display: flex; flex-wrap: wrap; gap: 12px; }
 
