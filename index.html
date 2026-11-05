@@ -6642,7 +6642,8 @@ function A77Models(THREE, fontData, allFonts) {
     for (i = 0; i < 5; i++) addCoaster(g, FL + 0.2 + i * (TH + 0.3));
     var pv = new THREE.Group(), TL = 1.2566;
     addCoaster(pv, -TH / 2);
-    pv.rotation.x = TL; pv.position.set(-24, RC * Math.sin(TL) + 1.4, 41.5); g.add(pv);
+    var PSI = 10 * Math.PI / 180, UX = Math.cos(PSI), UZ = Math.sin(PSI), CD = RH + 2.1 + 8.1 - RC * Math.cos(TL);
+    pv.rotation.set(TL, Math.PI / 2 - PSI, 0, 'YXZ'); pv.position.set(UX * CD, RC * Math.sin(TL) + 0.4, UZ * CD); g.add(pv);
     return g;
   }
 
