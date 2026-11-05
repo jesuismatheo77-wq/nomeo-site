@@ -2619,6 +2619,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un Père Noël debout, détaillé, comme une statuette : manteau à liseré de fourrure, ceinture noire à boucle dorée, bottes, grande barbe bouclée et bonnet au houx. Il tient une cloche dorée d’une main et un sac de cadeaux sur l’épaule de l’autre. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant.' },
     'noel-lutin': { t: 'Lutin de Noël', s: 'Lutin de Noël', one: 'lutin de Noël', many: 'lutins de Noël', ref: 'N11', dims: '10 cm de haut, socle de 6 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'enfants, familles, cadeaux, boutiques',
       d: 'Un petit lutin de Noël façon peluche nordique : grand bonnet pointu penché, barbe blanche en pointe, nez rond, ventre rouge bien visible, bras rayés rouge et blanc avec leurs moufles, et deux pieds ovales. Il se tient sur un socle rond de neige où votre prénom est écrit en relief, devant.' },
+    'noel-cheminee': { t: 'Boîte cheminée du Père Noël', s: 'Boîte cheminée', one: 'boîte cheminée', many: 'boîtes cheminée', ref: 'N12', dims: '8 cm de haut, 6 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
+      d: 'Une petite boîte de rangement en forme de cheminée en briques. Le Père Noël est resté coincé la tête en bas : ses jambes en l’air, avec leurs bottes noires, sont le couvercle, posé sur un petit nuage de neige qui goutte. Idéale pour les bonbons, les petits cadeaux ou les clés. Votre prénom est écrit en relief sur le plateau, devant.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
       d: 'Un traîneau à coque courbe, patins à volute et banc, plein de cadeaux, tiré par deux rennes attelés : l’un lève une patte, bois ramifiés et nez rouge. Le nom de la famille est écrit sur le flanc du traîneau. Imprimé d’un seul bloc sur un socle, sans pièce rapportée.' },    'c-coeurduo': { t: 'Collier cœur en deux morceaux', s: 'Collier cœur duo', one: 'collier cœur en deux morceaux', many: 'colliers cœur en deux morceaux', ref: 'D1', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-coeurduo', who: 'couples, amis, famille',
       d: 'Un cœur coupé en deux moitiés qui s’emboîtent, un prénom sur chacune et une chaîne pour chaque morceau : un collier pour vous, un pour l’autre. Vendu par paire, avec les deux chaînes argentées.' },
@@ -2719,6 +2721,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-bonhomme-art': [24.9, 19.9, 18.9, 18.4, 17.9],
     'noel-pere-noel': [34.9, 27.9, 26.4, 25.4, 24.4],
     'noel-lutin': [24.9, 19.9, 18.9, 18.4, 17.9],
+    'noel-cheminee': [29.9, 24.9, 23.4, 22.4, 21.4],
     'noel-traineau': [32.9, 26.9, 25.4, 24.4, 23.4],
     'noel-bonhomme': [9.9, 6.9, 6.2, 5.8, 5.5],
     'noel-bonhomme:m': [14.5, 10.5, 9.5, 8.9, 8.4],
@@ -3719,6 +3722,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     { id: 'noel-etoile', hero: 'etoile', ph: 'Maman', combos: ['jaune-noir', 'rouge-blanc', 'blanc-bleu', 'sapin-jaune'] },
     { id: 'noel-calendrier', v3: 1, ml: 10, ph: 'Léa', combos: ['sapin-blanc', 'rouge-blanc', 'sapin-jaune', 'blanc-rouge'] },
     { id: 'noel-pere-noel', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'rouge-gris', 'rouge-jaune', 'blanc-rouge'] },
+    { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-bonhomme-art', v3: 1, ml: 8, ph: 'Léa', combos: ['blanc-rouge', 'blanc-sapin', 'blanc-bleu', 'blanc-noir'] },
     { id: 'noel-traineau', v3: 1, ml: 12, ph: 'Famille', combos: ['blanc-rouge', 'gris-rouge', 'rouge-blanc', 'sapin-blanc'] },
@@ -5848,6 +5852,65 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* boîte cheminée : le Père Noël coincé la tête en bas, ses jambes forment le couvercle (neige, dôme rouge, ceinture, bottes) */
+  function cheminee(mat, text) {
+    var g = new THREE.Group(), DK = propMat('#1B1D22'), YL = propMat('#F5C518'), W = 44, H = 40, P = 3, i, r, k, sg;
+    /* plateau, devant plus long pour le prénom */
+    var pl = new THREE.Shape(); rr(pl, 56, 64, 2.5, 0, 0);
+    var plate = new THREE.ExtrudeGeometry(pl, { depth: P, bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.5, bevelSegments: 2, curveSegments: 8 });
+    plate.rotateX(-Math.PI / 2); g.add(mk(plate, mat.base));
+    var cz = -6;
+    /* cheminée creuse */
+    var sh = new THREE.Shape(); rr(sh, W, W, 1.5, 0, 0);
+    var hole = new THREE.Path(); rr(hole, W - 6, W - 6, 1, 0, 0); sh.holes.push(hole);
+    var body = new THREE.ExtrudeGeometry(sh, { depth: H, bevelEnabled: false, curveSegments: 6 });
+    body.rotateX(-Math.PI / 2); var bm = mk(body, mat.base); bm.position.set(0, P, cz); g.add(bm);
+    /* briques en relief sur les quatre faces */
+    var rows = 6, bh = (H - 1) / rows, BL = 10.6, gap = 1.1, pr = 0.9;
+    for (r = 0; r < rows; r++) {
+      var off = (r % 2) * (BL / 2), yy = P + 0.5 + r * bh + (bh - 1.1) / 2 + 0.55;
+      for (var f = 0; f < 4; f++) {
+        for (var x0 = -W / 2 - off; x0 < W / 2; x0 += BL + gap) {
+          var a0 = Math.max(x0, -W / 2), a1 = Math.min(x0 + BL, W / 2); if (a1 - a0 < 2.5) continue;
+          var bx = mk(new THREE.BoxGeometry(a1 - a0, bh - 1.1, pr + 0.4), mat.base), c = (a0 + a1) / 2;
+          if (f === 0) bx.position.set(c, yy, cz + W / 2 + pr / 2 - 0.2);
+          else if (f === 1) bx.position.set(c, yy, cz - W / 2 - pr / 2 + 0.2);
+          else { bx.rotation.y = Math.PI / 2; bx.position.set(f === 2 ? W / 2 + pr / 2 - 0.2 : -W / 2 - pr / 2 + 0.2, yy, cz + c); }
+          g.add(bx);
+        }
+      }
+    }
+    /* prénom sur le plateau, devant */
+    layout(text, { maxW: 44, maxH: 6, cap: 5, cx: 0, cy: 0 }).items.forEach(function (it) {
+      var m2 = mk(ext(it.shapes, 1.2, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, z0: P - 0.03 }), mat.relief); m2.position.set(0, 0, 27.4); g.add(m2);
+    });
+    /* couvercle, soulevé de 14 mm au-dessus de la cheminée */
+    var ly = P + H + 14, SN = 5;
+    var sl = new THREE.Shape(); rr(sl, W + 8, W + 8, 3.5, 0, 0);
+    var slab = new THREE.ExtrudeGeometry(sl, { depth: SN, bevelEnabled: true, bevelThickness: 1, bevelSize: 1, bevelSegments: 3, curveSegments: 8 });
+    slab.rotateX(-Math.PI / 2); var sm = mk(slab, mat.relief); sm.position.set(0, ly + 3, cz); g.add(sm);
+    var pg = new THREE.Shape(); rr(pg, W - 6.8, W - 6.8, 1, 0, 0);
+    var plug = new THREE.ExtrudeGeometry(pg, { depth: 3.4, bevelEnabled: false }); plug.rotateX(-Math.PI / 2); var pm = mk(plug, mat.relief); pm.position.set(0, ly - 0.2, cz); g.add(pm);
+    /* neige qui goutte sur les bords */
+    var HS = (W + 8) / 2, dr = [];
+    for (i = 0; i < 8; i++) { var t = -HS + 4 + i * (2 * HS - 8) / 7; dr.push([t, HS - 0.5], [t + 3.6, -HS + 0.5], [HS - 0.5, t + 1.8], [-HS + 0.5, t - 1.8]); }
+    dr.forEach(function (d, n) { var L = 2.4 + (n * 7 % 5) * 0.7; elG(g, mat.relief, 3.1, L, 2.5, d[0], ly + 3.4 - L * 0.55, cz + d[1], 0, 0, 0, 14); });
+    /* dôme rouge (le fond du Père Noël) */
+    var ty = ly + 3 + SN, dm = mk(new THREE.SphereGeometry(15, 40, 22, 0, TAU, 0, Math.PI / 2), mat.base); dm.position.set(0, ty - 0.5, cz); g.add(dm);
+    var bt = mk(new THREE.CylinderGeometry(15.5, 15.5, 4.6, 48), DK); bt.position.set(0, ty + 3, cz); g.add(bt);
+    var bk = mk(new THREE.BoxGeometry(9, 7.4, 1.8), YL); bk.position.set(0, ty + 3, cz + 15.6); g.add(bk);
+    var bi = mk(new THREE.BoxGeometry(5, 4, 2.2), DK); bi.position.set(0, ty + 3, cz + 15.8); g.add(bi);
+    /* jambes en l'air, bottes noires qui s'écartent */
+    [-1, 1].forEach(function (s2) {
+      var x = s2 * 6.6, y0 = ty + 11;
+      tubeG(g, mat.base, [[x * 0.9, y0 - 6, cz], [x, y0 + 3, cz], [x * 1.1, y0 + 12, cz]], 3.5);
+      tubeG(g, DK, [[x * 1.1, y0 + 11, cz], [x * 1.12, y0 + 17, cz], [x * 1.5, y0 + 20.4, cz], [x * 1.5 + s2 * 6.2, y0 + 21, cz]], 4.6);
+      elG(g, DK, 4.6, 4.6, 4.6, x * 1.5 + s2 * 6.2, y0 + 21, cz, 0, 0, 0, 16);
+      cylG(g, DK, 4.6, 4.6, 1.6, x * 1.1, y0 + 10.8, cz, 0, 0, 0, 24);
+    });
+    return g;
+  }
+
   /* Père Noël lutin (façon peluche nordique) : grand bonnet pointu penché, grosse barbe, nez rond, bras rayés à moufles, pieds ovales */
   function lutinNoel(mat, text) {
     var g = new THREE.Group(), SH = 4.5, sg;
@@ -6143,6 +6206,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-bonhomme-art': return bonhommeArt(mat, T('LÉA'));
       case 'noel-pere-noel': return pereNoel(mat, T('LÉA'));
       case 'noel-lutin': return lutinNoel(mat, T('LÉA'));
+      case 'noel-cheminee': return cheminee(mat, T('FAMILLE'));
       case 'noel-traineau': return traineau(mat, T('FAMILLE'));
       case 'reserve': return signSocle(mat, T('RÉSERVÉ'), { W: 112, H: 54, cap: 15 });
       case 'wifi': return qr(mat, 'WI-FI');
@@ -7042,6 +7106,7 @@ function A77Studio(THREE, M) {
     'noel-etiquette': { el: 0.84, az: -0.3, c: ['blanc', 'rouge'], aspect: 1.3 },
     'noel-calendrier': { el: 0.22, az: -0.4, c: ['sapin', 'blanc'], aspect: 0.9 },
     'noel-bonhomme-art': { el: 0.2, az: -0.42, c: ['blanc', 'rouge'], aspect: 0.85 },
+    'noel-cheminee': { el: 0.28, az: -0.5, c: ['rouge', 'blanc'], aspect: 0.85 },
     'noel-lutin': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
     'noel-pere-noel': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
     'noel-traineau': { el: 0.3, az: -0.5, c: ['blanc', 'rouge'], aspect: 1.9 },
