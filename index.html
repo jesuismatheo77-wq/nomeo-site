@@ -3780,13 +3780,13 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     /* retiré à la demande */ // { id: 'noel-orn-pere-noel', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
     { id: 'noel-mini-bonnets', v3: 1, ml: 20, ph: 'NOËL', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-bougeoir', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
-    { id: 'noel-orn-sapin', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
+    /* retiré à la demande */ // { id: 'noel-orn-sapin', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-orn-flocon', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-orn-cloche', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-orn-canne', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-orn-houx', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-orn-renne', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
-    { id: 'noel-orn-comete', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
+    /* retiré à la demande */ // { id: 'noel-orn-comete', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-boule-neige', v3: 1, ml: 12, ph: 'Famille', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
     { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
@@ -6359,11 +6359,14 @@ function A77Models(THREE, fontData, allFonts) {
       body = SOFT(U(arm.concat([CI(0, 0, 6.5)])), 0.8); hy = 32; body = U([body, CI(0, 30.5, 4.6)]);
       det = [CI(0, 0, 4.4)];
     } else if (which === 'cloche') {
-      var half = [], other = [], n = 16;
-      for (i = 0; i <= n; i++) { var tt = i / n, yy = 18 - 34 * tt, ww = 5.5 + 15.5 * Math.pow(tt, 2.3) + (tt > 0.86 ? (tt - 0.86) * 36 : 0); half.push([ww, yy]); other.push([-ww, yy]); }
-      var bell = PP(half.concat(other.reverse()));
-      body = SOFT(U([bell, CI(0, 20, 4.2)]), 1.2); hy = 28; body = U([body, CI(0, 25.8, 4.6), CI(0, -19, 5.6)]);
-      det = [IN(bell, PP([[-40, -9.5], [40, -9.5], [40, -5.5], [-40, -5.5]])), CI(0, -19, 4.5)];
+      var half = [], other = [], k2;
+      for (k2 = 0; k2 <= 12; k2++) { var an2 = k2 / 12 * Math.PI / 2, ww2 = 10.5 * Math.cos(an2), yy2 = 7 + 13.5 * Math.sin(an2); half.push([ww2 + 0.01, yy2]); }
+      half.reverse();
+      [[7, 10.6], [2, 11.6], [-3, 13], [-8, 15.4], [-11.5, 18.4], [-13.8, 22], [-14.6, 23.4]].forEach(function (q) { half.push([q[1], q[0]]); });
+      half.forEach(function (q) { other.unshift([-q[0], q[1]]); });
+      var bell = PP(half.concat(other));
+      body = SOFT(U([bell, CI(0, 20.4, 3.6)]), 1.0); hy = 29; body = U([body, CI(0, 26.6, 4.6), CI(0, -20.5, 5.4), CAP([0, -10], [0, -20], 2.2, 2.2)]);
+      det = [IN(bell, PP([[-40, -12.4], [40, -12.4], [40, -8.4], [-40, -8.4]])), CI(0, -20.5, 4.3), CI(-6, 1, 1.9), CI(6, 1, 1.9), CI(0, 6, 1.9), CI(-4, -3.6, 1.5), CI(4, -3.6, 1.5)];
     } else if (which === 'canne') {
       var pts = [[0, -26.5], [0, 10]]; for (i = 0; i <= 12; i++) { var t = Math.PI - i * Math.PI / 12; pts.push([8.2 + Math.cos(t) * 8.2, 10 + Math.sin(t) * 8.2]); }
       pts.push([16.4, 4]); var cn = []; for (i = 0; i < pts.length - 1; i++) cn.push(CAP(pts[i], pts[i + 1], 4.4, 4.4));
