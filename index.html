@@ -65,7 +65,7 @@
 html { scrollbar-color: rgba(22, 24, 27, .32) transparent; scrollbar-width: thin; }
 input, textarea, select { caret-color: var(--ink); accent-color: var(--ink); }
 p, li, dd { text-wrap: pretty; }
-.sp-p, .sp-p small, .cl-p, .cart-total, .line-p, [class*="price"], [class*="total"] { font-variant-numeric: tabular-nums; }
+.cl-p, .cart-total, .line-p { font-variant-numeric: tabular-nums; }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
 /* ---- rythme de la page : un temps fort jaune, un temps fort noir ---- */
@@ -91,6 +91,16 @@ p, li, dd { text-wrap: pretty; }
 .foot.dark-band { border-top: 0; background: #0D0F11; }
 .foot.dark-band .foot-brand p, .foot.dark-band .foot-in { color: var(--ink-2); }
 .foot.dark-band ul a { color: var(--ink); }
+
+/* boutique : fond de chaque photo teinté de la couleur choisie, grands titres de rayon, bandeau de Noël */
+.sp .obj-fig { background: color-mix(in srgb, var(--tone, #9aa0a8) 17%, #F4F5F7); transition: background-color .5s; }
+.sec-shop .shop-sub { margin: clamp(44px, 6vw, 84px) 0 18px; font-size: clamp(1.9rem, 1.3rem + 2.2vw, 3rem); font-weight: 780; letter-spacing: -.035em; line-height: 1; }
+.sec-shop .shop-sub::after { content: ""; display: block; width: 56px; height: 6px; border-radius: 3px; background: var(--accent); margin-top: 14px; }
+.sec-shop .shop-sub small { font-size: 1rem; margin-top: 14px; max-width: 58ch; }
+.sec-shop #b-noel { position: relative; margin-top: 6px; padding: clamp(28px, 4vw, 52px) clamp(22px, 4vw, 52px) clamp(26px, 3.5vw, 44px); border-radius: 30px; background: #C4262B; color: #fff; overflow: hidden; }
+.sec-shop #b-noel::after { content: ""; position: absolute; left: 0; right: 0; top: 0; width: auto; height: 10px; margin: 0; border-radius: 0; background: repeating-linear-gradient(135deg, #fff 0 14px, #C4262B 14px 28px); opacity: .9; }
+.sec-shop #b-noel small { color: rgba(255, 255, 255, .88); font-size: clamp(1rem, .9rem + .4vw, 1.2rem); }
+@media (max-width: 640px) { #b-noel { border-radius: 24px; } }
 </style>
 <style>
 @property --glow { syntax: "<color>"; inherits: true; initial-value: #12B04A; }
@@ -4006,7 +4016,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   var cardsDone = false;
   SHOP.forEach(function (s) {
     var c = CAT[s.id], P = PRICES[s.id], L = SIZES[s.id];
-    var a = el('article', { class: 'sp', 'data-id': s.id });
+    var a = el('article', { class: 'sp', 'data-id': s.id }); a.style.setProperty('--tone', col(s.combos[0].split('-')[0]).hex);
     a.innerHTML =
       '<div class="obj-fig" data-still="' + s.id + '">' + icon(c.ico, 'ico') + (s.hero || s.v3 ? '<button type="button" class="fig-btn" data-open="' + s.id + '"><span class="sr">Voir ' + c.one + ' en 3D</span><span class="fig-hint" aria-hidden="true">' + icon('i-cube') + '3D</span></button>' : '') + '</div>' +
       '<button type="button" class="sp-x" aria-label="Fermer"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>' +
@@ -4242,6 +4252,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   function recolorCard(a) {
     if (!A.stillCombo || !a || !a.hasAttribute('data-id')) return;
     var s = cardState(a), node = a.querySelector('.obj-fig[data-still]'); if (!node || !s.combo) return;
+    a.style.setProperty('--tone', col(s.combo.split('-')[0]).hex);
     var shown = false;
     var rel = szRel(s.id, s.sz);
     if (A.stillText && s.text.trim()) shown = A.stillText(s.id, s.combo, s.text.trim().slice(0, 40), s.fo, function (url) { A.setImg(node, url); }, rel);
