@@ -77,12 +77,12 @@
   --ink-2: #474B52;
   --grey: #5C616B;
   --rule: rgba(22, 24, 27, .1);
-  --glass: rgba(255, 255, 255, .97);
-  --glass-2: #FFFFFF;
-  --glass-line: rgba(22, 24, 27, .09);
+  --glass: rgba(255, 255, 255, .55);
+  --glass-2: rgba(255, 255, 255, .78);
+  --glass-line: rgba(255, 255, 255, .9);
   --veil: rgba(244, 245, 247, .86);
   --scrim: rgba(22, 24, 27, .32);
-  --shadow-glass: 0 1px 2px rgba(22, 24, 27, .06), 0 10px 28px -14px rgba(22, 24, 27, .22);
+  --shadow-glass: inset 0 1px 0 rgba(255, 255, 255, .95), 0 18px 44px -20px rgba(28, 36, 52, .38), 0 2px 8px -3px rgba(28, 36, 52, .1);
   --shadow-card: 0 1px 2px rgba(22, 24, 27, .05), 0 14px 34px -22px rgba(22, 24, 27, .32);
   --shadow-pop: 0 50px 100px -40px rgba(22, 24, 27, .55), 0 2px 10px rgba(22, 24, 27, .08);
   --accent: #FFC61A;
@@ -146,6 +146,8 @@ section[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 92px); }
 /* verre dépoli */
 .glass {
   background: var(--glass);
+  -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  backdrop-filter: blur(22px) saturate(1.8);
   border: 1px solid var(--glass-line);
   box-shadow: var(--shadow-glass);
 }
@@ -171,6 +173,7 @@ section[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 92px); }
 .btn-y:active { transform: translateY(1px); }
 .btn-glass {
   color: var(--ink); background: var(--glass-2); border-color: var(--glass-line);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6); backdrop-filter: blur(16px) saturate(1.6);
   box-shadow: var(--shadow-glass);
 }
 .btn-glass:hover { background: rgba(255, 255, 255, .95); transform: translateY(-1px); }
@@ -277,7 +280,7 @@ section[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 92px); }
 
 .hero-panel { position: relative; z-index: 3; grid-row: 3; padding-bottom: 28px; pointer-events: none; }
 .panel { position: relative; width: min(900px, 100%); display: grid; gap: 14px; padding: 20px 18px 18px; border-radius: 28px; overflow: hidden; pointer-events: auto; }
-.progress { position: absolute; left: 22px; right: 22px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: rgba(22, 24, 27, .07); overflow: hidden; }
+.progress { display: none; position: absolute; left: 22px; right: 22px; top: 0; height: 3px; border-radius: 0 0 3px 3px; background: rgba(22, 24, 27, .07); overflow: hidden; }
 .progress i { display: block; height: 100%; width: 0; background: var(--ink); }
 .p-row { display: flex; align-items: center; gap: 12px; }
 .seg { position: relative; flex: none; display: grid; --n: 4; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); padding: 4px; border-radius: 999px; background: rgba(22, 24, 27, .06); }
@@ -852,7 +855,7 @@ dialog::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(5px);
 
 .menu {
   position: fixed; inset: 0; width: 100%; height: 100%; margin: 0; overflow-y: auto; overscroll-behavior: contain;
-  background: var(--veil); 
+  background: var(--veil); -webkit-backdrop-filter: blur(26px) saturate(1.6); backdrop-filter: blur(26px) saturate(1.6);
 }
 .menu::backdrop { background: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 .menu[open] { animation: fade .25s ease; }
@@ -1540,6 +1543,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     <div class="wrap hero-panel">
       <form class="panel glass" id="maker" autocomplete="off">
         <div class="progress" aria-hidden="true"><i id="progress"></i></div>
+        
         <div class="p-row p-row-cat only-part">
           <div class="seg seg-cp seg-cat" role="radiogroup" aria-label="Type d’objet">
             <input type="radio" name="cat" id="c-noel" value="noel"><label for="c-noel">Noël</label>
@@ -1594,7 +1598,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
             <span class="fl">Prénom 2</span>
             <input class="text-in" id="hero-text2" type="text" maxlength="14" value="NOÉ" placeholder="Ex. Noé" spellcheck="false" autocapitalize="characters" autocomplete="off" enterkeyhint="done">
           </label>
-          <button type="button" class="icon-btn" id="reprint" aria-label="Relancer l’impression" title="Relancer l’impression">
+          <button type="button" class="icon-btn" id="reprint" aria-label="Rejouer l’aperçu" title="Rejouer l’aperçu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg>
           </button>
         </div>
@@ -7462,9 +7466,11 @@ function A77Stage(THREE, M) {
     var L = cur.layers[li], b = cur.parts[L.pi].box;
     return tmp2.set(li % 2 === 0 ? b.min.x : b.max.x, L.h1 + 0.06, b.min.z);
   }
+  var SHOWCASE = true;
   function startPrint() {
     if (!cur) return;
     if (reduce) { finish(); return; }
+    if (SHOWCASE) { quickReveal(); return; }
     showNone();
     pr.phase = 'heat'; pr.t = 0; pr.li = 0; pr.lt = 0;
     from.copy(head); flash = 0; shine(0); resetShow(); quickMode = false;
@@ -7515,7 +7521,7 @@ function A77Stage(THREE, M) {
   function beginShow() {
     var bb = new THREE.Box3(); cur.parts.forEach(function (p) { bb.union(p.box); });
     bb.getCenter(showC); showH = bb.max.y - bb.min.y; var rad = Math.max(bb.max.x - bb.min.x, bb.max.z - bb.min.z) / 2;
-    showR = Math.max(16, rad); showOn = true; showT = 0; ring.visible = sparks.visible = true;
+    showR = Math.max(16, rad); showOn = true; showT = 0; ring.visible = sparks.visible = !SHOWCASE;
     pieces = []; pzMoves = cur.model.relief && cur.model.relief.moves && cur.model.relief.moves.length ? cur.model.relief.moves : null;
     SHOW_T = SHOW_N;
     if (pzMoves) {
@@ -7554,7 +7560,7 @@ function A77Stage(THREE, M) {
     }
     spGeo.attributes.position.needsUpdate = true; sparks.material.opacity = fade * (0.65 + 0.35 * Math.sin(showT * 9));
     /* la caméra se rapproche de l’objet */
-    var f = up;
+    var f = SHOWCASE ? 0 : up;
     fx.tx = showC.x * f; fx.ty = 2 + (showH * 0.4 - 16) * f; fx.tz = 4 + (showC.z - 4) * f;
     return showT >= SHOW_T;
   }
@@ -7634,12 +7640,12 @@ function A77Stage(THREE, M) {
     var w = Math.max(1, view.clientWidth), h = Math.max(1, view.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(w, h, false);
-    var wide = w >= 1000 && w / h > 1.25;
+    var wide = w >= 1000 && (SHOWCASE || w / h > 1.25);
     camera.aspect = w / h;
-    if (wide) camera.setViewOffset(w, h, -0.17 * w, -0.06 * h, w, h);
+    if (wide) camera.setViewOffset(w, h, (SHOWCASE ? -0.24 : -0.17) * w, (SHOWCASE ? -0.02 : -0.06) * h, w, h);
     else camera.clearViewOffset();
     var vf = THREE.MathUtils.degToRad(camera.fov / 2), hf = Math.atan(Math.tan(vf) * camera.aspect);
-    cam.dist = (wide ? 204 : camera.aspect < 1.1 ? 145 : 133) / Math.sin(Math.min(vf, hf));
+    cam.dist = (wide ? 204 : camera.aspect < 1.1 ? 145 : 133) * (SHOWCASE ? (wide ? 0.4 : 0.28) : 1) / Math.sin(Math.min(vf, hf));
     coDirty = true;
     camera.near = cam.dist / 8; camera.far = cam.dist * 4;
     camera.updateProjectionMatrix();
@@ -7727,8 +7733,8 @@ function A77Stage(THREE, M) {
     update(dt);
     var busy = pr.phase === 'layers' || pr.phase === 'swap';
     var sh = pr.phase === 'show';
-    fx.zoom += ((sh ? 0.8 : busy ? 0.92 : 1) - fx.zoom) * Math.min(1, dt * 1.8);
-    fx.el += ((sh ? 0.4 : busy ? 0.52 : 0.6) - fx.el) * Math.min(1, dt * 1.8);
+    fx.zoom += ((SHOWCASE ? 1 : sh ? 0.8 : busy ? 0.92 : 1) - fx.zoom) * Math.min(1, dt * 1.8);
+    fx.el += ((SHOWCASE ? 0.5 : sh ? 0.4 : busy ? 0.52 : 0.6) - fx.el) * Math.min(1, dt * 1.8);
     target.x += (fx.tx - target.x) * Math.min(1, dt * 3); target.y += (fx.ty - target.y) * Math.min(1, dt * 3); target.z += (fx.tz - target.z) * Math.min(1, dt * 3);
     placeCam((now - t0) / 1000);
     renderer.render(scene, camera);
@@ -7876,10 +7882,18 @@ function A77Stage(THREE, M) {
     finish();
   } else {
     build(first.obj, first.text, first.combo);
-    showNone();
+    if (SHOWCASE) showAll(); else showNone();
     status('En attente');
     prog(0);
     view.dataset.state = 'idle';
+  }
+  if (SHOWCASE) {
+    scene.children.forEach(function (o) {
+      if (o.isLight || o === bedRig || o.type === 'Object3D') return;
+      if (o.material && o.material.type === 'ShadowMaterial') { o.position.y = -0.05; return; }
+      o.visible = false;
+    });
+    bedRig.children.slice(0, 2).forEach(function (o) { o.visible = false; });
   }
   renderOnce();
   view.classList.add('ready');
