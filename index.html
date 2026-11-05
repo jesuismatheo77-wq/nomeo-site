@@ -2660,6 +2660,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Une grosse boîte cadeau vide, avec son couvercle qui s’emboîte : un ruban dans la deuxième couleur et un gros nœud sur le dessus. Votre prénom est écrit en relief sur les deux côtés. On y glisse un petit cadeau, des bonbons ou un mot, et elle se range ensuite d’une année sur l’autre.' },
     'noel-essuie-tout': { t: 'Porte-essuie-tout bonnet de Père Noël', s: 'Porte-essuie-tout Noël', one: 'porte-essuie-tout de Noël', many: 'porte-essuie-tout de Noël', ref: 'N26', dims: '37 cm de haut, base de 17 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, cuisines, cadeaux, boutiques',
       d: 'Un porte-essuie-tout pour la cuisine de Noël : une base ronde bordée de boules de neige, un grand mât avec trois anneaux, et un gros bonnet de Père Noël penché au sommet, avec sa collerette de boules et son pompon. On enfile le rouleau sur le mât et on pose le bonnet dessus. Votre nom est écrit en relief sur la base. Il s’imprime en trois pièces (base, mât, bonnet) qui s’emboîtent.' },
+    'noel-cheminee-deco': { t: 'Cheminée de Noël lumineuse', s: 'Cheminée lumineuse', one: 'cheminée de Noël lumineuse', many: 'cheminées de Noël lumineuses', ref: 'N27', dims: '15 cm de large, 11 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, salons, cadeaux, boutiques',
+      d: 'Une cheminée de Noël en briques en relief, avec sa grande arche, ses bûches noires et trois bas de Noël accrochés sous le manteau. Une bougie LED, fournie, se place derrière les bûches : elle fait le feu qui danse dans la cheminée. Sur le manteau, une guirlande, une bougie rouge et de petits cadeaux, et votre nom écrit devant.' },
     'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
       d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
@@ -2776,6 +2778,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-cadeau:m': [44.9, 38.9, 36.4, 34.9, 33.4],
     'noel-cadeau:l': [69.9, 59.9, 56.4, 54.4, 52.4],
     'noel-essuie-tout': [49.9, 44.9, 42.9, 41.4, 39.9],
+    'noel-cheminee-deco': [34.9, 29.9, 28.4, 27.4, 26.4],
     'noel-boule-neige': [29.9, 24.9, 23.4, 22.4, 21.4],
     'noel-bougeoir': [24.9, 19.9, 18.9, 18.4, 17.9],
     'noel-mini-bonnets': [2.9, 2.5, 2.3, 2.2, 2.1],
@@ -3798,6 +3801,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     /* retiré à la demande */ // { id: 'noel-orn-comete', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-cadeau', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-rouge', 'bleu-jaune'] },
     { id: 'noel-essuie-tout', v3: 1, ml: 10, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
+    { id: 'noel-cheminee-deco', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-boule-neige', v3: 1, ml: 12, ph: 'Famille', combos: ['bleu-blanc', 'sapin-blanc', 'rouge-blanc', 'blanc-rouge'] },
     { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
@@ -6495,6 +6499,89 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* cheminée de Noël lumineuse : briques en relief, grande arche, bûches noires, bougie LED allumée derrière qui fait la flamme, bas de Noël, guirlande et cadeaux sur le manteau */
+  function chemineeDeco(mat, text) {
+    var g = new THREE.Group(), i, r, c;
+    var GR = propMat('#8C929A'), BK = propMat('#25282E'), GN = propMat('#12B04A'), RD = propMat('#D7332A'), WH = propMat('#EFEFEA'), YL = propMat('#F5C518'), BL = propMat('#2552D6');
+    var BW = 120, BD = 80, BH = 90, Y0 = 8, OW = 25;
+    function TP(tree) { return ClipperLib.Clipper.PolyTreeToPaths(tree); }
+    function PPc(pts) { return orient(cpaths([pts]))[0]; }
+    /* dalle de sol et corps */
+    var slab = mk(new THREE.BoxGeometry(150, Y0, 112), GR); slab.position.set(0, Y0 / 2, 0); g.add(slab);
+    var sh = new THREE.Shape(); sh.moveTo(-BW / 2, 0); sh.lineTo(BW / 2, 0); sh.lineTo(BW / 2, BH); sh.lineTo(-BW / 2, BH); sh.closePath();
+    var ho = new THREE.Path(); ho.moveTo(-OW, 3); ho.lineTo(-OW, 28); ho.absarc(0, 28, OW, Math.PI, 0, true); ho.lineTo(OW, 3); ho.closePath(); sh.holes.push(ho);
+    var bg = new THREE.ExtrudeGeometry(sh, { depth: BD, bevelEnabled: false, curveSegments: 28 }); bg.translate(0, Y0, -BD / 2);
+    g.add(mk(bg, mat.relief));
+    var back = mk(new THREE.BoxGeometry(2 * OW + 0.6, 56, 30), mat.relief); back.position.set(0, Y0 + 3 + 28, -BD / 2 + 15); g.add(back);
+    /* briques en relief (de face et sur les côtés) */
+    function brickRows(w, place) {
+      for (r = 0; r < 10; r++) {
+        var y = Y0 + 5.5 + r * 8.5, off = r % 2 ? 9 : 0, n = Math.floor(w / 17.4) + 1;
+        for (c = -1; c < n + 1; c++) {
+          var x0 = -w / 2 + off + c * 17.4 + 1, x1 = x0 + 16, a = Math.max(x0, -w / 2 + 1.2), b = Math.min(x1, w / 2 - 1.2);
+          if (b - a < 4) continue;
+          place(a, b, y);
+        }
+      }
+    }
+    brickRows(BW, function (a, b, y) {
+      var cx = (a + b) / 2; if (Math.abs(cx) < OW + 7 && y < Y0 + 3 + 28 + OW + 2) { if (Math.abs(cx) < OW + 7 && y < Y0 + 60) return; }
+      var bk = mk(new THREE.BoxGeometry(b - a, 7, 1.8), mat.base); bk.position.set(cx, y, BD / 2 + 0.7); g.add(bk);
+    });
+    [-1, 1].forEach(function (sg) {
+      brickRows(BD, function (a, b, y) { var bk = mk(new THREE.BoxGeometry(1.8, 7, b - a), mat.base); bk.position.set(sg * (BW / 2 + 0.7), y, (a + b) / 2); g.add(bk); });
+    });
+    /* briques de l'arche : claveaux autour de l'ouverture */
+    for (i = 0; i <= 8; i++) {
+      var an = Math.PI - i * Math.PI / 8 + 0.0, rad = OW + 4.6, ax = Math.cos(an) * rad, ay = Y0 + 3 + 28 + Math.sin(an) * rad;
+      var kv = mk(new THREE.BoxGeometry(8, 7.4, 1.8), mat.base); kv.position.set(ax, ay, BD / 2 + 0.7); kv.rotation.z = an - Math.PI / 2; g.add(kv);
+    }
+    /* manteau */
+    var mt = mk(new THREE.BoxGeometry(142, 12, 98), GR); mt.position.set(0, Y0 + BH + 6, 0); g.add(mt);
+    layout(text, { maxW: 112, maxH: 8, cap: 6.6, cx: 0, cy: Y0 + BH + 6 }).items.forEach(function (it) {
+      var t3 = mk(ext(it.shapes, 1.2, { bevel: 0.2, bseg: 1, seg: 8, dx: it.dx, dy: it.dy, upright: true }), mat.relief); t3.position.z = 49 - 0.1; g.add(t3);
+    });
+    var TOP = Y0 + BH + 12;
+    /* feu : bûches noires, bougie LED allumée derrière, flammes qui dansent */
+    var fy = Y0 + 3;
+    var wax = mk(new THREE.CylinderGeometry(15.4, 15.8, 13, 40), propMat('#F4EFE4')); wax.position.set(0, fy + 6.5, -12); g.add(wax);
+    var lrim = new THREE.Mesh(new THREE.TorusGeometry(13.8, 0.8, 8, 40), new THREE.MeshBasicMaterial({ color: 0xFFE2A6 })); lrim.rotation.x = Math.PI / 2; lrim.position.set(0, fy + 13, -12); g.add(lrim);
+    function flame(x, z, h, w, col) { var f = new THREE.Mesh(new THREE.ConeGeometry(w, h, 14), new THREE.MeshBasicMaterial({ color: col })); f.position.set(x, fy + 13 + h / 2 - 1, z); g.add(f); }
+    flame(0, -12, 22, 6.4, 0xFF7A1F); flame(-8, -12, 15, 4.6, 0xFFB02E); flame(8, -12, 17, 5, 0xFF8A1F); flame(0, -12, 13, 3.4, 0xFFE27A);
+    var halo = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({ color: 0xFF8A2A, transparent: true, opacity: 0.2, depthWrite: false })); halo.scale.set(26, 22, 20); halo.position.set(0, fy + 16, -8); g.add(halo);
+    var glw = new THREE.Mesh(new THREE.PlaneGeometry(2 * OW - 1, 52), new THREE.MeshBasicMaterial({ color: 0xFF6A1F, transparent: true, opacity: 0.35, depthWrite: false })); glw.position.set(0, fy + 26, -BD / 2 + 30.4); g.add(glw);
+    [[-9, 6, 0.1], [9, 6, -0.15]].forEach(function (L) {
+      var lg = mk(new THREE.CylinderGeometry(4.4, 4.4, 36, 18), BK); lg.rotation.z = Math.PI / 2; lg.rotation.y = L[2]; lg.position.set(0, fy + 4.4, L[0] > 0 ? 10 : 4); lg.position.x = L[0] * 0.3; g.add(lg);
+      [-1, 1].forEach(function (sg) { var ec = mk(new THREE.CircleGeometry(3.4, 16), GR); ec.rotation.y = sg * Math.PI / 2 + L[2]; ec.position.set(L[0] * 0.3 + sg * 18.1, fy + 4.4, L[0] > 0 ? 10 : 4); g.add(ec); });
+    });
+    var lg2 = mk(new THREE.CylinderGeometry(4, 4, 34, 18), BK); lg2.rotation.z = Math.PI / 2; lg2.rotation.y = -0.5; lg2.position.set(0, fy + 11.6, 7); g.add(lg2);
+    /* bas de Noël accrochés sous le manteau (vert, bord blanc, talon et pointe rouges) */
+    function sPaths(pts) { return PPc(pts); }
+    var boot = cOffset(cOffset([sPaths([[-7, 0], [7, 0], [7, -19], [17, -25], [17, -32], [2, -32], [-7, -26]])], 1.4), -1.4);
+    function lay(paths, d, z0, m2, ox, oy, oz) {
+      var shs = tShapes(cexec(ClipperLib.ClipType.ctUnion, paths, null, false));
+      if (shs.length) { var me = mk(ext(shs, d, { upright: true, bevel: 0.25, bseg: 1, seg: 8, z0: z0 }), m2); me.position.set(ox, oy, oz); g.add(me); }
+    }
+    function IN(a, b) { return TP(cexec(ClipperLib.ClipType.ctIntersection, a, b, false)); }
+    var cuff = IN(boot, [sPaths([[-30, -7], [30, -7], [30, 5], [-30, 5]])]);
+    var toe = IN(boot, [sPaths([[10.5, -40], [30, -40], [30, -10], [10.5, -10]])]);
+    var heel = IN(boot, [sPaths(circPts(-4, -28, 5.6, 20))]);
+    [-40, 0, 40].forEach(function (sx) {
+      var oy = Y0 + BH - 1.2, oz = BD / 2 + 2;
+      lay(boot, 3.2, 0, GN, sx, oy, oz); lay(cuff, 1.0, 3.0, WH, sx, oy, oz); lay(toe, 1.0, 3.0, RD, sx, oy, oz); lay(heel, 1.0, 3.0, RD, sx, oy, oz);
+      var hk = mk(new THREE.TorusGeometry(2.6, 0.7, 8, 16), BK); hk.position.set(sx, oy + 3, oz + 1.6); g.add(hk);
+    });
+    /* sur le manteau : guirlande de boules, bougie rouge, petits cadeaux */
+    for (i = -6; i <= 6; i++) { elG(g, GN, 4.6, 4.2, 4.6, i * 9.4, TOP + 3.4, 40 - (i % 2 ? 2 : 0), 0, 0, 0, 14); if (i % 3 === 0) elG(g, RD, 3.2, 3.2, 3.2, i * 9.4 + 2, TOP + 6.4, 43, 0, 0, 0, 14); }
+    cylG(g, RD, 5.2, 5.2, 24, -54, TOP + 12, -4, 0, 0, 0, 24); elG(g, YL, 2.2, 4.4, 2.2, -54, TOP + 27.4, -4, 0, 0, 0, 12);
+    [[34, 4.4, GN, RD, 8], [47, 3.6, BL, YL, 6], [53, 6.2, RD, WH, -14]].forEach(function (gf) {
+      var bx = mk(new THREE.BoxGeometry(gf[1] * 2, gf[1] * 2, gf[1] * 2), gf[2]); bx.position.set(gf[0], TOP + gf[1], gf[4]); g.add(bx);
+      var rb1 = mk(new THREE.BoxGeometry(gf[1] * 2 + 0.5, 1, 1.4), gf[3]); rb1.position.set(gf[0], TOP + gf[1] * 2 - 0.2, gf[4]); g.add(rb1);
+      var rb2 = mk(new THREE.BoxGeometry(1.4, 1, gf[1] * 2 + 0.5), gf[3]); rb2.position.set(gf[0], TOP + gf[1] * 2 - 0.2, gf[4]); g.add(rb2);
+    });
+    return g;
+  }
+
   /* Père Noël lutin (façon peluche nordique) : grand bonnet pointu penché, grosse barbe, nez rond, bras rayés à moufles, pieds ovales */
   function lutinNoel(mat, text) {
     var g = new THREE.Group(), SH = 4.5, sg;
@@ -6796,6 +6883,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-boule-neige': return bouleNeige(mat, T('FAMILLE'));
       case 'noel-cadeau': return boiteCadeau(mat, T('LÉA'));
       case 'noel-essuie-tout': return porteEssuieTout(mat, T('FAMILLE'));
+      case 'noel-cheminee-deco': return chemineeDeco(mat, T('FAMILLE'));
       case 'noel-orn-sapin': return ornementSimple(mat, T('LÉA'), 'sapin');
       case 'noel-orn-flocon': return ornementSimple(mat, T('LÉA'), 'flocon');
       case 'noel-orn-cloche': return ornementSimple(mat, T('LÉA'), 'cloche');
@@ -7721,6 +7809,7 @@ function A77Studio(THREE, M) {
     'noel-orn-comete': { el: 0.05, az: -0.3, c: ['sapin', 'blanc'], aspect: 0.8 },
     'noel-cadeau': { el: 0.35, az: -0.55, c: ['rouge', 'blanc'], aspect: 1 },
     'noel-essuie-tout': { el: 0.14, az: -0.45, c: ['rouge', 'blanc'], aspect: 0.62 },
+    'noel-cheminee-deco': { el: 0.2, az: -0.4, c: ['rouge', 'blanc'], aspect: 1 },
     'noel-boule-neige': { el: 0.24, az: -0.4, c: ['sapin', 'blanc'], aspect: 1.2 },
     'noel-cheminee': { el: 0.28, az: -0.5, c: ['rouge', 'blanc'], aspect: 0.85 },
     'noel-lutin': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
