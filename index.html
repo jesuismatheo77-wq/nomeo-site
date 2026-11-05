@@ -6234,6 +6234,32 @@ function A77Models(THREE, fontData, allFonts) {
       var h = t[2] * K;
       for (var k = 0; k < 3; k++) cylG(g, mat.base, h * (0.1 + 0.07 * (2 - k)) * 0.5, h * (0.3 - 0.06 * k), h * 0.42, t[0] * K, Yg + h * 0.2 + k * h * 0.27, t[1] * K, 0, 0, 0, 24);
     });
+    /* décor : collines au fond, chemin de pierres, réverbère, barrière, cadeaux, bras du bonhomme, neige sur les sapins, fumée, petits sapins */
+    var GYd = propMat('#9A9DA3'), YLd = propMat('#F5C518');
+    [[-12, -26, 20, 4.4, 8], [12, -27, 18, 3.8, 7], [0, -30, 22, 5.6, 6]].forEach(function (h2) { elG(g, mat.relief, h2[2], h2[3], h2[4], h2[0], Yg - 0.6, h2[1], 0, 0, 0, 24); });
+    [[9, 3], [8.4, 8], [7.6, 13], [6.4, 18], [5, 23]].forEach(function (p2, n) { elG(g, GYd, 3.6 - n * 0.1, 0.7, 2.6, p2[0], Yg + 0.2, p2[1], 0, 0.3, 0, 16); });
+    cylG(g, DK, 0.7, 0.9, 17, 24, Yg + 8.5, -1, 0, 0, 0, 12);
+    var lan = new THREE.Mesh(new THREE.BoxGeometry(3.6, 4.4, 3.6), new THREE.MeshBasicMaterial({ color: 0xFFD25E })); lan.position.set(24, Yg + 18.6, -1); g.add(lan);
+    var lcap = mk(new THREE.ConeGeometry(3.2, 2.4, 4), DK); lcap.position.set(24, Yg + 22, -1); lcap.rotation.y = Math.PI / 4; g.add(lcap);
+    var lhalo = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xFFC247, transparent: true, opacity: 0.22, depthWrite: false })); lhalo.scale.set(7, 7, 7); lhalo.position.set(24, Yg + 18.6, -1); g.add(lhalo);
+    for (i = 0; i < 5; i++) {
+      var fx = -27 + i * 4.6, fz = 17 + i * 2.2 - (i > 2 ? (i - 2) * 1.2 : 0);
+      var post = mk(new THREE.BoxGeometry(1.4, 7.4, 1.4), mat.base); post.position.set(fx, Yg + 3.4, fz); g.add(post);
+      if (i) { var pf = mk(new THREE.BoxGeometry(5, 1, 0.9), mat.base); pf.position.set(fx - 2.3, Yg + 4.6, fz - 1.1); pf.rotation.y = -0.4; g.add(pf); var pf2 = mk(new THREE.BoxGeometry(5, 1, 0.9), mat.base); pf2.position.set(fx - 2.3, Yg + 2.2, fz - 1.1); pf2.rotation.y = -0.4; g.add(pf2); }
+    }
+    [[-12, 20, mat.base, 4.6], [-7, 23, RD, 3.6]].forEach(function (gf) {
+      var bx2 = mk(new THREE.BoxGeometry(gf[3], gf[3], gf[3]), gf[2]); bx2.position.set(gf[0], Yg + gf[3] / 2 - 0.2, gf[1]); bx2.rotation.y = 0.5; g.add(bx2);
+      var rb1 = mk(new THREE.BoxGeometry(gf[3] + 0.4, 0.8, 0.9), YLd); rb1.position.set(gf[0], Yg + gf[3] - 0.1, gf[1]); rb1.rotation.y = 0.5; g.add(rb1);
+      var rb2 = mk(new THREE.BoxGeometry(0.9, 0.8, gf[3] + 0.4), YLd); rb2.position.set(gf[0], Yg + gf[3] - 0.1, gf[1]); rb2.rotation.y = 0.5; g.add(rb2);
+    });
+    [-1, 1].forEach(function (s2) { var arm = mk(new THREE.CylinderGeometry(0.45, 0.45, 8, 8), DK); arm.position.set(-9 * K + s2 * 8.4, Yg + 12.6 * K + 3.4, 8 * K); arm.rotation.z = s2 * -1.0; g.add(arm); });
+    [[-24, -6, 24], [22, 10, 17], [4, -17, 18], [-8, -20, 14]].forEach(function (t) { var h = t[2] * K; elG(g, mat.relief, 2.6, 3.2, 2.6, t[0] * K, Yg + h * 0.96, t[1] * K, 0, 0, 0, 14); elG(g, mat.relief, h * 0.2, 1.4, h * 0.2, t[0] * K, Yg + h * 0.52, t[1] * K, 0, 0, 0, 14); });
+    [[0.4, 26, 1.7], [1.2, 30, 2.2], [0.4, 34, 2.7]].forEach(function (sm) { elG(g, mat.relief, sm[2], sm[2], sm[2], hx + 3.4 * K + sm[0], Yg + sm[1] * K * 0.9 + 6, hz - 1.2 * K, 0, 0, 0, 14); });
+    [[-2, 26, 8], [28, 4, 10], [-27, 6, 11], [16, 20, 9], [-18, -14, 10]].forEach(function (mt) {
+      var h = mt[2];
+      for (var k = 0; k < 2; k++) cylG(g, mat.base, 0.5, h * (0.26 - 0.07 * k), h * 0.5, mt[0], Yg + h * 0.22 + k * h * 0.28, mt[1], 0, 0, 0, 16);
+    });
+    [[-20, 12, 2.4], [14, 14, 2], [-3, 14, 1.8], [19, -12, 2.2]].forEach(function (sb) { elG(g, mat.relief, sb[2], sb[2] * 0.8, sb[2], sb[0], Yg + 0.5, sb[1], 0, 0, 0, 12); });
     /* le dôme transparent (fourni) avec son rebord, et la lueur chaude de la bougie dessous */
     var dome = new THREE.Mesh(new THREE.SphereGeometry(RDm, 64, 32, 0, TAU, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xFFFFFF, emissive: 0xFFB04A, emissiveIntensity: 0.3, transparent: true, opacity: 0.2, roughness: 0.1, depthWrite: false, side: THREE.DoubleSide }));
     dome.scale.y = DH / RDm; dome.position.y = BHt + 0.6; g.add(dome);
