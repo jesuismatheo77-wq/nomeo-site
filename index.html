@@ -2661,7 +2661,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-essuie-tout': { t: 'Porte-essuie-tout bonnet de Père Noël', s: 'Porte-essuie-tout Noël', one: 'porte-essuie-tout de Noël', many: 'porte-essuie-tout de Noël', ref: 'N26', dims: '37 cm de haut, base de 17 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, cuisines, cadeaux, boutiques',
       d: 'Un porte-essuie-tout pour la cuisine de Noël : une base ronde bordée de boules de neige, un grand mât avec trois anneaux, et un gros bonnet de Père Noël penché au sommet, avec sa collerette de boules et son pompon. On enfile le rouleau sur le mât et on pose le bonnet dessus. Votre nom est écrit en relief sur la base. Il s’imprime en trois pièces (base, mât, bonnet) qui s’emboîtent.' },
     'noel-cheminee-deco': { t: 'Cheminée de Noël lumineuse', s: 'Cheminée lumineuse', one: 'cheminée de Noël lumineuse', many: 'cheminées de Noël lumineuses', ref: 'N27', dims: '15 cm de large, 11 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, salons, cadeaux, boutiques',
-      d: 'Une cheminée de Noël en briques en relief, avec sa grande arche et ses bûches noires. L’arche traverse la cheminée de part en part : derrière les bûches, il y a une petite place pour la bougie LED, fournie, qu’on glisse par l’arrière. Elle fait le feu qui danse. Sur le manteau, une guirlande, une bougie rouge et de petits cadeaux, et votre nom écrit devant.' },
+      d: 'Une cheminée de Noël en briques en relief, avec sa grande arche et ses bûches noires. Le fond est fermé pour que la lumière reste dans l’âtre : la bougie LED, fournie, se glisse par l’avant, au-dessus des bûches, et se pose derrière elles. Elle fait le feu qui danse. Sur le manteau, une guirlande, une bougie rouge et de petits cadeaux, et votre nom écrit devant.' },
     'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
       d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
@@ -6512,6 +6512,8 @@ function A77Models(THREE, fontData, allFonts) {
     var ho = new THREE.Path(); ho.moveTo(-OW, 3); ho.lineTo(-OW, 28); ho.absarc(0, 28, OW, Math.PI, 0, true); ho.lineTo(OW, 3); ho.closePath(); sh.holes.push(ho);
     var bg = new THREE.ExtrudeGeometry(sh, { depth: BD, bevelEnabled: false, curveSegments: 28 }); bg.translate(0, Y0, -BD / 2);
     g.add(mk(bg, mat.relief));
+    var back = mk(new THREE.BoxGeometry(2 * OW + 1.2, 62, 8), mat.relief); back.position.set(0, Y0 + 3 + 31, -BD / 2 + 3.6); g.add(back);
+    var glw = new THREE.Mesh(new THREE.PlaneGeometry(2 * OW - 1, 52), new THREE.MeshBasicMaterial({ color: 0xFF6A1F, transparent: true, opacity: 0.35, depthWrite: false })); glw.position.set(0, Y0 + 3 + 26, -BD / 2 + 8.2); g.add(glw);
     /* briques en relief (de face et sur les côtés) */
     function brickRows(w, place) {
       for (r = 0; r < 10; r++) {
@@ -6543,11 +6545,11 @@ function A77Models(THREE, fontData, allFonts) {
     var TOP = Y0 + BH + 12;
     /* feu : bûches noires, bougie LED allumée derrière, flammes qui dansent */
     var fy = Y0 + 3;
-    var wax = mk(new THREE.CylinderGeometry(15.4, 15.8, 13, 40), propMat('#F4EFE4')); wax.position.set(0, fy + 6.5, -10); g.add(wax);
-    var lrim = new THREE.Mesh(new THREE.TorusGeometry(13.8, 0.8, 8, 40), new THREE.MeshBasicMaterial({ color: 0xFFE2A6 })); lrim.rotation.x = Math.PI / 2; lrim.position.set(0, fy + 13, -10); g.add(lrim);
+    var wax = mk(new THREE.CylinderGeometry(15.4, 15.8, 13, 40), propMat('#F4EFE4')); wax.position.set(0, fy + 6.5, -20); g.add(wax);
+    var lrim = new THREE.Mesh(new THREE.TorusGeometry(13.8, 0.8, 8, 40), new THREE.MeshBasicMaterial({ color: 0xFFE2A6 })); lrim.rotation.x = Math.PI / 2; lrim.position.set(0, fy + 13, -20); g.add(lrim);
     function flame(x, z, h, w, col) { var f = new THREE.Mesh(new THREE.ConeGeometry(w, h, 14), new THREE.MeshBasicMaterial({ color: col })); f.position.set(x, fy + 13 + h / 2 - 1, z); g.add(f); }
-    flame(0, -10, 22, 6.4, 0xFF7A1F); flame(-8, -10, 15, 4.6, 0xFFB02E); flame(8, -10, 17, 5, 0xFF8A1F); flame(0, -10, 13, 3.4, 0xFFE27A);
-    var halo = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({ color: 0xFF8A2A, transparent: true, opacity: 0.2, depthWrite: false })); halo.scale.set(26, 22, 20); halo.position.set(0, fy + 16, -8); g.add(halo);
+    flame(0, -20, 22, 6.4, 0xFF7A1F); flame(-8, -20, 15, 4.6, 0xFFB02E); flame(8, -20, 17, 5, 0xFF8A1F); flame(0, -20, 13, 3.4, 0xFFE27A);
+    var halo = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), new THREE.MeshBasicMaterial({ color: 0xFF8A2A, transparent: true, opacity: 0.2, depthWrite: false })); halo.scale.set(26, 22, 20); halo.position.set(0, fy + 16, -18); g.add(halo);
     [[-9, 6, 0.1], [9, 6, -0.15]].forEach(function (L) {
       var lg = mk(new THREE.CylinderGeometry(4.4, 4.4, 36, 18), BK); lg.rotation.z = Math.PI / 2; lg.rotation.y = L[2]; lg.position.set(0, fy + 4.4, L[0] > 0 ? 10 : 4); lg.position.x = L[0] * 0.3; g.add(lg);
       [-1, 1].forEach(function (sg) { var ec = mk(new THREE.CircleGeometry(3.4, 16), GR); ec.rotation.y = sg * Math.PI / 2 + L[2]; ec.position.set(L[0] * 0.3 + sg * 18.1, fy + 4.4, L[0] > 0 ? 10 : 4); g.add(ec); });
