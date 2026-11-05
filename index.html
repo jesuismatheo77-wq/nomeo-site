@@ -6038,18 +6038,44 @@ function A77Models(THREE, fontData, allFonts) {
     var body = [C([0, 4, 0], [0.4, 10, -0.4], 10, 8.4, 2), C([0.4, 10, -0.4], [1.8, 17, -1.7], 8.4, 5.2, 2), C([1.8, 17, -1.7], [4.8, 22.4, -3.6], 5.2, 2.8, 2), C([4.8, 22.4, -3.6], [8.2, 22.8, -6.4], 2.8, 2.0, 2)];
     var bb = [1e3, 1e3, 1e3, -1e3, -1e3, -1e3];
     body.forEach(function (p) { for (var q = 0; q < 3; q++) { bb[q] = Math.min(bb[q], p.box[q]); bb[q + 3] = Math.max(bb[q + 3], p.box[q + 3]); } });
-    var gb = SC.group(body); bb[1] = 0; var bodyGeo = SC.mesh(function (x, y, z) { return Math.max(gb(x, y, z), 0.6 - y); }, bb, 0.5);
+    bb[1] = 0;
+    var gb = SC.group(body), gbc = function (x, y, z) { return Math.max(gb(x, y, z), 0.6 - y); };
     var bandGeo = new THREE.CylinderGeometry(11.2, 11.4, 6.4, 48);
+    /* champ de distance 2D d'une lettre (règle pair-impair sur contours et trous) */
+    function letterField(ch) {
+      var rings = [], x0 = 1e3, y0 = 1e3, x1 = -1e3, y1 = -1e3;
+      layout(ch, { maxW: 10, maxH: 10, cap: 8.2, cx: 0, cy: 14.2 }).items.forEach(function (it) {
+        it.shapes.forEach(function (sh) {
+          var ex = sh.extractPoints(10), all = [ex.shape].concat(ex.holes);
+          all.forEach(function (pts) { var ring = pts.map(function (p) { return [p.x + it.dx, p.y + it.dy]; }); ring.forEach(function (q) { x0 = Math.min(x0, q[0]); x1 = Math.max(x1, q[0]); y0 = Math.min(y0, q[1]); y1 = Math.max(y1, q[1]); }); rings.push(ring); });
+        });
+      });
+      if (!rings.length) return null;
+      var box = [x0 - 1.5, y0 - 1.5, 2.6, x1 + 1.5, y1 + 1.5, 10.5];
+      var f = function (x, y, z) {
+        if (x < box[0] || x > box[3] || y < box[1] || y > box[4] || z < box[2] || z > box[5]) return 1e3;
+        var inside = false, d = 1e3, r, k;
+        for (r = 0; r < rings.length; r++) {
+          var R = rings[r], n = R.length;
+          for (k = 0; k < n; k++) {
+            var a = R[k], b2 = R[(k + 1) % n], ex = b2[0] - a[0], ey = b2[1] - a[1], L2 = ex * ex + ey * ey || 1e-9;
+            if ((a[1] > y) !== (b2[1] > y) && x < a[0] + (y - a[1]) / (b2[1] - a[1]) * ex) inside = !inside;
+            var t = ((x - a[0]) * ex + (y - a[1]) * ey) / L2; t = t < 0 ? 0 : t > 1 ? 1 : t;
+            var px = a[0] + ex * t - x, py = a[1] + ey * t - y, dd = px * px + py * py; if (dd < d) d = dd;
+          }
+        }
+        var d2 = Math.sqrt(d) * (inside ? -1 : 1);
+        return Math.max(d2, gb(x, y, z) - 1.0, 2.9 - z);
+      };
+      return { f: f, box: box };
+    }
     for (i = 0; i < 5; i++) {
-      var h = new THREE.Group(), flip = i % 2 ? -1 : 1;
-      h.add(mk(bodyGeo, mat.base));
+      var h = new THREE.Group(), flip = i % 2 ? -1 : 1, lf = chars[i] ? letterField(chars[i]) : null;
+      var fr = lf ? function (x, y, z) { return Math.max(gbc(x, y, z), -lf.f(x, y, z)); } : gbc;
+      h.add(mk(SC.mesh(fr, bb, 0.5), mat.base));
+      if (lf) h.add(mk(SC.mesh(lf.f, lf.box, 0.3), mat.relief));
       var band = mk(bandGeo, mat.relief); band.position.y = 3.2; h.add(band);
       elG(h, mat.relief, 3.7, 3.7, 3.7, 9.2, 22.6, -7.2, 0, 0, 0, 22);
-      if (chars[i]) {
-        layout(chars[i], { maxW: 10, maxH: 10, cap: 8.2, cx: 0, cy: 14.2 }).items.forEach(function (it) {
-          var lt = mk(ext(it.shapes, 3.0, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, upright: true }), mat.relief); lt.position.z = 6.4; h.add(lt);
-        });
-      }
       h.position.x = (i - 2) * 29; h.rotation.y = (i - 2) * -0.07;
       if (flip < 0) { h.rotation.y += 0.2; }
       g.add(h);
