@@ -1188,6 +1188,10 @@ body[data-mode="part"] .only-pro, body[data-mode="pro"] .only-part { display: no
 .sp .sp-b { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 0 4px; }
 .sp .sp-b .stepper { flex: none; }
 .sp .sp-b .btn { flex: 1 1 100%; min-height: 46px; padding: 0 12px; white-space: normal; }
+.sp .sp-rw { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: center; padding: 6px 4px 0; font-size: .86rem; }
+.sp .sp-rw span { grid-column: 1 / -1; color: var(--mut, #5b6270); }
+.sp .sp-rw input[type=range] { width: 100%; accent-color: var(--ink, #1b1d22); }
+.sp .sp-rw output { font-weight: 700; min-width: 2ch; text-align: right; }
 .sp .sp-b .stepper { flex: 1 1 100%; justify-content: space-between; }
 .pk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 270px), 1fr)); gap: 18px; align-items: start; }
 .pkc .pack-fig { border-radius: 20px; overflow: hidden; }
@@ -2629,8 +2633,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un ornement de sapin : un petit bonhomme de neige en volume, avec son bonnet de Père Noël, son écharpe rouge et ses boutons, debout dans un cadre rond. Votre prénom est écrit en relief sur la base du cadre, et il est livré avec son cordon rouge pour l’accrocher.' },
     'noel-orn-pere-noel': { t: 'Ornement Père Noël', s: 'Ornement Père Noël', one: 'ornement Père Noël', many: 'ornements Père Noël', ref: 'N14', dims: '8 cm de haut, 7 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
       d: 'Un ornement de sapin : un petit Père Noël en volume, avec sa barbe en boules, sa ceinture à boucle dorée et ses bottes noires, debout dans un cadre rond. Votre prénom est écrit en relief sur la base du cadre, et il est livré avec son cordon rouge pour l’accrocher.' },
-    'noel-mini-bonnets': { t: 'Mini bonnets de Père Noël (lot de 5)', s: 'Mini bonnets (lot de 5)', one: 'lot de 5 mini bonnets', many: 'lots de 5 mini bonnets', ref: 'N15', dims: '3 cm de haut chacun, lot de 5', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
-      d: 'Cinq petits bonnets de Père Noël, avec leur bord de fourrure blanche et leur pompon, à poser sur un cadeau, une bouteille, un verre ou une table de fête. Chaque bonnet porte une lettre en relief : écrivez jusqu’à 5 lettres (NOËL, LÉA, MAMIE…), une par bonnet. Le lot est vendu par cinq.' },
+    'noel-mini-bonnets': { t: 'Mini bonnets de Père Noël', s: 'Mini bonnets de Père Noël', one: 'mini bonnet de Père Noël', many: 'mini bonnets', ref: 'N15', dims: '3 cm de haut chacun, à partir de 4', max: 'sur mesure sur demande', q: 4, qmin: 4, qmax: 20, ico: 'i-noel-perenoel', who: 'familles, enfants, cadeaux, boutiques',
+      d: 'De petits bonnets de Père Noël, avec leur bord de fourrure blanche et leur pompon, à poser sur un cadeau, une bouteille, un verre ou une table de fête. Chaque bonnet porte une lettre en relief : écrivez votre mot (NOËL, LÉA, JOYEUX NOËL…), une lettre par bonnet. On les prend par 4 au minimum, jusqu’à 20, et le prix de chaque bonnet baisse avec la quantité.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
       d: 'Un traîneau à coque courbe, patins à volute et banc, plein de cadeaux, tiré par deux rennes attelés : l’un lève une patte, bois ramifiés et nez rouge. Le nom de la famille est écrit sur le flanc du traîneau. Imprimé d’un seul bloc sur un socle, sans pièce rapportée.' },    'c-coeurduo': { t: 'Collier cœur en deux morceaux', s: 'Collier cœur duo', one: 'collier cœur en deux morceaux', many: 'colliers cœur en deux morceaux', ref: 'D1', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-coeurduo', who: 'couples, amis, famille',
       d: 'Un cœur coupé en deux moitiés qui s’emboîtent, un prénom sur chacune et une chaîne pour chaque morceau : un collier pour vous, un pour l’autre. Vendu par paire, avec les deux chaînes argentées.' },
@@ -2734,7 +2738,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-boule-bonhomme': [12.9, 10.9, 10.4, 9.9, 9.4],
     'noel-boule-pere-noel': [12.9, 10.9, 10.4, 9.9, 9.4],
     'noel-cheminee': [29.9, 24.9, 23.4, 22.4, 21.4],
-    'noel-mini-bonnets': [11.9, 9.9, 9.4, 8.9, 8.4],
+    'noel-mini-bonnets': [2.9, 2.5, 2.3, 2.2, 2.1],
     'noel-orn-bonhomme': [15.9, 12.9, 12.2, 11.7, 11.2],
     'noel-orn-pere-noel': [15.9, 12.9, 12.2, 11.7, 11.2],
     'noel-traineau': [32.9, 26.9, 25.4, 24.4, 23.4],
@@ -2857,6 +2861,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   function comboLow(v) { var c = v.split('-'); return col(c[0]).n + ' et ' + col(c[1]).n; }
   function validCombo(v) { if (typeof v !== 'string') return false; var c = v.split('-'); return c.length === 2 && isTok(c[0]) && isTok(c[1]); }
   function plural(n, one, many) { return n + ' ' + (n > 1 ? many : one); }
+  function clampFor(id, v) { var n = clampQ(v), c = CAT[id] || {}; if (c.qmin) n = Math.max(c.qmin, n); if (c.qmax) n = Math.min(c.qmax, n); return n; }
   function clampQ(v) { var n = parseInt(v, 10); return isNaN(n) ? 1 : Math.max(1, Math.min(9999, n)); }
   function val(id) { var e = $(id); return e ? e.value.trim() : ''; }
   function el(tag, attrs, kids) {
@@ -3741,7 +3746,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     /* retiré : doublon avec l’ornement */ // { id: 'noel-boule-pere-noel', v3: 1, ml: 10, ph: 'Léa', combos: ['blanc-rouge', 'gris-rouge', 'jaune-rouge', 'sapin-rouge'] },
     { id: 'noel-orn-bonhomme', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
     { id: 'noel-orn-pere-noel', v3: 1, ml: 9, ph: 'Théo', combos: ['sapin-blanc', 'rouge-blanc', 'bleu-blanc', 'blanc-rouge'] },
-    { id: 'noel-mini-bonnets', v3: 1, ml: 5, ph: 'NOËL', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
+    { id: 'noel-mini-bonnets', v3: 1, ml: 20, ph: 'NOËL', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-bonhomme-art', v3: 1, ml: 8, ph: 'Léa', combos: ['blanc-rouge', 'blanc-sapin', 'blanc-bleu', 'blanc-noir'] },
@@ -3808,9 +3813,9 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     var s = SHOP_BY[id]; if (!s) return;
     var text = String(o.text || '').replace(/\s+/g, ' ').trim().slice(0, s.ml || A.TEXTML[s.hero] || 40);
     var combo = validCombo(o.combo) ? o.combo : s.combos[0];
-    var q = clampQ(o.qty || 1), line = null, sz = szOf(id, o.sz), fo = text && !CAT[id].logo ? foOf(o.fo) : '', pda = o.pda > 0 ? Math.round(o.pda * 100) / 100 : 0;
+    var q = clampFor(id, o.qty || CAT[id].q || 1), line = null, sz = szOf(id, o.sz), fo = text && !CAT[id].logo ? foOf(o.fo) : '', pda = o.pda > 0 ? Math.round(o.pda * 100) / 100 : 0;
     cart.forEach(function (x) { if (x.id === id && x.text === text && x.combo === combo && x.sz === sz && (x.fo || '') === fo) line = x; });
-    if (line) { line.qty = Math.min(999, line.qty + q); if (pda) { line.pda = Math.round(((line.pda || 0) + pda) * 100) / 100; line.pq = Math.min(line.qty, (line.pq || 0) + q); line.pn = String(o.pn || line.pn || ''); } }
+    if (line) { line.qty = clampFor(id, Math.min(999, line.qty + q)); if (pda) { line.pda = Math.round(((line.pda || 0) + pda) * 100) / 100; line.pq = Math.min(line.qty, (line.pq || 0) + q); line.pn = String(o.pn || line.pn || ''); } }
     else cart.push({ id: id, text: text, combo: combo, qty: q, sz: sz, fo: fo, pda: pda || undefined, pq: pda ? q : undefined, pn: pda ? String(o.pn || '') : undefined });
     cartSave(); cartRender();
   }
@@ -3858,7 +3863,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     var x = cart[parseInt(li.getAttribute('data-i'), 10)], d = b.getAttribute('data-d');
     if (!x) return;
     if (d === 'x') cart.splice(cart.indexOf(x), 1);
-    else { x.qty = clampQ(x.qty + parseInt(d, 10)); }
+    else { x.qty = clampFor(x.id, x.qty + parseInt(d, 10)); }
     cartSave(); cartRender();
   });
   function openCart() { cartRender(); openDialog(cartDlg); }
@@ -3886,7 +3891,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       (s.logo ? '' : '<label class="sp-fw"><span>Police</span><select class="sp-f" aria-label="Police d’écriture">' + FONTS.map(function (f) { return '<option value="' + f.k + '">' + f.n + '</option>'; }).join('') + '</select></label>') +
       (s.logo ? '<p class="sp-n">Vous nous envoyez votre logo par e-mail après la commande.</p>' : '') +
       '<div class="sp-c" role="radiogroup" aria-label="Couleurs">' + s.combos.map(function (v, i) { return chip(v, i === 0, 'sc-' + s.id); }).join('') + '</div>' +
-      '<div class="sp-b"><div class="stepper" role="group" aria-label="Quantité"><button type="button" data-st="-1" aria-label="Une pièce de moins">−</button><input type="number" class="sp-q" value="1" min="1" max="999" inputmode="numeric" aria-label="Quantité"><button type="button" data-st="1" aria-label="Une pièce de plus">+</button></div><button type="button" class="btn btn-y sp-add">Ajouter</button></div>' +
+      '<div class="sp-b"><div class="stepper" role="group" aria-label="Quantité"><button type="button" data-st="-1" aria-label="Une pièce de moins">−</button><input type="number" class="sp-q" value="' + (c.q || 1) + '" min="' + (c.qmin || 1) + '" max="' + (c.qmax || 999) + '" inputmode="numeric" aria-label="Quantité"><button type="button" data-st="1" aria-label="Une pièce de plus">+</button></div><button type="button" class="btn btn-y sp-add">Ajouter</button></div>' +
+      (c.qmax ? '<label class="sp-rw"><span>Nombre de ' + c.many.replace(/^lots? de [0-9]+ /, '') + '</span><input type="range" class="sp-r" min="' + c.qmin + '" max="' + c.qmax + '" step="1" value="' + c.q + '" aria-label="Nombre de pièces"><output class="sp-ro">' + c.q + '</output></label>' : '') +
       (s.hero ? '<button type="button" class="sp-3d" data-hero="' + s.id + '">Personnaliser en 3D</button>' : '');
     var chipHost = a.querySelector('.sp-c');
     colorMore(chipHost, { mk: function (v) { var n = document.createElement('span'); n.className = 'cchip'; n.style.display = 'contents'; n.innerHTML = chip(v, false, 'sc-' + s.id); return n; } });
@@ -4013,7 +4019,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     packsHost.appendChild(a);
   });
   function cardState(a) {
-    var id = a.getAttribute('data-id'), q = clampQ(a.querySelector('.sp-q').value);
+    var id = a.getAttribute('data-id'), q = clampFor(id, a.querySelector('.sp-q').value);
     var r = a.querySelector('.sp-c input[type=radio]:checked');
     var z = a.querySelector('.sp-s input:checked');
     var f = a.querySelector('.sp-f');
@@ -4021,6 +4027,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     var tx = t2 ? ((noAmp(t1v) || noAmp(t2.value)) ? (noAmp(t1v) || 'LÉA') + ' & ' + (noAmp(t2.value) || 'NOÉ') : '') : t1v;
     return { id: id, q: q, text: tx, combo: r ? r.value : '', sz: z ? z.value : '', fo: f ? foOf(f.value) : '' };
   }
+  function syncRange(a) { var r = a.querySelector('.sp-r'), q = a.querySelector('.sp-q'); if (r && q) { r.value = q.value; var o = a.querySelector('.sp-ro'); if (o) o.textContent = q.value; } }
   function shopPrices() {
     $$('.sp[data-id]').forEach(function (a) {
       var s = cardState(a), pk = pkey(s.id, s.sz), up = unitPrice(pk, cartQty(pk) + s.q), P = PRICES[pk], pe = a.querySelector('.sp-p');
@@ -4071,14 +4078,14 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       setTimeout(function () { box.classList.remove('open'); szSync(a); shopPrices(); }, 0); return;
     }
     var st = e.target.closest('[data-st]');
-    if (st) { var qi = a.querySelector('.sp-q'); qi.value = clampQ(clampQ(qi.value) + parseInt(st.getAttribute('data-st'), 10)); shopPrices(); return; }
+    if (st) { var qi = a.querySelector('.sp-q'); qi.value = clampFor(a.getAttribute('data-id'), clampQ(qi.value) + parseInt(st.getAttribute('data-st'), 10)); syncRange(a); shopPrices(); return; }
     if (e.target.closest('.sp-3d')) { var s0 = cardState(a); closeCard(); personalize(s0.id, s0.text, s0.combo, s0.sz, s0.fo); return; }
     if (e.target.closest('.sp-add')) {
       var s = cardState(a), t = a.querySelector('.sp-t');
       if (!s.text.trim()) { t.focus(); t.placeholder = CAT[s.id].logo ? 'Indiquez le nom de votre logo' : 'Écrivez votre texte ici'; t.style.borderColor = '#c4262b'; return; }
       t.style.borderColor = '';
       cartAdd(s.id, { text: s.text, combo: s.combo, qty: s.q, sz: s.sz, fo: s.fo });
-      a.querySelector('.sp-q').value = 1;
+      a.querySelector('.sp-q').value = CAT[s.id].q || 1; syncRange(a);
       toast('Dans votre panier' + NB + ': ' + CAT[s.id].one + ' «' + NB + s.text.trim() + NB + '»', { label: 'Voir le panier', fn: openCart });
       t.value = ''; var tt2 = a.querySelector('.sp-t2'); if (tt2) tt2.value = ''; recolorCard(a);
       closeCard();
@@ -4098,7 +4105,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
   function recolorSoon(a) { clearTimeout(recTimer); recTimer = setTimeout(function () { recolorCard(a); }, 380); }
   [shopGrid, shopGrid2, shopGrid3, shopGrid4, spHost].forEach(function (g) {
     g.addEventListener('change', function (e) { var t = e.target; if (t.closest && (t.closest('.sp-c') || t.closest('.sp-f') || t.classList.contains('sp-f'))) recolorCard(t.closest('.sp')); });
-    g.addEventListener('input', function (e) { var t = e.target; if (t.classList && (t.classList.contains('sp-t') || t.classList.contains('sp-t2'))) recolorSoon(t.closest('.sp')); });
+    g.addEventListener('input', function (e) { var t = e.target; if (t.classList && t.classList.contains('sp-r')) { var ca = t.closest('.sp'); ca.querySelector('.sp-q').value = t.value; syncRange(ca); shopPrices(); return; } if (t.classList && t.classList.contains('sp-q')) { var cb = t.closest('.sp'); if (cb) { var vq = parseInt(t.value, 10); if (!isNaN(vq)) { var rr2 = cb.querySelector('.sp-r'); if (rr2) { rr2.value = Math.max(+rr2.min, Math.min(+rr2.max, vq)); var oo = cb.querySelector('.sp-ro'); if (oo) oo.textContent = rr2.value; } shopPrices(); } } return; } if (t.classList && (t.classList.contains('sp-t') || t.classList.contains('sp-t2'))) recolorSoon(t.closest('.sp')); });
   });
   document.addEventListener('a77:studio', function () {
     $$('.sp[data-id]').forEach(function (a) { var s = cardState(a); if (s.text.trim() || (A.stillDefault && s.combo && A.stillDefault(s.id) !== s.combo)) recolorCard(a); });
@@ -6034,7 +6041,7 @@ function A77Models(THREE, fontData, allFonts) {
 
   /* lot de 5 mini bonnets de Père Noël : bord de fourrure, bonnet rouge qui retombe, pompon ; une lettre par bonnet */
   function miniBonnets(mat, text) {
-    var g = new THREE.Group(), E = SC.ell, C = SC.cap, i, chars = Array.from(text || '').filter(function (c) { return c !== ' '; }).slice(0, 5);
+    var g = new THREE.Group(), E = SC.ell, C = SC.cap, i, chars = Array.from(text || '').filter(function (c) { return c !== ' '; }).slice(0, 8);
     var body = [C([0, 4, 0], [0.4, 10, -0.4], 10, 8.4, 2), C([0.4, 10, -0.4], [1.8, 17, -1.7], 8.4, 5.2, 2), C([1.8, 17, -1.7], [4.8, 22.4, -3.6], 5.2, 2.8, 2), C([4.8, 22.4, -3.6], [8.2, 22.8, -6.4], 2.8, 2.0, 2)];
     var bb = [1e3, 1e3, 1e3, -1e3, -1e3, -1e3];
     body.forEach(function (p) { for (var q = 0; q < 3; q++) { bb[q] = Math.min(bb[q], p.box[q]); bb[q + 3] = Math.max(bb[q + 3], p.box[q + 3]); } });
@@ -6069,14 +6076,16 @@ function A77Models(THREE, fontData, allFonts) {
       };
       return { f: f, box: box };
     }
-    for (i = 0; i < 5; i++) {
+    var nh = Math.max(4, Math.min(8, chars.length)), cols = 4;
+    for (i = 0; i < nh; i++) {
       var h = new THREE.Group(), flip = i % 2 ? -1 : 1, lf = chars[i] ? letterField(chars[i]) : null;
       var fr = lf ? function (x, y, z) { return Math.max(gbc(x, y, z), -lf.f(x, y, z)); } : gbc;
       h.add(mk(SC.mesh(fr, bb, 0.5), mat.base));
       if (lf) h.add(mk(SC.mesh(lf.f, lf.box, 0.3), mat.relief));
       var band = mk(bandGeo, mat.relief); band.position.y = 3.2; h.add(band);
       elG(h, mat.relief, 3.7, 3.7, 3.7, 9.2, 22.6, -7.2, 0, 0, 0, 22);
-      h.position.x = (i - 2) * 29; h.rotation.y = (i - 2) * -0.07;
+      var rw = Math.floor(i / cols), cl = i % cols, cnt = Math.min(cols, nh - rw * cols);
+      h.position.set((cl - (cnt - 1) / 2) * 29, 0, -rw * 28); h.rotation.y = (cl - (cnt - 1) / 2) * -0.07;
       if (flip < 0) { h.rotation.y += 0.2; }
       g.add(h);
     }
