@@ -2663,6 +2663,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'Un porte-essuie-tout pour la cuisine de Noël : une base ronde bordée de boules de neige, un grand mât avec trois anneaux, et un gros bonnet de Père Noël penché au sommet, avec sa collerette de boules et son pompon. On enfile le rouleau sur le mât et on pose le bonnet dessus. Votre nom est écrit en relief sur la base. Il s’imprime en trois pièces (base, mât, bonnet) qui s’emboîtent.' },
     'noel-cheminee-deco': { t: 'Cheminée de Noël lumineuse', s: 'Cheminée lumineuse', one: 'cheminée de Noël lumineuse', many: 'cheminées de Noël lumineuses', ref: 'N27', dims: '15 cm de large, 11 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, salons, cadeaux, boutiques',
       d: 'Une cheminée de Noël en briques en relief, avec sa grande arche et ses bûches noires. Le fond est fermé pour que la lumière reste dans l’âtre : la bougie LED, fournie, se glisse par l’avant, au-dessus des bûches, et se pose derrière elles. Elle fait le feu qui danse. Sur le manteau, une guirlande, une bougie rouge et de petits cadeaux, et votre nom écrit devant.' },
+    'noel-sous-verres': { t: 'Sous-verres de Noël avec support', s: 'Sous-verres de Noël', one: 'lot de 6 sous-verres de Noël', many: 'lots de 6 sous-verres de Noël', ref: 'N28', dims: '6 sous-verres de 9,3 cm, support de 10,4 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, tables de fête, cadeaux, boutiques',
+      d: 'Un lot de 6 sous-verres de Noël rangés dans leur support rond. Chaque sous-verre est bien plat et a son liseré, un sapin avec son étoile, des petits flocons de neige et votre prénom. Le support a une encoche devant pour attraper les sous-verres du bout des doigts.' },
     'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
       d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
@@ -2780,6 +2782,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-cadeau:l': [69.9, 59.9, 56.4, 54.4, 52.4],
     'noel-essuie-tout': [49.9, 44.9, 42.9, 41.4, 39.9],
     'noel-cheminee-deco': [34.9, 29.9, 28.4, 27.4, 26.4],
+    'noel-sous-verres': [34.9, 29.9, 28.4, 27.4, 26.4],
     'noel-boule-neige': [29.9, 24.9, 23.4, 22.4, 21.4],
     'noel-bougeoir': [24.9, 19.9, 18.9, 18.4, 17.9],
     'noel-mini-bonnets': [2.9, 2.5, 2.3, 2.2, 2.1],
@@ -3803,6 +3806,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     { id: 'noel-cadeau', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-rouge', 'bleu-jaune'] },
     { id: 'noel-essuie-tout', v3: 1, ml: 10, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
     { id: 'noel-cheminee-deco', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'blanc-rouge', 'sapin-blanc', 'bleu-blanc'] },
+    { id: 'noel-sous-verres', v3: 1, ml: 9, ph: 'Léa', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-boule-neige', v3: 1, ml: 12, ph: 'Famille', combos: ['bleu-blanc', 'sapin-blanc', 'rouge-blanc', 'blanc-rouge'] },
     { id: 'noel-cheminee', v3: 1, ml: 12, ph: 'Famille', combos: ['rouge-blanc', 'rouge-jaune', 'blanc-rouge', 'bleu-blanc'] },
     { id: 'noel-lutin', v3: 1, ml: 10, ph: 'Théo', combos: ['rouge-blanc', 'sapin-blanc', 'blanc-rouge', 'bleu-blanc'] },
@@ -6583,6 +6587,49 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
+  /* sous-verres de Noël : 6 sous-verres (liseré, sapin, flocons de neige et prénom, tout à plat) rangés dans leur support rond à encoche */
+  function sousVerresNoel(mat, text) {
+    var g = new THREE.Group(), i, k;
+    function TP(tree) { return ClipperLib.Clipper.PolyTreeToPaths(tree); }
+    function PPc(pts) { return orient(cpaths([pts]))[0]; }
+    function UN(list, eo) { return TP(cexec(ClipperLib.ClipType.ctUnion, list, null, !!eo)); }
+    var RC = 46.5, RI2 = 42.5, TH = 4.2, TOP = 1.0, FL = 3, RH = 52, RHi = 48.8, HW = 10, HT = 25;
+    /* dessin : sapin de Noël, étoile, flocons ronds et prénom */
+    var motif = [PPc([[-20, -22], [20, -22], [7.5, -4], [-7.5, -4]]), PPc([[-15.5, -9], [15.5, -9], [5.5, 8], [-5.5, 8]]), PPc([[-11, 2], [11, 2], [0, 19]]), PPc(starPts(0, 25, 8, 3.4, 5))];
+    [[-31, 18], [-29, 2], [-33, -10], [31, 18], [29, 2], [33, -10], [-22, 30], [22, 30], [-10, 35], [10, 35], [-16, -14], [16, -14]].forEach(function (d, n) { if (n < 10) motif.push(PPc(circPts(d[0], d[1], 1.7, 14))); });
+    var tp = [];
+    layout(text, { maxW: 44, maxH: 8, cap: 6, cx: 0, cy: -31 }).items.forEach(function (it) {
+      it.shapes.forEach(function (sh) {
+        var ex = sh.extractPoints(6);
+        [ex.shape].concat(ex.holes).forEach(function (pts) { tp.push(cpaths([pts.map(function (q) { return [q.x + it.dx, q.y + it.dy]; })])[0]); });
+      });
+    });
+    var txt = tp.length ? UN(tp, true) : [];
+    var M = UN(motif.concat(txt)), disc = [PPc(circPts(0, 0, RI2, 90))];
+    var colA = TP(cexec(ClipperLib.ClipType.ctDifference, disc, M, false));
+    var shM = tShapes(cexec(ClipperLib.ClipType.ctUnion, M, null, false)), shA = tShapes(cexec(ClipperLib.ClipType.ctUnion, colA, null, false));
+    var ringSh = new THREE.Shape(); ringSh.absarc(0, 0, RC, 0, TAU, false); var rh = new THREE.Path(); rh.absarc(0, 0, RI2, 0, TAU, true); ringSh.holes.push(rh);
+    /* support : fond, bandeau plein devant, parois avec une encoche pour attraper les sous-verres */
+    cylG(g, mat.base, RH, RH, FL, 0, FL / 2, 0, 0, 0, 0, 80);
+    function wall(h, y0, a0, a1) {
+      var sh = new THREE.Shape(); sh.absarc(0, 0, RH, a0, a1, false); sh.absarc(0, 0, RHi, a1, a0, true); sh.closePath();
+      var geo = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false, curveSegments: 60 }); geo.rotateX(-Math.PI / 2);
+      var me = mk(geo, mat.base); me.position.y = y0; g.add(me);
+    }
+    var hw2 = Math.asin(21 / RH), fr = -Math.PI / 2;
+    wall(HW, FL, 0, TAU - 1e-4);
+    wall(HT - FL, FL, fr + hw2, fr - hw2 + TAU);
+    /* les 6 sous-verres empilés */
+    for (i = 0; i < 6; i++) {
+      var y0 = FL + 0.2 + i * (TH + 0.3);
+      var cr = mk(ext([ringSh], TH, {}), mat.relief); cr.position.y = y0; g.add(cr);
+      var cd = mk(new THREE.CylinderGeometry(RI2, RI2, TH - TOP, 90), mat.base); cd.position.y = y0 + (TH - TOP) / 2; g.add(cd);
+      if (shA.length) { var ca = mk(ext(shA, TOP, { seg: 10 }), mat.base); ca.position.y = y0 + TH - TOP; g.add(ca); }
+      if (shM.length) { var cm = mk(ext(shM, TOP, { seg: 10 }), mat.relief); cm.position.y = y0 + TH - TOP; g.add(cm); }
+    }
+    return g;
+  }
+
   /* Père Noël lutin (façon peluche nordique) : grand bonnet pointu penché, grosse barbe, nez rond, bras rayés à moufles, pieds ovales */
   function lutinNoel(mat, text) {
     var g = new THREE.Group(), SH = 4.5, sg;
@@ -6885,6 +6932,7 @@ function A77Models(THREE, fontData, allFonts) {
       case 'noel-cadeau': return boiteCadeau(mat, T('LÉA'));
       case 'noel-essuie-tout': return porteEssuieTout(mat, T('FAMILLE'));
       case 'noel-cheminee-deco': return chemineeDeco(mat, T('FAMILLE'));
+      case 'noel-sous-verres': return sousVerresNoel(mat, T('LÉA'));
       case 'noel-orn-sapin': return ornementSimple(mat, T('LÉA'), 'sapin');
       case 'noel-orn-flocon': return ornementSimple(mat, T('LÉA'), 'flocon');
       case 'noel-orn-cloche': return ornementSimple(mat, T('LÉA'), 'cloche');
@@ -7811,6 +7859,7 @@ function A77Studio(THREE, M) {
     'noel-cadeau': { el: 0.35, az: -0.55, c: ['rouge', 'blanc'], aspect: 1 },
     'noel-essuie-tout': { el: 0.14, az: -0.45, c: ['rouge', 'blanc'], aspect: 0.62 },
     'noel-cheminee-deco': { el: 0.2, az: -0.4, c: ['rouge', 'blanc'], aspect: 1 },
+    'noel-sous-verres': { el: 0.5, az: -0.4, c: ['rouge', 'blanc'], aspect: 1.2 },
     'noel-boule-neige': { el: 0.24, az: -0.4, c: ['sapin', 'blanc'], aspect: 1.2 },
     'noel-cheminee': { el: 0.28, az: -0.5, c: ['rouge', 'blanc'], aspect: 0.85 },
     'noel-lutin': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
