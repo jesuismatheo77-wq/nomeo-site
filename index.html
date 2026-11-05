@@ -6205,7 +6205,17 @@ function A77Models(THREE, fontData, allFonts) {
     /* socle creux ouvert derrière, plateau translucide et rebord qui cale le dôme */
     var prof = [new THREE.Vector2(RB, 0), new THREE.Vector2(RB + 0.4, 2), new THREE.Vector2(RB, BHt), new THREE.Vector2(RB - 2.4, BHt), new THREE.Vector2(RB - 1.8, 2), new THREE.Vector2(RB - 2.4, 0)];
     var wall = new THREE.Mesh(new THREE.LatheGeometry(prof, 80, Math.PI + 0.7, TAU - 1.4), mat.base); wall.castShadow = true; g.add(wall);
-    var plate = mk(new THREE.CylinderGeometry(RB, RB, 1.6, 80), mat.relief); plate.position.y = BHt - 0.2; g.add(plate);
+    /* plateau percé : 18 fentes en couronne (r 37-43) + 8 trous au centre laissent passer la lumière de la bougie */
+    var psh = new THREE.Shape(); psh.absarc(0, 0, RB, 0, TAU, false);
+    var NS = 18, SA = TAU / NS * 0.62;
+    for (i = 0; i < NS; i++) { var a0 = i * TAU / NS, hp = new THREE.Path(); hp.absarc(0, 0, 43, a0, a0 + SA, false); hp.absarc(0, 0, 37, a0 + SA, a0, true); hp.closePath(); psh.holes.push(hp); }
+    for (i = 0; i < 8; i++) { var hc = new THREE.Path(); hc.absarc(Math.cos(i * TAU / 8) * 26, Math.sin(i * TAU / 8) * 26, 3.4, 0, TAU, true); psh.holes.push(hc); }
+    var plate = mk(new THREE.ExtrudeGeometry(psh, { depth: 1.6, bevelEnabled: false, curveSegments: 10 }), mat.relief); plate.rotation.x = -Math.PI / 2; plate.position.y = BHt - 1; g.add(plate);
+    /* lumière visible dans les trous */
+    var lm = new THREE.MeshBasicMaterial({ color: 0xFFD27A });
+    for (i = 0; i < NS; i++) { var cm = mk(new THREE.RingGeometry(37.4, 42.6, 6, 1, i * TAU / NS + 0.03, SA - 0.06), lm); cm.rotation.x = -Math.PI / 2; cm.position.y = BHt - 0.9; cm.material.side = THREE.DoubleSide; g.add(cm); }
+    for (i = 0; i < 8; i++) { var cd = mk(new THREE.CircleGeometry(3.2, 16), lm); cd.rotation.x = -Math.PI / 2; cd.position.set(Math.cos(i * TAU / 8) * 26, BHt - 0.9, -Math.sin(i * TAU / 8) * 26); g.add(cd); }
+    var gdisc = new THREE.Mesh(new THREE.CircleGeometry(RB - 3, 48), new THREE.MeshBasicMaterial({ color: 0xFFB347, transparent: true, opacity: 0.25, depthWrite: false })); gdisc.rotation.x = -Math.PI / 2; gdisc.position.y = BHt + 1.3; g.add(gdisc);
     var lip = mk(new THREE.TorusGeometry(RB - 0.4, 1.5, 12, 80), mat.base); lip.rotation.x = Math.PI / 2; lip.position.y = BHt + 0.4; g.add(lip);
     layout(text, { maxW: 40, maxH: 8, cap: 6.4, cx: 0, cy: BHt / 2 - 0.6 }).items.forEach(function (it) {
       var t3 = mk(ext(it.shapes, 4.8, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, upright: true }), mat.relief); t3.position.z = RB - 3.7; g.add(t3);
