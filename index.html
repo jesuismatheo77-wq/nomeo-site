@@ -2614,7 +2614,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'c-duo': { t: 'Sous-verres d’amoureux', s: 'Sous-verres duo', one: 'duo de sous-verres', many: 'duos de sous-verres', ref: 'D3', dims: '2 sous-verres Ø 78 mm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-duo', who: 'couples, pendaison de crémaillère, mariages',
       d: 'Deux sous-verres d’amoureux qui vont ensemble : un cœur plein sur l’un, un cœur en contour sur l’autre, et un prénom sur chacun. Vendu par paire.' },
     'c-lampe': { t: 'Veilleuse cœur', s: 'Veilleuse cœur', one: 'veilleuse cœur', many: 'veilleuses cœur', ref: 'D4', dims: '8, 10 ou 12 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-c-lampe', who: 'couples, chambres, cadeaux',
-      d: 'Un cœur fin qui laisse passer la lumière, avec vos prénoms, glissé dans un socle. Une bougie LED à piles (fournie) se place derrière : lumière douce, aucun risque.' },
+      d: 'Un vrai cœur bombé, à parois fines qui laissent passer la lumière, avec vos prénoms en relief. Il se tient debout sur un socle. Une bougie LED à piles (fournie) se place derrière, dans l’anneau du socle : lumière douce, aucun risque.' },
     'c-magnet': { t: 'Magnet à votre texte', s: 'Magnet', one: 'magnet', many: 'magnets', ref: 'D5', dims: '5,5, 7 ou 9 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-magnet', who: 'particuliers, couples, commerces, mariages',
       d: 'Une plaque avec votre texte en relief et un aimant collé au dos, pour le frigo ou un tableau. Idéal en lot pour un mariage ou un événement.' },
     'c-magnetcoeur': { t: 'Magnet cœur', s: 'Magnet cœur', one: 'magnet cœur', many: 'magnets cœur', ref: 'D6', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-magnetcoeur', who: 'particuliers, couples, mariages',
@@ -4948,35 +4948,40 @@ function A77Models(THREE, fontData, allFonts) {
     };
   }
 
-  /* veilleuse cœur : un panneau mince qui laisse passer la lumière, glissé dans un socle (pile LED derrière) */
+  /* veilleuse cœur : un vrai cœur bombé, creux, à parois fines qui laissent passer la lumière ; le dos est ouvert.
+     Il s'imprime couché sur le dos (des contours concentriques, sans support), puis se colle debout sur un socle ; une bougie LED se pose derrière. */
   function lampe(text, s) {
     s = s || 1;
-    var W = 56 * s, hp = heartPts(W), bw = 64 * s, bd = 24 * s, floor = 3, wall = 11, tp = 1.4, i;
+    var W = 56 * s, hp = heartPts(W), bw = 72 * s, bd = 54 * s, ph = 5, wall = 1.6, T = 17 * s, RM = 10 * s, NS = 12, k;
     var t = clean(text) || 'LÉA & NOÉ';
-    var lay = layoutAuto(t, { maxW: W * 0.62, maxH: W * 0.3, cap: 7.5 * s, cx: 0, cy: W * 0.09 });
-    var panel = [new THREE.Shape(hp.map(function (q) { return new THREE.Vector2(q[0], q[1]); }))];
-    var gP = ext(panel, tp, { seg: 24 });
-    var gT = lay.items.map(function (it) { return ext(it.shapes, 0.7, { seg: 5, dx: it.dx, dy: it.dy, z0: tp - 0.05 }); });
-    var slotL = Math.min(W * 0.55, bw - 8), slotW = 3.6;
-    var bs = rr(new THREE.Shape(), bw, bd, 5);
-    bs.holes.push(rr(new THREE.Path(), slotL, slotW, 0.6, 0, 3 * s));
-    bs.holes.push(circle(new THREE.Path(), 8.5 * s, 0, -6 * s));
-    var gFloor = ext([rr(new THREE.Shape(), bw, bd, 5)], floor, { bevel: 0.5, seg: 14 });
-    var gWall = ext([bs], wall, { seg: 14, z0: floor - 0.02 });
-    var hp0 = -Math.min.apply(null, hp.map(function (q) { return q[1]; }));
-    var lift = floor + wall - 7 + hp0, zoff = 3 * s;
-    /* impression à plat côte à côte, objet monté une fois fini */
+    var lay = layoutAuto(t, { maxW: W * 0.5, maxH: W * 0.26, cap: 6.5 * s, cx: 0, cy: W * 0.06 });
+    var heart = orient(cpaths([hp])), shell = [];
+    for (k = 1; k <= NS; k++) {
+      var th = k / NS * Math.PI / 2, d = RM * (1 - Math.cos(th)), hh = T * Math.sin(th);
+      var th2 = Math.min(NS, k + 1) / NS * Math.PI / 2, dd = RM * (1 - Math.cos(th2)) - d;
+      var outer = d < 0.01 ? heart : orient(cOffset(heart, -d));
+      var inner = orient(cOffset(outer, -(k < NS ? dd + wall : wall)));
+      var ringT = tShapes(cexec(ClipperLib.ClipType.ctDifference, outer, inner));
+      if (ringT.length) shell.push(ext(ringT, hh, { seg: 18 }));
+      if (k === NS) shell.push(ext(tShapes(cexec(ClipperLib.ClipType.ctUnion, outer, null, true)), wall, { seg: 18, z0: T - wall }));
+    }
+    var txt = lay.items.map(function (it) { return ext(it.shapes, 0.8, { seg: 5, dx: it.dx, dy: it.dy, z0: T - 0.05 }); });
+    /* socle : plaque arrondie, avec un anneau de repère pour la bougie LED (38 mm) derrière le cœur */
+    var gPlinth = ext([rr(new THREE.Shape(), bw, bd, 8)], ph, { bevel: 0.8, seg: 14 });
+    var guide = circle(new THREE.Shape(), 20.2 * s, 0, -10 * s); guide.holes.push(circle(new THREE.Path(), 19.2 * s, 0, -10 * s));
+    var gGuide = ext([guide], 1.6, { seg: 28, z0: ph - 0.02 });
+    var hp0 = -Math.min.apply(null, hp.map(function (q) { return q[1]; })), hpMax = Math.max.apply(null, hp.map(function (q) { return q[1]; }));
+    var lift = ph + hp0, zb = 5 * s;
     function tag(g, prn, asm, rx) { g.userData.arr = { prn: { p: prn, rx: 0 }, asm: { p: asm, rx: rx } }; return g; }
-    var PY = 0, bx = -(bw / 2 + 4), px = W / 2 + 4 + 2;
-    gFloor = tag(gFloor, [bx, 0, 0], [0, 0, 0], 0); gWall = tag(gWall, [bx, 0, 0], [0, 0, 0], 0);
-    gP = tag(gP, [px, 0, 0], [0, lift, -zoff - 0.5], Math.PI / 2);
-    gT.forEach(function (g) { tag(g, [px, 0, 0], [0, lift, -zoff - 0.5], Math.PI / 2); });
-    var y1 = Math.max(floor + wall, tp);
+    var bx = -(bw / 2 + 4), px = W / 2 + 4 + 2;
+    gPlinth = tag(gPlinth, [bx, 0, 0], [0, 0, 0], 0); gGuide = tag(gGuide, [bx, 0, 0], [0, 0, 0], 0);
+    shell.forEach(function (g) { tag(g, [px, 0, 0], [0, lift, zb], Math.PI / 2); });
+    txt.forEach(function (g) { tag(g, [px, 0, 0], [0, lift, zb], Math.PI / 2); });
     return {
       ball: true, anchorAsm: [bw / 2, 20, 0],
-      base: { y0: 0, y1: y1, geos: [gFloor, gWall, gP], caps: [], double: true },
-      relief: { y0: tp, y1: tp + 0.7, geos: gT, caps: [], solid: true, double: true },
-      dims: [bw, lift + hp0 + W * 0.45, bd], shrunk: (lay.size * CAP) < 7.5 * s * 0.75
+      base: { y0: 0, y1: Math.max(ph + 1.6, T), geos: [gPlinth, gGuide].concat(shell), caps: [], double: true },
+      relief: { y0: T, y1: T + 0.8, geos: txt, caps: [], solid: true, double: true },
+      dims: [bw, lift + hpMax, bd], shrunk: (lay.size * CAP) < 6.5 * s * 0.75
     };
   }
 
