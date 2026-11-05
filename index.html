@@ -2642,8 +2642,8 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
       d: 'De petits bonnets de Père Noël, avec leur bord de fourrure blanche et leur pompon, à poser sur un cadeau, une bouteille, un verre ou une table de fête. Chaque bonnet porte une lettre en relief : écrivez votre mot (NOËL, LÉA, JOYEUX NOËL…), une lettre par bonnet. On les prend par 4 au minimum, jusqu’à 20, et le prix de chaque bonnet baisse avec la quantité.' },
     'noel-bougeoir': { t: 'Bougeoir Père Noël et sapin', s: 'Bougeoir de Noël', one: 'bougeoir de Noël', many: 'bougeoirs de Noël', ref: 'N16', dims: '8 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, tables de fête, cadeaux, boutiques',
       d: 'Un petit bougeoir de Noël : un Père Noël qui salue à côté d\u2019un sapin décoré (guirlandes, boules et étoile), debout sur un socle rond. Devant, un logement accueille la bougie LED à piles, fournie, dont la lumière douce éclaire la scène sans aucune vraie flamme. Votre prénom est écrit en relief sur le socle, devant la bougie.' },
-    'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '9 cm de haut, 8 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
-      d: 'Une boule à neige qui s\u2019allume : sous un globe fin, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée, des sapins et la lune. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière, et sa lumière chaude éclaire tout le globe. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
+    'noel-boule-neige': { t: 'Boule à neige lumineuse', s: 'Boule à neige lumineuse', one: 'boule à neige lumineuse', many: 'boules à neige lumineuses', ref: 'N17', dims: '6,5 cm de haut, 9 cm de large', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-perenoel', who: 'familles, chambres, tables de fête, cadeaux',
+      d: 'Une boule à neige qui s\u2019allume : sous un dôme transparent, une petite scène d\u2019hiver avec un bonhomme de neige, une maison à la fenêtre allumée et des sapins. La bougie LED à piles, fournie, se glisse dans le socle creux par derrière et éclaire la scène par en dessous. Votre prénom est écrit en relief sur le socle, devant. Aucune vraie flamme.' },
     'noel-traineau': { t: 'Traîneau et rennes', s: 'Traîneau et rennes', one: 'traîneau avec deux rennes', many: 'traîneaux avec deux rennes', ref: 'N10', dims: '16 cm de long, 7 cm de haut', max: 'sur mesure sur demande', q: 1, ico: 'i-noel-traineau', who: 'familles, enfants, décoration, boutiques',
       d: 'Un traîneau à coque courbe, patins à volute et banc, plein de cadeaux, tiré par deux rennes attelés : l’un lève une patte, bois ramifiés et nez rouge. Le nom de la famille est écrit sur le flanc du traîneau. Imprimé d’un seul bloc sur un socle, sans pièce rapportée.' },    'c-coeurduo': { t: 'Collier cœur en deux morceaux', s: 'Collier cœur duo', one: 'collier cœur en deux morceaux', many: 'colliers cœur en deux morceaux', ref: 'D1', dims: '5, 6,5 ou 8 cm', max: 'sur mesure sur demande', q: 1, ico: 'i-c-coeurduo', who: 'couples, amis, famille',
       d: 'Un cœur coupé en deux moitiés qui s’emboîtent, un prénom sur chacune et une chaîne pour chaque morceau : un collier pour vous, un pour l’autre. Vendu par paire, avec les deux chaînes argentées.' },
@@ -2747,7 +2747,7 @@ html:not(.pay-on) .pay-on-only, html.pay-on .pay-off-only { display: none !impor
     'noel-boule-bonhomme': [12.9, 10.9, 10.4, 9.9, 9.4],
     'noel-boule-pere-noel': [12.9, 10.9, 10.4, 9.9, 9.4],
     'noel-cheminee': [29.9, 24.9, 23.4, 22.4, 21.4],
-    'noel-boule-neige': [34.9, 28.9, 27.4, 26.4, 25.4],
+    'noel-boule-neige': [29.9, 24.9, 23.4, 22.4, 21.4],
     'noel-bougeoir': [24.9, 19.9, 18.9, 18.4, 17.9],
     'noel-mini-bonnets': [2.9, 2.5, 2.3, 2.2, 2.1],
     'noel-orn-bonhomme': [15.9, 12.9, 12.2, 11.7, 11.2],
@@ -6199,49 +6199,46 @@ function A77Models(THREE, fontData, allFonts) {
     return g;
   }
 
-  /* boule à neige lumineuse : un globe fin posé sur un socle creux où se glisse la bougie LED ; une petite scène d'hiver à l'intérieur (bonhomme de neige, maison, sapins, lune) */
+  /* boule à neige lumineuse : un dôme transparent (8 cm de large, 3,8 cm de haut, rebord de 8,9 cm) posé sur un socle creux où se glisse la bougie LED ; une petite scène d'hiver dessous */
   function bouleNeige(mat, text) {
-    var g = new THREE.Group(), DK = propMat('#1B1D22'), YL = propMat('#F5C518'), RD = propMat('#D7332A'), BHt = 22, RG = 41, GY0 = BHt + 19, i;
-    /* socle creux, ouvert derrière pour la bougie, avec son bourrelet */
-    var prof = [new THREE.Vector2(40, 0), new THREE.Vector2(40.4, 2), new THREE.Vector2(40, BHt), new THREE.Vector2(37.4, BHt), new THREE.Vector2(37.8, 2), new THREE.Vector2(37.4, 0)];
-    var wall = new THREE.Mesh(new THREE.LatheGeometry(prof, 72, Math.PI + 0.7, TAU - 1.4), mat.base); wall.material = mat.base.clone ? mat.base : mat.base; wall.castShadow = true; g.add(wall);
-    var ring = mk(new THREE.TorusGeometry(39.2, 2.3, 14, 72), mat.base); ring.rotation.x = Math.PI / 2; ring.position.y = BHt; g.add(ring);
-    var floor = mk(new THREE.CylinderGeometry(38.4, 38.4, 1.6, 64), mat.relief); floor.position.y = BHt - 0.2; g.add(floor);
-    /* prénom en relief devant le socle */
-    layout(text, { maxW: 36, maxH: 8, cap: 6.4, cx: 0, cy: BHt / 2 - 0.6 }).items.forEach(function (it) {
-      var t3 = mk(ext(it.shapes, 4.6, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, upright: true }), mat.relief); t3.position.z = 36.3; g.add(t3);
+    var g = new THREE.Group(), DK = propMat('#1B1D22'), RD = propMat('#D7332A'), BHt = 20, RB = 46, RDm = 40, DH = 38, i, K = 0.78;
+    /* socle creux ouvert derrière, plateau translucide et rebord qui cale le dôme */
+    var prof = [new THREE.Vector2(RB, 0), new THREE.Vector2(RB + 0.4, 2), new THREE.Vector2(RB, BHt), new THREE.Vector2(RB - 2.4, BHt), new THREE.Vector2(RB - 1.8, 2), new THREE.Vector2(RB - 2.4, 0)];
+    var wall = new THREE.Mesh(new THREE.LatheGeometry(prof, 80, Math.PI + 0.7, TAU - 1.4), mat.base); wall.castShadow = true; g.add(wall);
+    var plate = mk(new THREE.CylinderGeometry(RB, RB, 1.6, 80), mat.relief); plate.position.y = BHt - 0.2; g.add(plate);
+    var lip = mk(new THREE.TorusGeometry(RB - 0.4, 1.5, 12, 80), mat.base); lip.rotation.x = Math.PI / 2; lip.position.y = BHt + 0.4; g.add(lip);
+    layout(text, { maxW: 40, maxH: 8, cap: 6.4, cx: 0, cy: BHt / 2 - 0.6 }).items.forEach(function (it) {
+      var t3 = mk(ext(it.shapes, 4.8, { bevel: 0.25, bseg: 1, seg: 6, dx: it.dx, dy: it.dy, upright: true }), mat.relief); t3.position.z = RB - 3.7; g.add(t3);
     });
     /* bougie LED allumée dans le socle */
-    var wax = mk(new THREE.CylinderGeometry(18, 18.3, 10, 48), propMat('#F4EFE4')); wax.position.set(0, 5, 0); g.add(wax);
+    var wax = mk(new THREE.CylinderGeometry(18.4, 18.7, 10, 48), propMat('#F4EFE4')); wax.position.set(0, 5, 0); g.add(wax);
     var fl = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 14), new THREE.MeshBasicMaterial({ color: 0xFFC83D })); fl.scale.set(3, 6, 3); fl.position.set(0, 14, 0); g.add(fl);
-    /* scène intérieure : neige, bonhomme de neige, maison, sapins, lune */
-    var sg = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 20), mat.relief); sg.scale.set(34, 5.2, 34); sg.position.y = BHt + 0.6; sg.castShadow = true; g.add(sg);
-    var Y0 = BHt + 4.6;
-    elG(g, mat.relief, 8.4, 8.4, 8.4, -9, Y0 + 7.4, 8, 0, 0, 0, 28); elG(g, mat.relief, 6.2, 6.2, 6.2, -9, Y0 + 19.2, 8, 0, 0, 0, 24);
-    var scf = mk(new THREE.TorusGeometry(5.0, 1.5, 10, 28), RD); scf.rotation.x = Math.PI / 2; scf.position.set(-9, Y0 + 14.2, 8); g.add(scf);
-    elG(g, RD, 1.6, 1.6, 4.2, -9, Y0 + 19, 13.8, 0, 0, 0, 12);
-    cylG(g, mat.base, 5.4, 5.4, 4.4, -9, Y0 + 24.6, 8, 0, 0, 0.1, 28); cylG(g, mat.base, 7.6, 7.6, 1.2, -9, Y0 + 22.4, 8, 0, 0, 0.1, 28);
-    [-1, 1].forEach(function (s) { elG(g, DK, 0.8, 0.9, 0.7, -9 + s * 2.2, Y0 + 20.4, 13.4, 0, 0, 0, 8); });
-    [0, 1].forEach(function (k) { elG(g, DK, 1.1, 1.1, 0.8, -9, Y0 + 9.6 + k * 4.2, 15.9, 0, 0, 0, 8); });
-    /* maison */
-    var hx = 13, hz = -5;
-    var hb = mk(new THREE.BoxGeometry(15, 12, 12), mat.relief); hb.position.set(hx, Y0 + 5, hz); hb.rotation.y = -0.35; g.add(hb);
-    var rf = new THREE.Shape(); rf.moveTo(-9.4, 0); rf.lineTo(9.4, 0); rf.lineTo(0, 8.4); rf.closePath();
-    var rg = new THREE.ExtrudeGeometry(rf, { depth: 13.4, bevelEnabled: false }); rg.translate(0, 0, -6.7);
-    var rm = mk(rg, mat.base); rm.position.set(hx, Y0 + 11, hz); rm.rotation.y = -0.35; g.add(rm);
-    var ch = mk(new THREE.BoxGeometry(2.6, 5, 2.6), mat.base); ch.position.set(hx + 3.4, Y0 + 17, hz - 1.2); g.add(ch);
-    var wd = new THREE.Mesh(new THREE.BoxGeometry(3.4, 3.6, 0.6), new THREE.MeshBasicMaterial({ color: 0xFFD25E })); wd.position.set(hx - 1.2 + Math.sin(-0.35) * 6.1, Y0 + 5.6, hz + Math.cos(-0.35) * 6.1); wd.rotation.y = -0.35; g.add(wd);
-    /* sapins */
-    [[-22, -6, 24], [22, 9, 17], [2, -14, 18], [-6, -17, 14]].forEach(function (t) {
-      var h = t[2];
-      for (var k = 0; k < 3; k++) cylG(g, mat.base, h * (0.1 + 0.07 * (2 - k)) * 0.5, h * (0.3 - 0.06 * k), h * 0.42, t[0], Y0 + h * 0.2 + k * h * 0.27, t[1], 0, 0, 0, 24);
+    /* scène d'hiver, sous le dôme (tient dans 3,2 cm de haut) */
+    var Y0 = BHt + 1.4;
+    var sg = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 20), mat.relief); sg.scale.set(36, 3.4, 36); sg.position.y = Y0 + 0.4; g.add(sg);
+    var Yg = Y0 + 2.4;
+    elG(g, mat.relief, 8.4 * K, 8.4 * K, 8.4 * K, -9 * K, Yg + 7.4 * K, 8 * K, 0, 0, 0, 28); elG(g, mat.relief, 6.2 * K, 6.2 * K, 6.2 * K, -9 * K, Yg + 19.2 * K, 8 * K, 0, 0, 0, 24);
+    var scf = mk(new THREE.TorusGeometry(5.0 * K, 1.5 * K, 10, 28), RD); scf.rotation.x = Math.PI / 2; scf.position.set(-9 * K, Yg + 14.2 * K, 8 * K); g.add(scf);
+    elG(g, RD, 1.6 * K, 1.6 * K, 4.2 * K, -9 * K, Yg + 19 * K, 13.8 * K, 0, 0, 0, 12);
+    cylG(g, mat.base, 5.4 * K, 5.4 * K, 4.4 * K, -9 * K, Yg + 24.6 * K, 8 * K, 0, 0, 0.1, 28); cylG(g, mat.base, 7.6 * K, 7.6 * K, 1.2 * K, -9 * K, Yg + 22.4 * K, 8 * K, 0, 0, 0.1, 28);
+    [-1, 1].forEach(function (s2) { elG(g, DK, 0.8 * K, 0.9 * K, 0.7 * K, (-9 + s2 * 2.2) * K, Yg + 20.4 * K, 13.4 * K, 0, 0, 0, 8); });
+    [0, 1].forEach(function (k) { elG(g, DK, 1.1 * K, 1.1 * K, 0.8 * K, -9 * K, Yg + (9.6 + k * 4.2) * K, 15.9 * K, 0, 0, 0, 8); });
+    var hx = 14 * K, hz = -6 * K;
+    var hb = mk(new THREE.BoxGeometry(15 * K, 12 * K, 12 * K), mat.relief); hb.position.set(hx, Yg + 5 * K, hz); hb.rotation.y = -0.35; g.add(hb);
+    var rf = new THREE.Shape(); rf.moveTo(-9.4 * K, 0); rf.lineTo(9.4 * K, 0); rf.lineTo(0, 8.4 * K); rf.closePath();
+    var rg = new THREE.ExtrudeGeometry(rf, { depth: 13.4 * K, bevelEnabled: false }); rg.translate(0, 0, -6.7 * K);
+    var rm = mk(rg, mat.base); rm.position.set(hx, Yg + 11 * K, hz); rm.rotation.y = -0.35; g.add(rm);
+    var ch = mk(new THREE.BoxGeometry(2.6 * K, 5 * K, 2.6 * K), mat.base); ch.position.set(hx + 3.4 * K, Yg + 17 * K, hz - 1.2 * K); g.add(ch);
+    var wd = new THREE.Mesh(new THREE.BoxGeometry(3.4 * K, 3.6 * K, 0.6), new THREE.MeshBasicMaterial({ color: 0xFFD25E })); wd.position.set(hx - 1.2 * K + Math.sin(-0.35) * 6.1 * K, Yg + 5.6 * K, hz + Math.cos(-0.35) * 6.1 * K); wd.rotation.y = -0.35; g.add(wd);
+    [[-24, -6, 24], [22, 10, 17], [4, -17, 18], [-8, -20, 14]].forEach(function (t) {
+      var h = t[2] * K;
+      for (var k = 0; k < 3; k++) cylG(g, mat.base, h * (0.1 + 0.07 * (2 - k)) * 0.5, h * (0.3 - 0.06 * k), h * 0.42, t[0] * K, Yg + h * 0.2 + k * h * 0.27, t[1] * K, 0, 0, 0, 24);
     });
-    /* lune sur la paroi du fond */
-    var mn = mk(new THREE.CylinderGeometry(7.6, 7.6, 1.4, 40), mat.relief); mn.rotation.x = Math.PI / 2; mn.position.set(13, GY0 + 17, -31); g.add(mn);
-    /* le globe : fine paroi qui diffuse la lumière, et lueur chaude à l'intérieur */
-    var glass = new THREE.Mesh(new THREE.SphereGeometry(RG, 64, 40, 0, TAU, 0, Math.PI * 0.86), new THREE.MeshStandardMaterial({ color: 0xFFE9B8, emissive: 0xFFA83A, emissiveIntensity: 0.6, transparent: true, opacity: 0.3, roughness: 0.3, depthWrite: false, side: THREE.DoubleSide }));
-    glass.position.y = GY0; g.add(glass);
-    var glow = new THREE.Mesh(new THREE.SphereGeometry(RG - 3, 40, 24), new THREE.MeshBasicMaterial({ color: 0xFFB347, transparent: true, opacity: 0.14, depthWrite: false })); glow.position.y = GY0; g.add(glow);
+    /* le dôme transparent (fourni) avec son rebord, et la lueur chaude de la bougie dessous */
+    var dome = new THREE.Mesh(new THREE.SphereGeometry(RDm, 64, 32, 0, TAU, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xFFFFFF, emissive: 0xFFB04A, emissiveIntensity: 0.3, transparent: true, opacity: 0.2, roughness: 0.1, depthWrite: false, side: THREE.DoubleSide }));
+    dome.scale.y = DH / RDm; dome.position.y = BHt + 0.6; g.add(dome);
+    var fr = new THREE.Mesh(new THREE.RingGeometry(RDm, 44.5, 64), new THREE.MeshStandardMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.35, roughness: 0.15, side: THREE.DoubleSide, depthWrite: false })); fr.rotation.x = -Math.PI / 2; fr.position.y = BHt + 0.7; g.add(fr);
+    var glow = new THREE.Mesh(new THREE.SphereGeometry(RDm - 3, 40, 20, 0, TAU, 0, Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xFFB347, transparent: true, opacity: 0.12, depthWrite: false })); glow.scale.y = (DH - 3) / (RDm - 3); glow.position.y = BHt + 0.6; g.add(glow);
     return g;
   }
 
@@ -7453,7 +7450,7 @@ function A77Studio(THREE, M) {
     'noel-orn-pere-noel': { el: 0.05, az: -0.3, c: ['sapin', 'blanc'], aspect: 0.8 },
     'noel-mini-bonnets': { el: 0.3, az: -0.25, c: ['rouge', 'blanc'], aspect: 2.1 },
     'noel-bougeoir': { el: 0.3, az: -0.35, c: ['rouge', 'blanc'], aspect: 1 },
-    'noel-boule-neige': { el: 0.18, az: -0.4, c: ['sapin', 'blanc'], aspect: 0.9 },
+    'noel-boule-neige': { el: 0.24, az: -0.4, c: ['sapin', 'blanc'], aspect: 1.2 },
     'noel-cheminee': { el: 0.28, az: -0.5, c: ['rouge', 'blanc'], aspect: 0.85 },
     'noel-lutin': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
     'noel-pere-noel': { el: 0.2, az: -0.42, c: ['rouge', 'blanc'], aspect: 0.8 },
