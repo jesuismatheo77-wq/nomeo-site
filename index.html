@@ -1177,7 +1177,7 @@ dialog::backdrop { background: var(--scrim); -webkit-backdrop-filter: blur(5px);
 .garland { position: fixed; left: 0; right: 0; top: 0; height: 22px; z-index: 49; pointer-events: none; overflow: hidden; }
 .garland i { position: absolute; width: 8px; height: 11px; margin-left: -4px; border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; background: var(--c); box-shadow: 0 0 9px 2px var(--c); animation: bulb 1.8s ease-in-out infinite; animation-delay: calc(var(--k) * -.45s); }
 .garland i::before { content: ""; position: absolute; left: 1px; top: -3px; width: 6px; height: 4px; border-radius: 2px 2px 0 0; background: #3b4a3f; }
-@keyframes bulb { 0%, 100% { opacity: 1; filter: brightness(1.2); } 50% { opacity: .38; filter: brightness(.8); box-shadow: 0 0 2px 0 var(--c); } }
+@keyframes bulb { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 .snow { position: fixed; inset: 0; z-index: 48; pointer-events: none; overflow: hidden; }
 .spark-field { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
 .spark-field b { position: absolute; color: #F2B705; opacity: 0; animation: spark 3.2s ease-in-out infinite; text-shadow: 0 0 8px rgba(255, 198, 26, .8); font-weight: 400; }
@@ -1461,7 +1461,7 @@ button:active:not(:disabled), .btn:active { transform: scale(.98); }
 
 /* ---------- entrée du haut de page (une seule fois) ---------- */
 :root { --ease-out: cubic-bezier(.23, 1, .32, 1); }
-@keyframes enter { from { opacity: 0; transform: translateY(var(--dy, 14px)); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes enter { from { opacity: 0; transform: translateY(var(--dy, 14px)); } to { opacity: 1; transform: none; } }
 @keyframes enter-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes enter-obj { from { opacity: 0; transform: scale(.88) translateY(24px); } to { opacity: 1; transform: none; } }
 html.an-go .hero-text h1 { --dy: 56px; animation: enter .9s var(--ease-out) .15s both; }
@@ -1477,6 +1477,7 @@ html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-te
 }
 .badge[hidden] { display: none !important; }
 @media (max-width: 440px) { .cart-btn { padding-inline: 16px; gap: 6px; } .cart-btn .i { width: 24px; height: 24px; } .top { padding-left: 14px; } }
+@media (max-width: 700px) { .spark-field { display: none; } .garland i { box-shadow: 0 0 5px 1px var(--c); will-change: opacity; } }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -7710,7 +7711,7 @@ function A77Stage(THREE, M) {
   var target = new THREE.Vector3(0, 2, 4);
   function fit() {
     var w = Math.max(1, view.clientWidth), h = Math.max(1, view.clientHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, w < 700 ? 1.5 : 2));
     renderer.setSize(w, h, false);
     var wide = w >= 1000 && (SHOWCASE || w / h > 1.25);
     camera.aspect = w / h;
@@ -9543,10 +9544,10 @@ function A77Studio(THREE, M) {
   var box = document.getElementById('snow');
   if (box && !reduce) {
     var cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%'; box.appendChild(cv);
-    var cx = cv.getContext('2d'), W = 0, H = 0, dpr = Math.min(1.5, window.devicePixelRatio || 1), flakes = [], run = true, last = 0, wind = 0, tw = 0;
+    var cx = cv.getContext('2d'), W = 0, H = 0, dpr = window.innerWidth < 700 ? 1 : Math.min(1.5, window.devicePixelRatio || 1), flakes = [], run = true, last = 0, wind = 0, tw = 0;
     var resize = function () {
       W = window.innerWidth; H = window.innerHeight; cv.width = W * dpr; cv.height = H * dpr; cx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var n = Math.round(Math.min(90, Math.max(40, W / 14)));
+      var n = Math.round(Math.min(W < 700 ? 40 : 90, Math.max(30, W / 14)));
       while (flakes.length < n) flakes.push(mk(true)); flakes.length = n;
     };
     function mk(anywhere) {
@@ -9568,7 +9569,7 @@ function A77Studio(THREE, M) {
       for (var i = 0; i < flakes.length; i++) {
         var f = flakes[i]; f.y += f.v * dt; f.ph += f.sp * dt; f.x += (Math.cos(f.ph) * f.sw * .6 + wind) * dt;
         if (f.y > H + 8 || f.x < -20 || f.x > W + 20) { var m = mk(false); f.x = Math.random() * W; f.y = -8; f.r = m.r; f.v = m.v; f.a = m.a; f.sw = m.sw; f.sp = m.sp; }
-        cx.beginPath(); cx.fillStyle = 'rgba(255,255,255,' + f.a.toFixed(2) + ')'; cx.shadowColor = 'rgba(110,140,190,.55)'; cx.shadowBlur = f.r > 2.4 ? 5 : 2; cx.arc(f.x, f.y, f.r, 0, 6.2832); cx.fill();
+        cx.beginPath(); cx.fillStyle = 'rgba(255,255,255,' + f.a.toFixed(2) + ')'; cx.shadowColor = 'rgba(110,140,190,.55)'; cx.shadowBlur = W < 700 ? 0 : (f.r > 2.4 ? 5 : 2); cx.arc(f.x, f.y, f.r, 0, 6.2832); cx.fill();
       }
       requestAnimationFrame(tick);
     }
