@@ -1,7 +1,7 @@
 <title>Noméo · Cadeaux personnalisés imprimés en 3D</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<script>(function(d){var h=d.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('an-obj');return}h.classList.add('an-wait');var f=function(c){requestAnimationFrame(function(){requestAnimationFrame(function(){if(c==='an-go')h.classList.remove('an-wait');h.classList.add(c)})})};var n=0,w=function(){var v=d.getElementById('view');if((v&&v.classList.contains('ready'))||++n>150)f('an-obj');else setTimeout(w,100)};addEventListener('load',function(){setTimeout(function(){f('an-go');w()},60)});setTimeout(function(){f('an-go');f('an-obj')},3000)})(document)</script>
+<script>(function(d){var h=d.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches){h.classList.add('an-obj');return}h.classList.add('an-wait');var f=function(c){requestAnimationFrame(function(){requestAnimationFrame(function(){if(c==='an-go')h.classList.remove('an-wait');h.classList.add(c)})})};var n=0,w=function(){var v=d.getElementById('view');if((v&&v.classList.contains('ready'))||++n>150)f('an-obj');else setTimeout(w,100)};var st=false,go=function(){if(st)return;st=true;f('an-go');w()};if(d.readyState!=='loading')go();else d.addEventListener('DOMContentLoaded',go);setTimeout(go,900);setTimeout(function(){f('an-go');f('an-obj')},3500)})(document)</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Cadeaux personnalisés imprimés en 3D : boules de Noël, cœurs, magnets et porte-clés à votre prénom. Pour les particuliers et les professionnels.">
 <meta property="og:type" content="website">
@@ -4479,6 +4479,14 @@ html:not(.an-obj) #stage-canvas { opacity: 0; }
     n.classList.add('rv'); io.observe(n);
   });
   setTimeout(function () { document.querySelectorAll('.rv:not(.rv-in)').forEach(function (n) { var r = n.getBoundingClientRect(); if (r.top < window.innerHeight) { n.classList.add('rv-in'); } }); }, 2500);
+})();
+
+/* ouverture : toujours la boule de Noël, même si le navigateur a gardé un ancien choix */
+(function () {
+  var r = document.getElementById('o-boule'); if (!r) return;
+  var def = function () { if (r.checked) return; r.checked = true; r.dispatchEvent(new Event('change', { bubbles: true })); };
+  def();
+  window.addEventListener('pageshow', function (e) { if (e.persisted) def(); });
 })();
 </script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
