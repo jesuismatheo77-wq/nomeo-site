@@ -1,7 +1,7 @@
 <title>Noméo · Cadeaux personnalisés imprimés en 3D</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
-<script>(function(d){var h=d.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;h.classList.add('an-wait');var g=function(){if(h.classList.contains('an-go'))return;requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.remove('an-wait');h.classList.add('an-go')})})};addEventListener('load',function(){setTimeout(g,150)});setTimeout(g,4000)})(document)</script>
+<script>(function(d){var h=d.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;h.classList.add('an-wait');var g=function(){if(h.classList.contains('an-go'))return;requestAnimationFrame(function(){requestAnimationFrame(function(){h.classList.remove('an-wait');h.classList.add('an-go')})})};var n=0,w=function(){var v=d.getElementById('view');if((v&&v.classList.contains('ready'))||++n>60)g();else setTimeout(w,100)};addEventListener('load',w);setTimeout(g,6000)})(document)</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="Cadeaux personnalisés imprimés en 3D : boules de Noël, cœurs, magnets et porte-clés à votre prénom. Pour les particuliers et les professionnels.">
 <meta property="og:type" content="website">
@@ -1469,6 +1469,7 @@ html.an-go .hero-text .lead:not([hidden]) { --dy: 32px; animation: enter .8s var
 html.an-go .hero-text .actions { --dy: 24px; animation: enter .75s var(--ease-out) .58s both; }
 html.an-go .hero-panel .panel { --dy: 44px; animation: enter .9s var(--ease-out) .72s both; }
 html.an-go #stage-canvas { animation: enter-obj 1.2s var(--ease-out) .3s both; }
+html.an-wait .fallback { opacity: 0; transition: none; }
 html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-text .actions, html.an-wait .hero-panel .panel, html.an-wait #stage-canvas { opacity: 0; }
 @media (prefers-reduced-motion: reduce) {
   html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-text .actions, html.an-wait .hero-panel .panel, html.an-wait #stage-canvas { opacity: 1; }
