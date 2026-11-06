@@ -1380,7 +1380,7 @@ h2 { font-size: clamp(1.9rem, 1.3rem + 1.8vw, 2.75rem); }
 @media (max-width: 1279px) { .nav a.nav-x:not(.btn) { display: none; } }
 /* téléphone : avec le badge, le bouton panier garde juste l'icône et le nombre */
 @media (max-width: 440px) {
-  .cart-btn:has(.badge:not([hidden])) > span:not(.badge) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .cart-btn > span:not(.badge) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 }
 /* téléphone et tablette : le choix particuliers / pros reste en haut de page au lieu de suivre l'écran */
 @media (max-width: 1099px) { .modefix { position: absolute; } }
@@ -1475,6 +1475,8 @@ html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-te
   html.an-wait .hero-text h1, html.an-wait .hero-text .lead, html.an-wait .hero-text .actions, html.an-wait .hero-panel .panel, html.an-wait #stage-canvas { opacity: 1; }
   html.an-go .hero-text h1, html.an-go .hero-text .lead, .hero-text .actions, .hero-panel .panel, #stage-canvas { animation: enter-fade .2s ease both; animation-delay: 0s; }
 }
+.badge[hidden] { display: none !important; }
+@media (max-width: 440px) { .cart-btn { padding-inline: 16px; gap: 6px; } .cart-btn .i { width: 24px; height: 24px; } .top { padding-left: 14px; } }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
