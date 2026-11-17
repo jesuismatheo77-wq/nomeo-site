@@ -163,7 +163,7 @@
         
         <div class="p-row p-row-cat only-part">
           <div class="seg seg-cp seg-cat" role="radiogroup" aria-label="Type d’objet">
-            <input type="radio" name="cat" id="c-noel" value="noel"><label for="c-noel">Noël</label>
+            <input type="radio" name="cat" id="c-noel" value="noel" checked><label for="c-noel">Noël</label>
             <input type="radio" name="cat" id="c-couple" value="couple"><label for="c-couple">Couple</label>
             <input type="radio" name="cat" id="c-objet" value="objet"><label for="c-objet">Objets</label>
           </div>
@@ -172,7 +172,7 @@
           <span class="seg-lab">Noël</span>
           <div class="seg seg-noel seg-5" role="radiogroup" aria-label="Décoration de Noël à imprimer">
             <i class="thumb" aria-hidden="true"></i>
-            <input type="radio" name="obj" id="o-boule" value="boule"><label for="o-boule">Boule</label>
+            <input type="radio" name="obj" id="o-boule" value="boule" checked><label for="o-boule">Boule</label>
             <input type="radio" name="obj" id="o-etoile" value="etoile"><label for="o-etoile">Étoile</label>
             <input type="radio" name="obj" id="o-sapin" value="sapin"><label for="o-sapin">Sapin</label>
             <input type="radio" name="obj" id="o-etiquette" value="etiquette"><label for="o-etiquette">Étiquette</label>
@@ -202,14 +202,14 @@
         <div class="p-row p-row-1">
           <div class="seg seg-3 cat-objet" role="radiogroup" aria-label="Objet à imprimer">
             <i class="thumb" aria-hidden="true"></i>
-            <input type="radio" name="obj" id="o-keychain" value="keychain" checked><label for="o-keychain">Porte-clés</label>
+            <input type="radio" name="obj" id="o-keychain" value="keychain"><label for="o-keychain">Porte-clés</label>
             <input type="radio" name="obj" id="o-plaque" value="plaque"><label for="o-plaque">Plaque</label>
             <input type="radio" name="obj" id="o-coaster" value="coaster"><label for="o-coaster">Sous-verre</label>
           </div>
           <label class="field" for="hero-text">
             <span class="fl">Essayez avec votre nom</span>
-            <input class="text-in" id="hero-text" name="text" type="text" maxlength="18" value="TENNIS CLUB" placeholder="Le nom de votre club" spellcheck="false" autocapitalize="characters" autocomplete="off" enterkeyhint="done">
-            <span class="count" id="hero-count">11/18</span>
+            <input class="text-in" id="hero-text" name="text" type="text" maxlength="18" value="EMMA" placeholder="Le nom de votre club" spellcheck="false" autocapitalize="characters" autocomplete="off" enterkeyhint="done">
+            <span class="count" id="hero-count">4/18</span>
           </label>
           <label class="field" id="hero-field2" for="hero-text2" hidden>
             <span class="fl">Prénom 2</span>
@@ -231,9 +231,9 @@
           <div class="chips" role="radiogroup" aria-label="Couleurs du socle et du relief">
             <span class="sw"><input type="radio" name="combo" id="c-jaune-noir" value="jaune-noir"><label for="c-jaune-noir" style="--a:#FFC61A;--b:#25282E" title="Jaune et noir"><span class="sr">Jaune et noir</span></label></span>
             <span class="sw"><input type="radio" name="combo" id="c-bleu-jaune" value="bleu-jaune"><label for="c-bleu-jaune" style="--a:#2552D6;--b:#FFC61A" title="Bleu et jaune"><span class="sr">Bleu et jaune</span></label></span>
-            <span class="sw"><input type="radio" name="combo" id="c-sapin-blanc" value="sapin-blanc" checked><label for="c-sapin-blanc" style="--a:#12B04A;--b:#EFEFEA" title="Vert bambou et blanc"><span class="sr">Vert bambou et blanc</span></label></span>
+            <span class="sw"><input type="radio" name="combo" id="c-sapin-blanc" value="sapin-blanc"><label for="c-sapin-blanc" style="--a:#12B04A;--b:#EFEFEA" title="Vert bambou et blanc"><span class="sr">Vert bambou et blanc</span></label></span>
             <span class="sw"><input type="radio" name="combo" id="c-blanc-bleu" value="blanc-bleu"><label for="c-blanc-bleu" style="--a:#EFEFEA;--b:#2552D6" title="Blanc et bleu roi"><span class="sr">Blanc et bleu roi</span></label></span>
-            <span class="sw"><input type="radio" name="combo" id="c-rouge-blanc" value="rouge-blanc"><label for="c-rouge-blanc" style="--a:#D7332A;--b:#EFEFEA" title="Rouge et blanc"><span class="sr">Rouge et blanc</span></label></span>
+            <span class="sw"><input type="radio" name="combo" id="c-rouge-blanc" value="rouge-blanc" checked><label for="c-rouge-blanc" style="--a:#D7332A;--b:#EFEFEA" title="Rouge et blanc"><span class="sr">Rouge et blanc</span></label></span>
             <span class="sw"><input type="radio" name="combo" id="c-noir-jaune" value="noir-jaune"><label for="c-noir-jaune" style="--a:#25282E;--b:#FFC61A" title="Noir et jaune"><span class="sr">Noir et jaune</span></label></span>
             <span class="sw"><input type="radio" name="combo" id="c-gris-jaune" value="gris-jaune"><label for="c-gris-jaune" style="--a:#8C929A;--b:#FFC61A" title="Gris et jaune"><span class="sr">Gris et jaune</span></label></span>
             <span class="sw"><input type="radio" name="combo" id="c-blanc-rouge" value="blanc-rouge"><label for="c-blanc-rouge" style="--a:#EFEFEA;--b:#D7332A" title="Blanc et rouge"><span class="sr">Blanc et rouge</span></label></span>
@@ -1168,14 +1168,12 @@
 </div>
 
 <div class="cr-app" id="cr" role="dialog" aria-modal="true" aria-label="Outil de création sur mesure" hidden><p class="cr-fail">Chargement…</p></div>
-<script type="text/late" data-src="js/ui.js?v=0d60a2bd"></script>
+<script type="text/late" data-src="js/ui.js?v=4ee6f91f"></script>
 <script type="text/late" data-src="js/vendor/three.min.js?v=r128"></script>
 <script type="text/late" data-src="js/vendor/clipper.min.js?v=642"></script>
 <script type="text/late" data-src="js/fonts.js?v=c8eb5816"></script>
-<script type="text/late" data-src="js/stage.js?v=d214f3df"></script>
+<script type="text/late" data-src="js/stage.js?v=d0f65734"></script>
 <script type="text/late" data-src="js/creator.js?v=c63aa354"></script>
 <script type="text/late" data-src="js/teaser.js?v=841e8f51"></script>
 <script type="text/late" data-src="js/deco.js?v=4ed18bf2"></script>
 <script>(function(){var a=[].slice.call(document.querySelectorAll('script[type="text/late"]'));function o(){a.forEach(function(n){var t=document.createElement("script"),c=n.getAttribute("data-src");c?(t.async=!1,t.src=c):t.text=n.textContent,document.body.appendChild(t)})}function e(){requestAnimationFrame(function(){setTimeout(o,40)})}document.readyState!=="loading"?e():document.addEventListener("DOMContentLoaded",e)})();</script>
-
-<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "f7e2905e3bfe4d24b09524fb8a5d0fc0"}'></script><!-- End Cloudflare Web Analytics -->
