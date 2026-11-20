@@ -31,11 +31,9 @@ h1,h2,h3{font-weight:850;letter-spacing:-.035em}
   radial-gradient(60% 55% at 70% 45%,#FFD95E 0%,transparent 70%),
   var(--mk-yellow)!important;-webkit-mask-image:none!important;mask-image:none!important}
 .hero:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;
-  background-image:linear-gradient(var(--mk-yellow) 0 0);
   background-image:
-   radial-gradient(circle,transparent 0),
    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='68'%3E%3Crect x='0' y='0' width='44' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='60' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='86' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3C/svg%3E");
-  background-size:auto,120px 68px}
+  background-size:120px 68px}
 .hero-text h1,.hero-text .lead{color:var(--mk-ink)!important;text-shadow:none!important}
 .hero .scene{z-index:0}
 /* Panneau de création et bandes sombres : noir franc au lieu du bleu nuit */
@@ -44,3 +42,51 @@ h1,h2,h3{font-weight:850;letter-spacing:-.035em}
 .dark-band .copy-mini{background:#333}
 .panel.glass.dark-band{background:#141414!important;border-color:#141414;box-shadow:6px 6px 0 #fff, 6px 6px 0 2.5px #141414}
 .foot.dark-band{background:#141414!important}
+
+/* Trio dans le héros */
+.hero-trio{display:block;height:auto;pointer-events:none;filter:drop-shadow(0 8px 0 rgba(20,20,20,.14))}
+@media(min-width:861px){.hero-trio{position:absolute;z-index:1;right:30vw;top:112px;width:min(34vw,440px)}}
+@media(max-width:860px){.hero-trio{position:static;width:min(78vw,380px);margin:14px auto 0}}
+/* Section famille */
+.fam{background:var(--mk-paper)}
+.fam h2{font-size:clamp(2.2rem,1.3rem + 3.4vw,4rem)}
+.fam-intro{max-width:46ch;font-size:1.12rem;color:var(--ink-2);margin:12px 0 36px}
+.fam-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+.fam-card{display:flex;flex-direction:column;gap:8px;padding:22px 22px 26px;border:var(--mk-line) solid var(--mk-ink);border-radius:28px;box-shadow:6px 6px 0 var(--mk-ink);min-width:0}
+.fam-card img{display:block;width:100%;height:270px;object-fit:contain;margin:0 0 6px}
+.fam-card h3{font-size:1.9rem;margin:0}
+.fam-card p{margin:0;font-size:1.02rem;line-height:1.4}
+.fam-nuage{background:var(--mk-yellow-soft);color:var(--mk-ink)}
+.fam-citron{background:var(--mk-yellow);color:var(--mk-ink)}
+.fam-oeuf{background:var(--mk-ink);color:#FFFDF6}
+.fam-citron{transform:rotate(-1.2deg)}.fam-oeuf{transform:rotate(1deg)}
+@media(max-width:760px){.fam-grid{grid-template-columns:1fr;gap:20px}.fam-card{flex-direction:row;align-items:center;gap:14px}.fam-card>div,.fam-card h3,.fam-card p{min-width:0}.fam-card img{width:110px;height:140px;flex:none;margin:0}.fam-card{display:grid;grid-template-columns:110px minmax(0,1fr);grid-template-rows:auto auto;column-gap:16px}.fam-card img{grid-row:1/3}.fam-card h3{align-self:end}.fam-card p{align-self:start}.fam-citron,.fam-oeuf{transform:none}}
+/* Étapes : cartes autocollant avec mascotte */
+.steps{background:var(--mk-yellow-soft)}
+.steps .steps-h{font-weight:850}
+.steps-list li{background:#fff!important;border:var(--mk-line) solid var(--mk-ink)!important;border-radius:24px!important;box-shadow:var(--mk-pop)!important}
+.steps-list li b{color:var(--mk-ink)}
+.st-img{object-position:left bottom;height:120px!important}
+/* Cartes produits, filtres, champs */
+.card,.prod,.sec-creer .box,.faq details,.qa{border:var(--mk-line) solid var(--mk-ink)!important;border-radius:20px!important;box-shadow:var(--mk-pop)!important;background:#fff}
+.filters{background:#fff;border:var(--mk-line) solid var(--mk-ink)}
+input,select,textarea{border:2px solid var(--mk-ink)}
+/* Pied de page : Œuf qui dort */
+.foot-logo{display:none}
+
+.hero .scene::after{display:none!important}
+.co.glass{background:#fff;color:var(--mk-ink)}
+.co.glass b{color:var(--mk-ink)}
+.co.glass span,.co.glass .st{color:var(--mk-ink)}
+.fam{padding-bottom:clamp(110px,14vw,170px)}
+/* Cartes de la boutique et des packs */
+article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;border-radius:24px!important;box-shadow:5px 5px 0 var(--mk-ink)!important;background:#fff}
+.dark-band .sp,.dark-band .pkc{box-shadow:5px 5px 0 var(--mk-yellow)!important}
+.sp-add,.add-btn,.pk-add{border:var(--mk-line) solid var(--mk-ink);background:var(--mk-yellow)!important;color:var(--mk-ink)!important;box-shadow:3px 3px 0 var(--mk-ink)}
+.shop-grid .sp-t,.sp-t{font-weight:800}
+
+/* Pied de page : le trio remplace la vidéo du logo */
+.foot-logo{display:flex!important;justify-content:center;padding-top:36px}
+.foot-logo video{display:none}
+.foot-logo img{display:block;width:min(70vw,380px);height:auto}
+.steps-list li:before,.steps-list li:after{display:none!important}
