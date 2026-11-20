@@ -1,0 +1,46 @@
+/* Direction artistique « La famille Noméo » : blanc, jaune tournesol, noir.
+   Contours noirs épais, ombres pleines, arrondis généreux : le même esprit que les mascottes. */
+:root{
+  --mk-ink:#141414; --mk-yellow:#FFC61A; --mk-yellow-soft:#FFE58A; --mk-paper:#FFFDF6;
+  --mk-line:2.5px; --mk-pop:4px 4px 0 var(--mk-ink);
+  --bg:#FFFDF6; --white:#FFFFFF; --soft:#FFF4C9; --soft-2:#FFE9A0;
+  --ink:#141414; --ink-hi:#000; --ink-2:#2B2B2B; --grey:#4A4A4A;
+  --rule:rgba(20,20,20,.9); --field:#FFFFFF; --field-line:#141414;
+  --glass:#fff; --glass-2:#fff; --glass-line:#141414;
+  --shadow-glass:var(--mk-pop); --shadow-card:var(--mk-pop); --shadow-pop:6px 6px 0 var(--mk-ink);
+  --studio:#FFF4C9;
+}
+html,body{background:var(--mk-paper)}
+/* Plus d'ambiance de Noël : ni guirlande, ni neige, ni bonnet */
+.garland,.snow,.logo .hat{display:none!important}
+/* Verre dépoli -> carte pleine avec contour */
+.glass{-webkit-backdrop-filter:none;backdrop-filter:none;background:#fff;border:var(--mk-line) solid var(--mk-ink);box-shadow:var(--mk-pop)}
+.top.glass{background:#fff}
+.top .nav a:not(.btn),.top .nav button.menu-btn{color:var(--mk-ink)}
+/* Boutons */
+.btn{border:var(--mk-line) solid var(--mk-ink);font-weight:750;box-shadow:var(--mk-pop);transition:transform .15s var(--ease),box-shadow .15s var(--ease)}
+.btn-y{background:var(--mk-yellow);color:var(--mk-ink);box-shadow:var(--mk-pop)}
+.btn-glass{background:#fff;color:var(--mk-ink)}
+@media(hover:hover)and (pointer:fine){.btn:hover{transform:translate(-2px,-2px);box-shadow:6px 6px 0 var(--mk-ink)}}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--mk-ink)}
+/* Titres */
+h1,h2,h3{font-weight:850;letter-spacing:-.035em}
+/* Héros : grand aplat jaune avec la grille de pastilles du logo */
+.hero{background:var(--mk-yellow)!important}
+.hero:before{background:
+  radial-gradient(60% 55% at 70% 45%,#FFD95E 0%,transparent 70%),
+  var(--mk-yellow)!important;-webkit-mask-image:none!important;mask-image:none!important}
+.hero:after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.5;
+  background-image:linear-gradient(var(--mk-yellow) 0 0);
+  background-image:
+   radial-gradient(circle,transparent 0),
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='68'%3E%3Crect x='0' y='0' width='44' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='60' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='86' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3C/svg%3E");
+  background-size:auto,120px 68px}
+.hero-text h1,.hero-text .lead{color:var(--mk-ink)!important;text-shadow:none!important}
+.hero .scene{z-index:0}
+/* Panneau de création et bandes sombres : noir franc au lieu du bleu nuit */
+.dark-band{--white:#141414;--soft:#262626;--soft-2:#333;--ink:#FFFDF6;--ink-hi:#fff;--ink-2:rgba(255,253,246,.82);--grey:rgba(255,253,246,.66);--rule:rgba(255,255,255,.2);--field:#262626;--field-line:rgba(255,255,255,.28);background:#141414!important;color:var(--ink)}
+.dark-band .how li{background:#1f1f1f}
+.dark-band .copy-mini{background:#333}
+.panel.glass.dark-band{background:#141414!important;border-color:#141414;box-shadow:6px 6px 0 #fff, 6px 6px 0 2.5px #141414}
+.foot.dark-band{background:#141414!important}
