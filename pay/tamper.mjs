@@ -1,0 +1,12 @@
+const m = await import('./dist/worker.js');
+const t = (name, items) => { try { const r = m.priceCart(m.normalize(items)); console.log(name, '->', r.reduce((a,l)=>a+l.cents,0)); } catch (e) { console.log(name, '-> refusé :', e.message); } };
+t('normal', [{id:'porte-cles',qty:10,text:'A'}]);
+t('prix falsifié (champ unit)', [{id:'porte-cles',qty:10,unit:0.01,cents:1,price:1}]);
+t('fausse remise', [{id:'porte-cles',qty:10,pda:20,pq:10,pn:'Pack Amoureux'}]);
+t('pack inconnu', [{id:'porte-cles',qty:10,pda:20,pq:10,pn:'Pack Gratuit'}]);
+t('qty négative', [{id:'porte-cles',qty:-5}]);
+t('qty énorme', [{id:'porte-cles',qty:99999999}]);
+t('création sur mesure', [{id:'creation',qty:1,sz:'x',cp:[0.01,0.01,0.01,0.01,0.01]}]);
+t('article caché/jouet', [{id:'j-puzzle',qty:1}]);
+t('texte piégé', [{id:'porte-cles',qty:1,text:'<script>alert(1)</script>'+'x'.repeat(200)}]);
+t('taille inconnue', [{id:'noel-boule',qty:1,sz:'zz'}]);
