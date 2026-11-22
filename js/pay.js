@@ -4,7 +4,7 @@
    Tant que PAY_API n'est pas renseigné, ce fichier ne fait rien : le site garde son fonctionnement actuel. */
 (function () {
   'use strict';
-  var PAY_API = '';                         // ex. https://nomeo-pay.compte.workers.dev (sans « / » final)
+  var PAY_API = 'https://nomeo-pay.jesuismatheo77.workers.dev';                         // ex. https://nomeo-pay.compte.workers.dev (sans « / » final)
   var CART_KEY = 'nomeo-panier-v1';
   var MAIL_KEY = '027d9344-9e05-43ea-8a2f-2f5c3c5cd6e5';   // clé publique Web3Forms, la même que dans ui.js
   if (!/^https:\/\/[a-z0-9.-]+$/i.test(PAY_API)) return;
