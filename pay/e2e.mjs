@@ -9,7 +9,7 @@ globalThis.fetch=async (u,o)=>{ if(String(u).startsWith('https://api.stripe.com'
   return realFetch(u,o); };
 const srv=http.createServer((q,r)=>{let p=path.join(root,decodeURIComponent(q.url.split('?')[0]));if(p.endsWith('/'))p+='index.html';fs.readFile(p,(e,d)=>{if(e){r.writeHead(404);r.end();return;}
   let t={'.html':'text/html','.js':'text/javascript','.css':'text/css','.webp':'image/webp','.png':'image/png','.svg':'image/svg+xml'}[path.extname(p)]||'application/octet-stream';
-  if(p.endsWith('js/pay.js')) d=Buffer.from(d.toString().replace("var PAY_API = '';","var PAY_API = 'https://mock.workers.dev';").replace('/^https:\\/\\/[a-z0-9.-]+$/i','/./'));
+  if(p.endsWith('js/pay.js')) d=Buffer.from(d.toString().replace(/var PAY_API = '[^']*';/,"var PAY_API = 'https://mock.workers.dev';").replace('/^https:\\/\\/[a-z0-9.-]+$/i','/./'));
   r.writeHead(200,{'Content-Type':t});r.end(d);});}).listen(8768);
 const env={STRIPE_SECRET_KEY:'sk_test_x',STRIPE_PUBLISHABLE_KEY:'pk_test_x',ALLOWED_ORIGINS:ORIGIN};
 const b=await chromium.launch();const pg=await b.newPage({viewport:{width:420,height:900}});

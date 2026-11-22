@@ -96,7 +96,10 @@ async function stripe(env, method, path, body) {
   const r = await fetch('https://api.stripe.com/v1' + path, {
     method, headers: Object.assign({ Authorization: 'Bearer ' + env.STRIPE_SECRET_KEY, 'Content-Type': 'application/x-www-form-urlencoded' },
       method === 'POST' ? { 'Idempotency-Key': crypto.randomUUID() } : {}), body: body ? form(body).join('&') : undefined });
-  const j = await r.json(); if (!r.ok) { console.log('stripe error', JSON.stringify(j.error)); throw new Err('Paiement indisponible pour le moment. Réessayez ou envoyez la commande par message.', 502); }
+  const j = await r.json();
+  if (!r.ok) { console.log('stripe error', JSON.stringify(j.error));
+    const e = new Err('Paiement indisponible pour le moment. Réessayez ou envoyez la commande par message.' + (j.error && j.error.message ? ' (détail technique : ' + String(j.error.message).slice(0, 160) + ')' : ''), 502);
+    e.stripeMsg = (j.error && j.error.message) || ''; throw e; }
   return j;
 }
 class Err extends Error { constructor(m, s = 400) { super(m); this.status = s; } }
@@ -116,7 +119,7 @@ async function createSession(env, req, origin) {
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
   const meta = { order_no: no, name, tel, delivery: colis ? 'colis' : 'main-propre', more };
   chunks(compact).slice(0, 45).forEach((c, i) => { meta['l' + i] = c; });
-  const s = await stripe(env, 'POST', '/checkout/sessions', {
+  const params = {
     ui_mode: 'embedded', mode: 'payment', locale: 'fr', redirect_on_completion: 'if_required',
     return_url: origin + '/?paiement=ok&session_id={CHECKOUT_SESSION_ID}',
     client_reference_id: no, customer_email: email || undefined, metadata: meta,
@@ -127,7 +130,14 @@ async function createSession(env, req, origin) {
     shipping_options: [{ shipping_rate_data: { type: 'fixed_amount', display_name: colis ? 'Envoi en colis' : 'Remise en main propre',
       fixed_amount: { amount: colis ? ship : 0, currency: 'eur' } } }],
     custom_text: { submit: { message: 'Aucune pièce n’est imprimée avant votre aperçu 3D. Avant l’impression, vous pouvez modifier ou annuler sur simple message.' } },
-  });
+  };
+  // Les versions récentes de l'API Stripe nomment ce mode « embedded_page » : on essaie les deux.
+  let s;
+  try { s = await stripe(env, 'POST', '/checkout/sessions', params); }
+  catch (e) {
+    if (e.stripeMsg && /ui_mode/i.test(e.stripeMsg)) s = await stripe(env, 'POST', '/checkout/sessions', { ...params, ui_mode: 'embedded_page' });
+    else throw e;
+  }
   const total = lines.reduce((a, l) => a + l.cents, 0) + (colis ? ship : 0);
   return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: colis ? ship : 0, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
 }
