@@ -10,25 +10,20 @@
   var METIERS = {};
   try { METIERS = JSON.parse(box.getAttribute("data-metiers")); } catch (e) {}
 
-  /* ---------- Onglets par métier ---------- */
-  var tabs = [].slice.call(document.querySelectorAll(".mt-tab"));
-  function pick(t, focus) {
-    tabs.forEach(function (x) {
-      var on = x === t;
-      x.setAttribute("aria-selected", String(on));
-      x.tabIndex = on ? 0 : -1;
-      var p = document.getElementById(x.getAttribute("aria-controls"));
-      if (p) p.hidden = !on;
-    });
-    if (focus) t.focus();
-  }
-  tabs.forEach(function (t, i) {
-    t.addEventListener("click", function () { pick(t); });
-    t.addEventListener("keydown", function (e) {
-      var j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : null;
-      if (j == null) return;
-      e.preventDefault();
-      pick(tabs[(j + tabs.length) % tabs.length], true);
+  /* ---------- Métiers en liste : on ouvre une ligne pour voir les objets ---------- */
+  document.querySelectorAll(".mt-open").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var open = btn.getAttribute("aria-expanded") === "true";
+      document.querySelectorAll(".mt-open").forEach(function (b) {
+        b.setAttribute("aria-expanded", "false");
+        document.getElementById(b.getAttribute("aria-controls")).hidden = true;
+      });
+      if (!open) {
+        btn.setAttribute("aria-expanded", "true");
+        document.getElementById(btn.getAttribute("aria-controls")).hidden = false;
+        var r = btn.getBoundingClientRect();
+        if (r.top < 80) window.scrollBy({ top: r.top - 90, behavior: "smooth" });
+      }
     });
   });
   document.querySelectorAll(".mt-go").forEach(function (b) {

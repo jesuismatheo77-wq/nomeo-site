@@ -326,3 +326,22 @@ svg.mark rect{height:14px!important}
   #pro .steps-list li{position:relative;padding-right:112px!important;min-height:120px}
   #pro .steps-list li .st-img.st-scene{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:92px!important;height:92px!important;margin:0}
 }
+/* Métiers en liste compacte (24/11) */
+.mt-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.mt-row{background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:20px;box-shadow:4px 4px 0 var(--mk-ink);overflow:hidden}
+.mt-row .mt-open{display:flex;align-items:center;gap:14px;width:100%;padding:10px 16px 10px 10px;border:0;background:none;font:inherit;color:var(--mk-ink);text-align:left;cursor:pointer;min-height:64px}
+.mt-ic{flex:none;width:52px;height:52px;border-radius:14px;background:#FFF4C9;overflow:hidden}
+.mt-ic img{width:100%;height:100%;object-fit:contain}
+.mt-tx{flex:1;min-width:0;display:grid}
+.mt-tx b{font-size:1.06rem;letter-spacing:-.01em}
+.mt-tx span{font-size:.86rem;color:#2B2B2B}
+.mt-chev{flex:none;width:12px;height:12px;border-right:2.5px solid var(--mk-ink);border-bottom:2.5px solid var(--mk-ink);transform:rotate(45deg) translateY(-3px);transition:transform .2s}
+.mt-open[aria-expanded=true] .mt-chev{transform:rotate(-135deg) translateY(-3px)}
+.mt-open:focus-visible{outline:3px solid var(--mk-ink);outline-offset:-4px}
+.mt-row .mt-panel{padding:4px 14px 16px!important;border-top:2px dashed rgba(20,20,20,.2)}
+.mt-row .mt-gal{display:flex;gap:10px;overflow-x:auto;margin:12px -14px 14px;padding:0 14px 6px;scroll-snap-type:x mandatory;scrollbar-width:none}
+.mt-row .mt-gal::-webkit-scrollbar{display:none}
+.mt-row .mt-gal li{flex:none;width:128px;scroll-snap-align:start;padding:8px 8px 10px;border-width:2px;border-radius:16px;box-shadow:none;gap:6px}
+.mt-row .mt-n{font-size:.84rem}
+@media(min-width:861px){.mt-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.mt-row .mt-gal li{width:150px}}
+@media(prefers-reduced-motion:reduce){.mt-chev{transition:none}}
