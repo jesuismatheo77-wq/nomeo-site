@@ -10,22 +10,25 @@
   var METIERS = {};
   try { METIERS = JSON.parse(box.getAttribute("data-metiers")); } catch (e) {}
 
-  /* ---------- Cartes par métier ---------- */
-  document.querySelectorAll(".mt-open").forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var panel = document.getElementById(btn.getAttribute("aria-controls"));
-      var open = btn.getAttribute("aria-expanded") === "true";
-      document.querySelectorAll(".mt-open").forEach(function (b) {
-        b.setAttribute("aria-expanded", "false");
-        var p = document.getElementById(b.getAttribute("aria-controls"));
-        if (p) p.hidden = true;
-        b.closest(".mt-card").classList.remove("is-open");
-      });
-      if (!open) {
-        btn.setAttribute("aria-expanded", "true");
-        panel.hidden = false;
-        btn.closest(".mt-card").classList.add("is-open");
-      }
+  /* ---------- Onglets par métier ---------- */
+  var tabs = [].slice.call(document.querySelectorAll(".mt-tab"));
+  function pick(t, focus) {
+    tabs.forEach(function (x) {
+      var on = x === t;
+      x.setAttribute("aria-selected", String(on));
+      x.tabIndex = on ? 0 : -1;
+      var p = document.getElementById(x.getAttribute("aria-controls"));
+      if (p) p.hidden = !on;
+    });
+    if (focus) t.focus();
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { pick(t); });
+    t.addEventListener("keydown", function (e) {
+      var j = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? tabs.length - 1 : null;
+      if (j == null) return;
+      e.preventDefault();
+      pick(tabs[(j + tabs.length) % tabs.length], true);
     });
   });
   document.querySelectorAll(".mt-go").forEach(function (b) {
