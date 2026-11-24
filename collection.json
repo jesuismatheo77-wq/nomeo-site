@@ -1,0 +1,14 @@
+{
+  "serie": "Série 1 · Hiver 2026",
+  "seuilMini": 25,
+  "tranche": 50,
+  "minisParTranche": 2,
+  "chances": { "l": 0.005, "sr": 0.05, "r": 0.2 },
+  "figurines": {
+    "c": [["001", "Flocon"], ["002", "Zeste"], ["003", "Dodo"]],
+    "r": [["004", "Flocon de Noël"], ["005", "Zeste pizzaïolo"]],
+    "sr": [["006", "Dodo fantôme"]],
+    "l": [["007", "Zeste doré"]]
+  },
+  "legendaireUnique": true
+}

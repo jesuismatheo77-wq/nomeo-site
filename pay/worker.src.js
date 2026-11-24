@@ -159,20 +159,32 @@ async function rolls(sid, n) {
   }
   return out.map(x => x / 4294967296);
 }
+// Réglages lus sur le site (collection.json) : on peut changer séries, chances et paliers sans redéployer ce serveur.
+async function loadCfg(env) {
+  const url = env.COLLECTION_URL || 'https://nomeo-atelier.com/collection.json';
+  try {
+    const r = await fetch(url, { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
+    const c = await r.json();
+    if (c && c.figurines && c.chances && c.figurines.c && c.figurines.c.length) return c;
+  } catch (e) {}
+  return { seuilMini: 25, tranche: 50, minisParTranche: 2, chances: { l: 0.005, sr: 0.05, r: 0.2 }, figurines: SERIE, legendaireUnique: true };
+}
 async function gifts(env, sid, goodsCents) {
+  const C = await loadCfg(env), F = C.figurines, P = C.chances;
   const eur = goodsCents / 100;
-  const nMini = eur >= 25 ? 1 + 2 * Math.floor(eur / 50) : 0;
+  const nMini = eur >= (C.seuilMini || 25) ? 1 + (C.minisParTranche || 2) * Math.floor(eur / (C.tranche || 50)) : 0;
   if (!nMini) return { card: true, minis: [] };
   const u = await rolls(sid, nMini), minis = [];
   for (let i = 0; i < nMini; i++) {
     const a = u[2 * i], b = u[2 * i + 1];
-    let r = a < 0.005 ? 'l' : a < 0.055 ? 'sr' : a < 0.255 ? 'r' : 'c';
-    if (r === 'l') {
+    const pl = F.l && F.l.length ? (P.l || 0) : 0, ps = F.sr && F.sr.length ? (P.sr || 0) : 0, pr = F.r && F.r.length ? (P.r || 0) : 0;
+    let r = a < pl ? 'l' : a < pl + ps ? 'sr' : a < pl + ps + pr ? 'r' : 'c';
+    if (r === 'l' && C.legendaireUnique !== false) {
       let ok = false;
       if (env.FILES) { const g = await env.FILES.get('gold-winner'); if (!g) { await env.FILES.put('gold-winner', sid); ok = true; } else ok = g === sid; }
-      if (!ok || minis.some(m => m.r === 'l')) r = 'sr';
+      if (!ok || minis.some(m => m.r === 'l')) r = (F.sr && F.sr.length) ? 'sr' : 'c';
     }
-    const list = SERIE[r], f = list[Math.floor(b * list.length)];
+    const list = F[r], f = list[Math.floor(b * list.length)];
     minis.push({ no: f[0], name: f[1], r, rar: RAR[r] });
   }
   return { card: false, minis, gold: minis.some(m => m.r === 'l') };
