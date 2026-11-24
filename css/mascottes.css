@@ -153,3 +153,14 @@ section.dark-band .copy-mini{background:var(--mk-yellow)!important;color:var(--m
 #pro .steps-list,#pro .wrap>ol{background:transparent!important;box-shadow:none!important;padding:0!important}
 .shop-jump a,.shop-filters button{color:var(--mk-ink)!important;background:#fff!important;box-shadow:inset 0 0 0 2px var(--mk-ink)!important}
 .shop-filters button[aria-pressed=true]{background:var(--mk-ink)!important;color:#fff!important}
+
+/* ===== Fond (24/11, v2) : plus de pastilles derrière les textes.
+   Jaune chaud, grain de papier très léger et grandes taches de lumière douces sur les bords ===== */
+body{background-image:
+  radial-gradient(900px 700px at 0% 8%,rgba(255,231,140,.75),transparent 70%),
+  radial-gradient(800px 800px at 100% 38%,rgba(255,176,0,.35),transparent 70%),
+  radial-gradient(900px 700px at 0% 72%,rgba(255,231,140,.6),transparent 70%),
+  radial-gradient(800px 700px at 100% 100%,rgba(255,176,0,.3),transparent 70%),
+  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")!important;
+  background-size:100% 3200px,100% 3200px,100% 3200px,100% 3200px,180px 180px!important;
+  background-repeat:repeat-y,repeat-y,repeat-y,repeat-y,repeat!important}
