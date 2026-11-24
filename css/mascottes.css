@@ -455,3 +455,4 @@ svg.mark rect{height:14px!important}
 .cl-soon-h{margin:28px 0 10px;font-size:1.15rem;font-weight:800}
 .cl-grid.cl-soon{grid-template-columns:repeat(3,minmax(0,1fr))}
 .cl-soon .cl-card{opacity:.92}
+@media(max-width:480px){.contacts{grid-template-columns:minmax(0,1fr);gap:2px}.contacts dd{overflow-wrap:normal;margin-bottom:10px}.contacts dd a,.contacts dd span{white-space:nowrap}}
