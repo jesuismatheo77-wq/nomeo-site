@@ -120,7 +120,7 @@ async function createSession(env, req, origin) {
   const meta = { order_no: no, name, tel, delivery: colis ? 'colis' : 'main-propre', more };
   chunks(compact).slice(0, 45).forEach((c, i) => { meta['l' + i] = c; });
   const params = {
-    ui_mode: 'embedded', mode: 'payment', locale: 'fr', redirect_on_completion: 'if_required',
+    ui_mode: 'embedded', mode: 'payment', locale: 'fr', redirect_on_completion: 'if_required', allow_promotion_codes: true,
     return_url: origin + '/?paiement=ok&session_id={CHECKOUT_SESSION_ID}',
     client_reference_id: no, customer_email: email || undefined, metadata: meta,
     payment_intent_data: { description: 'Noméo ' + no, metadata: { order_no: no } },
@@ -142,6 +142,42 @@ async function createSession(env, req, origin) {
   return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: colis ? ship : 0, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
 }
 
+// ---------- cadeaux de collection : tirage fait ICI (le navigateur ne peut pas tricher) ----------
+// Chances par mini-figurine : légendaire 1/200 (un seul exemplaire au total), super rare 5 %, rare 20 %, commune le reste.
+const SERIE = {
+  c: [['001', 'Flocon'], ['002', 'Zeste'], ['003', 'Dodo']],
+  r: [['004', 'Flocon de Noël'], ['005', 'Zeste pizzaïolo']],
+  sr: [['006', 'Dodo fantôme']],
+  l: [['007', 'Zeste doré']]
+};
+const RAR = { c: 'Commune', r: 'Rare', sr: 'Super rare', l: 'Légendaire' };
+async function rolls(sid, n) {
+  const out = []; let buf = new Uint8Array(0), k = 0;
+  while (out.length < n * 2) {
+    buf = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode('nomeo|' + sid + '|' + (k++))));
+    for (let i = 0; i + 4 <= buf.length; i += 4) out.push(((buf[i] << 24) >>> 0) + (buf[i + 1] << 16) + (buf[i + 2] << 8) + buf[i + 3]);
+  }
+  return out.map(x => x / 4294967296);
+}
+async function gifts(env, sid, goodsCents) {
+  const eur = goodsCents / 100;
+  const nMini = eur >= 25 ? 1 + 2 * Math.floor(eur / 50) : 0;
+  if (!nMini) return { card: true, minis: [] };
+  const u = await rolls(sid, nMini), minis = [];
+  for (let i = 0; i < nMini; i++) {
+    const a = u[2 * i], b = u[2 * i + 1];
+    let r = a < 0.005 ? 'l' : a < 0.055 ? 'sr' : a < 0.255 ? 'r' : 'c';
+    if (r === 'l') {
+      let ok = false;
+      if (env.FILES) { const g = await env.FILES.get('gold-winner'); if (!g) { await env.FILES.put('gold-winner', sid); ok = true; } else ok = g === sid; }
+      if (!ok || minis.some(m => m.r === 'l')) r = 'sr';
+    }
+    const list = SERIE[r], f = list[Math.floor(b * list.length)];
+    minis.push({ no: f[0], name: f[1], r, rar: RAR[r] });
+  }
+  return { card: false, minis, gold: minis.some(m => m.r === 'l') };
+}
+
 async function status(env, sid) {
   if (!/^cs_(test|live)_[A-Za-z0-9]+$/.test(sid || '')) throw new Err('Session inconnue.');
   const s = await stripe(env, 'GET', '/checkout/sessions/' + sid);
@@ -153,7 +189,10 @@ async function status(env, sid) {
     (r[8] ? ' · remise ' + r[8] : '') + ' : ' + eur(+r[7])).join('\n');
   const sd = s.collected_information && s.collected_information.shipping_details || s.shipping_details;
   const addr = sd && sd.address ? [sd.name, sd.address.line1, sd.address.line2, sd.address.postal_code, sd.address.city].filter(Boolean).join(', ') : '';
-  return { paid, orderNo: m.order_no || '', name: m.name || '', tel: m.tel || '', email: (s.customer_details && s.customer_details.email) || s.customer_email || '',
+  const ship = (s.total_details && s.total_details.amount_shipping) || 0;
+  const gift = paid ? await gifts(env, sid, (s.amount_total || 0) - ship) : null;
+  const disc = (s.total_details && s.total_details.amount_discount) || 0;
+  return { paid, gift, discountCents: disc, orderNo: m.order_no || '', name: m.name || '', tel: m.tel || '', email: (s.customer_details && s.customer_details.email) || s.customer_email || '',
     delivery: m.delivery || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
 }
 
@@ -212,4 +251,4 @@ export default {
     }
   }
 };
-export { normalize, priceCart, packFacts };
+export { normalize, priceCart, packFacts, gifts };

@@ -80,12 +80,46 @@
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
       'Total payé : ' + eur(info.totalCents), 'Réception : ' + (info.delivery === 'colis' ? 'envoi en colis' : 'remise en main propre'),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
-      info.more ? 'Remise, remarques : ' + info.more : '', '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
+      info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };
     if (info.email) payload.email = info.email;
     return fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' }, body: JSON.stringify(payload) })
       .then(function (r) { return r.json().then(function (j) { return r.ok && j.success; }); })
       .then(function (ok) { if (ok) { try { localStorage.setItem(mk, '1'); } catch (e) {} } return ok; }).catch(function () { return false; });
+  }
+
+  function giftTxt(info) {
+    var g = info.gift; if (!g) return '';
+    if (!g.minis || !g.minis.length) return 'CADEAU : 1 carte de collection';
+    return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ') + sa carte'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 100 € ***' : '');
+  }
+  var IMG = { '001': 'mascotte-nuage', '002': 'mascotte-citron', '003': 'mascotte-oeuf', '004': 'mascotte-nuage', '005': 'mascotte-citron', '006': 'mascotte-oeuf', '007': 'mascotte-citron' };
+  // Roue : parts proportionnelles aux vraies chances (commune 74,5 %, rare 20 %, super rare 5 %, légendaire 0,5 %)
+  var SEG = { c: [0, 268.2], r: [268.2, 340.2], sr: [340.2, 358.2], l: [358.2, 360] };
+  function wheel(g) {
+    var box = el('div', { class: 'wh' });
+    if (!g || !g.minis || !g.minis.length) { box.appendChild(el('p', { class: 'wh-h', text: '🎁 Une carte de collection est offerte avec votre commande.' })); return box; }
+    var n = g.minis.length, i = 0, rot = 0;
+    box.appendChild(el('p', { class: 'wh-h', text: '🎁 Vous avez gagné ' + (n > 1 ? n + ' mini-figurines' : 'une mini-figurine') + ' ! Tournez la roue pour découvrir ' + (n > 1 ? 'lesquelles' : 'laquelle') + '.' }));
+    var stage = el('div', { class: 'wh-stage' }), disc = el('div', { class: 'wh-disc' }), pin = el('div', { class: 'wh-pin' });
+    ['Commune', 'Rare', 'Super rare'].forEach(function (t, k) { var l = el('span', { class: 'wh-l wh-l' + k, text: t }); disc.appendChild(l); });
+    stage.appendChild(disc); stage.appendChild(pin); box.appendChild(stage);
+    var res = el('ul', { class: 'wh-res' }), btn = el('button', { type: 'button', class: 'btn btn-y wh-go', text: 'Tourner la roue' + (n > 1 ? ' (1/' + n + ')' : '') });
+    box.appendChild(btn); box.appendChild(res);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    btn.addEventListener('click', function () {
+      if (i >= n) return; var m = g.minis[i]; btn.disabled = true;
+      var s = SEG[m.r], target = s[0] + (s[1] - s[0]) * (0.2 + Math.random() * 0.6);
+      rot += 360 * 5 + ((360 - target) - (rot % 360) + 360) % 360;
+      disc.style.transition = reduce ? 'none' : 'transform 3.2s cubic-bezier(.12,.7,.15,1)'; disc.style.transform = 'rotate(' + rot + 'deg)';
+      setTimeout(function () {
+        var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: 'img/' + IMG[m.no] + '.webp', alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
+        res.appendChild(li); i++;
+        if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 100 € à utiliser sur le site.' }));
+        if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines et leurs cartes seront glissées dans votre colis.' })); }
+      }, reduce ? 300 : 3300);
+    });
+    return box;
   }
 
   function showDone(info, mailed) {
@@ -94,7 +128,8 @@
       el('b', { text: 'Paiement reçu, merci !' }),
       el('p', { text: 'Commande n° ' + info.orderNo + ' · ' + eur(info.totalCents) + '. Un reçu vous est envoyé par e-mail.' }),
       el('p', { text: 'On prépare l’aperçu 3D de votre pièce et on vous l’envoie avant de l’imprimer. Pour toute modification, écrivez-nous en indiquant votre numéro de commande.' }),
-      mailed ? el('span') : el('p', { class: 'pay-msg', text: 'Votre paiement est bien enregistré. Si vous ne recevez pas de nouvelles sous 24 h, écrivez-nous avec ce numéro de commande.' })
+      mailed ? el('span') : el('p', { class: 'pay-msg', text: 'Votre paiement est bien enregistré. Si vous ne recevez pas de nouvelles sous 24 h, écrivez-nous avec ce numéro de commande.' }),
+      wheel(info.gift)
     ]);
     var b = el('button', { type: 'button', class: 'btn btn-y', text: 'Terminer' });
     b.addEventListener('click', function () { closeDlg(); location.reload(); });
