@@ -164,3 +164,71 @@ body{background-image:
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")!important;
   background-size:100% 3200px,100% 3200px,100% 3200px,100% 3200px,180px 180px!important;
   background-repeat:repeat-y,repeat-y,repeat-y,repeat-y,repeat!important}
+
+/* ===== Espace pros (24/11) : pas de panier ni d'outil 3D, des idées par métier et une discussion avec Zeste ===== */
+.pro-old{display:none!important}
+body[data-mode=pro] .hero-panel,body[data-mode=pro] .hero .scene,body[data-mode=pro] .hero .hint,body[data-mode=pro] #dock,body[data-mode=pro] .dock{display:none!important}
+body[data-mode=pro] .hero{min-height:0!important;padding-bottom:clamp(24px,4vw,56px)}
+@media(min-width:861px){body[data-mode=pro] .hero-trio{right:8vw;top:96px;width:min(28vw,360px)}}
+@media(max-width:860px){body[data-mode=pro] .hero-trio{width:min(62vw,280px)}}
+
+#metiers h2,#parler h2{font-size:clamp(2rem,1.3rem + 3vw,3.6rem)}
+.mt-intro{max-width:56ch;margin:12px 0 30px;font-size:1.08rem;color:var(--mk-ink)}
+.mt-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;align-items:start}
+@media(max-width:960px){.mt-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.mt-grid{grid-template-columns:minmax(0,1fr);gap:14px}}
+.mt-card{background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:26px;box-shadow:var(--mk-pop);overflow:hidden;min-width:0}
+.mt-card.is-open{grid-column:1/-1}
+.mt-open{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"th t" "th d" "th m";column-gap:16px;row-gap:2px;align-items:center;width:100%;padding:18px;border:0;background:none;text-align:left;font:inherit;color:var(--mk-ink);cursor:pointer}
+.mt-thumbs{grid-area:th;display:flex;align-items:center}
+.mt-th{display:block;width:58px;height:58px;border-radius:16px;background:#FFF4C9;border:2px solid var(--mk-ink);overflow:hidden;flex:none}
+.mt-th+.mt-th{margin-left:-22px}
+.mt-th img,.mt-g img{display:block;width:100%;height:100%;object-fit:contain}
+.mt-t{grid-area:t;font-weight:850;font-size:1.18rem;letter-spacing:-.02em;line-height:1.15}
+.mt-d{grid-area:d;font-size:.94rem;color:#2B2B2B}
+.mt-more{grid-area:m;font-weight:750;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;margin-top:4px}
+.mt-card.is-open .mt-more{text-decoration:none}
+.mt-card.is-open .mt-more::after{content:" ↑"}
+.mt-panel{padding:4px 18px 20px}
+.mt-gal{list-style:none;margin:0 0 18px;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.mt-gal li{display:grid;gap:6px;font-weight:700;font-size:.9rem;text-align:center}
+.mt-g{display:block;aspect-ratio:1;border-radius:18px;background:#FFF4C9;border:2px solid var(--mk-ink);overflow:hidden}
+.mt-go{width:100%;justify-content:center}
+@media(hover:hover)and (pointer:fine){.mt-open:hover .mt-t{text-decoration:underline;text-underline-offset:4px}}
+.mt-open:focus-visible{outline:3px solid var(--mk-ink);outline-offset:-6px;border-radius:22px}
+
+/* Discussion */
+.pz{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px 48px;align-items:start}
+@media(max-width:860px){.pz{grid-template-columns:minmax(0,1fr)}}
+.pz-side p{max-width:40ch;margin-top:12px;font-size:1.05rem}
+.pz-zeste{display:block;width:min(100%,300px);height:auto;margin-top:18px;filter:drop-shadow(0 12px 10px rgba(20,20,20,.18))}
+@media(max-width:860px){.pz-zeste{width:150px;position:absolute;right:max(16px,env(safe-area-inset-right,0px));margin-top:-110px}.pz-side{position:relative;padding-right:150px}}
+@media(max-width:480px){.pz-zeste{width:110px;margin-top:-90px}.pz-side{padding-right:96px}}
+.pz-chat{background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:28px;box-shadow:6px 6px 0 var(--mk-ink);padding:20px;min-width:0}
+.pz-log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.pz-b{max-width:88%;padding:12px 16px;border-radius:20px;line-height:1.4;animation:pzIn .25s var(--ease) both}
+.pz-b p{margin:0}
+.pz-z{align-self:flex-start;background:#FFF4C9;border:2px solid var(--mk-ink);border-bottom-left-radius:6px}
+.pz-who{display:block;font-size:.78rem;font-weight:800;margin-bottom:2px}
+.pz-me{align-self:flex-end;background:var(--mk-ink);color:#fff;border-bottom-right-radius:6px;text-align:right}
+.pz-edit{margin-top:4px;padding:0;border:0;background:none;color:#FFC61A;font:inherit;font-size:.8rem;font-weight:700;text-decoration:underline;cursor:pointer;min-height:28px}
+@keyframes pzIn{from{opacity:0;transform:translateY(6px)}}
+@media(prefers-reduced-motion:reduce){.pz-b{animation:none}}
+.pz-input{margin-top:16px;padding-top:16px;border-top:2px dashed rgba(20,20,20,.25)}
+.pz-chips{display:flex;flex-wrap:wrap;gap:8px}
+.pz-chip{min-height:44px;padding:0 16px;border-radius:999px;border:2px solid var(--mk-ink);background:#fff;color:var(--mk-ink);font:inherit;font-weight:700;font-size:.95rem;cursor:pointer}
+.pz-chip[aria-pressed=true]{background:var(--mk-yellow)}
+@media(hover:hover)and (pointer:fine){.pz-chip:hover{background:#FFF4C9}.pz-chip[aria-pressed=true]:hover{background:var(--mk-yellow)}}
+.pz-ok{margin-top:12px}
+.pz-ok:disabled,.pz-send:disabled{opacity:.45;cursor:not-allowed}
+.pz-ta{width:100%;min-height:90px;padding:12px 14px;border-radius:16px;border:2px solid var(--mk-ink);font:inherit;resize:vertical}
+.pz-row{display:flex;gap:10px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}
+.pz-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:520px){.pz-form{grid-template-columns:minmax(0,1fr)}}
+.pz-f{display:grid;gap:4px;font-weight:700;font-size:.9rem;min-width:0}
+.pz-f input{min-height:48px;padding:0 14px;border-radius:14px;border:2px solid var(--mk-ink);font:inherit;font-weight:400;width:100%}
+.pz-note,.pz-state{grid-column:1/-1;margin:0;font-size:.88rem;color:#2B2B2B}
+.pz-state a{color:var(--mk-ink);font-weight:700}
+.pz-send{grid-column:1/-1;justify-content:center}
+.pz-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.pz-again{margin-top:4px}

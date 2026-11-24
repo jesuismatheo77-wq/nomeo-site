@@ -103,14 +103,11 @@
     <span class="modeswitch" role="group" aria-label="Vous êtes"><a href="#boutique" data-mode-go="part" aria-pressed="true">Particuliers</a><a href="#pro" data-mode-go="pro" aria-pressed="false">Professionnels</a></span>
     <a class="only-part" href="#boutique">Boutique</a>
     <a class="only-part" href="#sur-mesure">Sur mesure</a>
-    <a class="only-pro" href="#objets">Objets</a>
-    <a class="only-pro" href="#mode">Prêt-à-porter</a>
-    <a class="only-pro nav-x" href="#resto">Bars et hôtels</a>
-    <a class="only-pro" href="#packs">Packs</a>
-    <a class="only-pro nav-x" href="#tarifs">Tarifs</a>
+    <a class="only-pro" href="#metiers">Par métier</a>
+    <a class="only-pro" href="#catalogue">Catalogue</a>
     <a class="nav-x" href="#atelier">À propos</a>
     <a href="#questions">Questions</a>
-    <a class="btn btn-y top-devis only-pro" href="#devis" id="top-devis"><span id="top-lbl">Demander un devis</span><span class="badge" id="top-n" hidden>0</span></a>
+    <a class="btn btn-y top-devis only-pro" href="#parler" id="top-devis"><span id="top-lbl">Nous écrire</span><span class="badge" id="top-n" hidden>0</span></a>
     <button type="button" class="btn btn-y cart-btn only-part" id="cart-open" aria-haspopup="dialog" aria-controls="cart"><svg class="i" aria-hidden="true"><use href="#i-cart"/></svg><span>Panier</span><span class="badge" id="cart-n" hidden>0</span></button>
     <button type="button" class="menu-btn" id="menu-open" aria-haspopup="dialog" aria-controls="menu"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg><span class="sr">Ouvrir le menu</span></button>
   </nav>
@@ -154,8 +151,8 @@
         <h1 id="titre">Des objets à votre nom, imprimés en 3D.</h1>
         <p class="lead" hidden>Porte-clés, sous-verres, chevalets, plaques… <span class="lead-more">On les dessine et on les imprime nous-mêmes, en petites séries, </span>pour les restaurants, les bureaux, les clubs, les commerces et les événements.</p>
         <p class="lead" id="lead-part">Boules de Noël, cœurs, porte-clés, plaques&nbsp;: écrivez votre texte, il est imprimé en relief. Essayez juste en dessous, l’aperçu 3D vous montre l’objet avant l’impression.</p>
-        <p class="actions"><a class="btn btn-y only-part" href="#boutique">Voir la boutique <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-part" href="#pro" data-mode-go="pro">Je suis un professionnel</a><a class="btn btn-y only-pro" href="#devis">Demander un devis <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-pro" href="#objets">Voir les objets</a></p>
-        <img class="hero-trio" src="img/mascotte-trio.webp" alt="Flocon, Zeste et Dodo, les trois personnages de Noméo" width="1400" height="657" decoding="async">
+        <p class="actions"><a class="btn btn-y only-part" href="#boutique">Voir la boutique <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-part" href="#metiers" data-mode-go="pro">Je suis un professionnel</a><a class="btn btn-y only-pro" href="#parler">Nous écrire <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a><a class="btn btn-glass only-pro" href="#metiers">Voir les idées par métier</a></p>
+        <img class="hero-trio only-part" src="img/mascotte-trio.webp" alt="Flocon, Zeste et Dodo, les trois personnages de Noméo" width="1400" height="657" decoding="async"><img class="hero-trio hero-zeste only-pro" src="img/scene-zeste-atelier.webp" alt="Zeste, le chef d’atelier de Noméo" width="585" height="655" decoding="async">
       </div>
     </div>
 
@@ -250,6 +247,49 @@
     </div>
   </section>
 
+  <section class="sec only-pro" id="metiers" aria-labelledby="t-metiers">
+    <div class="wrap">
+      <h2 id="t-metiers">Votre métier, vos objets</h2>
+      <p class="mt-intro">Choisissez votre métier pour voir ce qu’on peut faire à votre logo. Tout est fait sur mesure, en petites séries, et toujours validé avec vous avant l’impression.</p>
+      <ul class="mt-grid">
+        <li class="mt-card" data-metier="resto">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-resto"><span class="mt-thumbs"><span class="mt-th" data-still="chevalet" aria-hidden="true"></span><span class="mt-th" data-still="qr" aria-hidden="true"></span><span class="mt-th" data-still="sous-verre" aria-hidden="true"></span></span><span class="mt-t">Restaurant et café</span><span class="mt-d">Sur les tables, au comptoir, sur la porte.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-resto" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="chevalet"></span><span>Chevalet de table</span></li><li><span class="mt-g" data-still="qr"></span><span>Présentoir QR code</span></li><li><span class="mt-g" data-still="sous-verre"></span><span>Sous-verres</span></li><li><span class="mt-g" data-still="porte-menu"></span><span>Porte-menu de table</span></li><li><span class="mt-g" data-still="reserve"></span><span>Panneau Réservé</span></li><li><span class="mt-g" data-still="wifi"></span><span>Présentoir Wi-Fi</span></li><li><span class="mt-g" data-still="ouvert-ferme"></span><span>Panneau Ouvert / Fermé</span></li><li><span class="mt-g" data-still="badge-nom"></span><span>Badge prénom</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="resto">Je veux ça pour mon restaurant</button></div>
+        </li><li class="mt-card" data-metier="hotel">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-hotel"><span class="mt-thumbs"><span class="mt-th" data-still="sous-verre" aria-hidden="true"></span><span class="mt-th" data-still="reserve" aria-hidden="true"></span><span class="mt-th" data-still="wifi" aria-hidden="true"></span></span><span class="mt-t">Bar et hôtel</span><span class="mt-d">Du comptoir aux couloirs.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-hotel" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="sous-verre"></span><span>Sous-verres</span></li><li><span class="mt-g" data-still="reserve"></span><span>Panneau Réservé</span></li><li><span class="mt-g" data-still="wifi"></span><span>Présentoir Wi-Fi</span></li><li><span class="mt-g" data-still="hotel-chambre"></span><span>Numéros de chambre</span></li><li><span class="mt-g" data-still="hotel-dnd"></span><span>Ne pas déranger</span></li><li><span class="mt-g" data-still="hotel-signal"></span><span>Signalétique</span></li><li><span class="mt-g" data-still="porte-cles"></span><span>Porte-clés au logo</span></li><li><span class="mt-g" data-still="badge-nom"></span><span>Badge prénom</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="hotel">Je veux ça pour mon établissement</button></div>
+        </li><li class="mt-card" data-metier="club">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-club"><span class="mt-thumbs"><span class="mt-th" data-still="porte-cles" aria-hidden="true"></span><span class="mt-th" data-still="badge" aria-hidden="true"></span><span class="mt-th" data-still="sous-verre" aria-hidden="true"></span></span><span class="mt-t">Club et association</span><span class="mt-d">Pour les joueurs, les bénévoles, la buvette.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-club" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="porte-cles"></span><span>Porte-clés au logo</span></li><li><span class="mt-g" data-still="badge"></span><span>Porte-badge</span></li><li><span class="mt-g" data-still="sous-verre"></span><span>Sous-verres</span></li><li><span class="mt-g" data-still="plaque"></span><span>Plaque de porte</span></li><li><span class="mt-g" data-still="logo-relief"></span><span>Logo en relief</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="club">Je veux ça pour mon club</button></div>
+        </li><li class="mt-card" data-metier="boutique">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-boutique"><span class="mt-thumbs"><span class="mt-th" data-still="sep-taille" aria-hidden="true"></span><span class="mt-th" data-still="clip-cintre" aria-hidden="true"></span><span class="mt-th" data-still="porte-prix" aria-hidden="true"></span></span><span class="mt-t">Boutique et mode</span><span class="mt-d">Rayons, vitrine et caisse à vos couleurs.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-boutique" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="sep-taille"></span><span>Séparateurs de taille</span></li><li><span class="mt-g" data-still="clip-cintre"></span><span>Clips de cintre</span></li><li><span class="mt-g" data-still="porte-prix"></span><span>Porte-étiquettes de prix</span></li><li><span class="mt-g" data-still="enseigne-cabine"></span><span>Enseigne de cabine</span></li><li><span class="mt-g" data-still="logo-relief"></span><span>Logo en relief</span></li><li><span class="mt-g" data-still="qr"></span><span>Présentoir QR code</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="boutique">Je veux ça pour ma boutique</button></div>
+        </li><li class="mt-card" data-metier="bureau">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-bureau"><span class="mt-thumbs"><span class="mt-th" data-still="plaque" aria-hidden="true"></span><span class="mt-th" data-still="badge" aria-hidden="true"></span><span class="mt-th" data-still="pot" aria-hidden="true"></span></span><span class="mt-t">Bureau et entreprise</span><span class="mt-d">Accueil, portes, cadeaux clients.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-bureau" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="plaque"></span><span>Plaque de porte</span></li><li><span class="mt-g" data-still="badge"></span><span>Porte-badge</span></li><li><span class="mt-g" data-still="pot"></span><span>Pot à stylos</span></li><li><span class="mt-g" data-still="porte-cles"></span><span>Porte-clés au logo</span></li><li><span class="mt-g" data-still="logo-relief"></span><span>Logo en relief</span></li><li><span class="mt-g" data-still="chevalet"></span><span>Chevalet de table</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="bureau">Je veux ça pour mon entreprise</button></div>
+        </li><li class="mt-card" data-metier="event">
+          <button type="button" class="mt-open" aria-expanded="false" aria-controls="mt-event"><span class="mt-thumbs"><span class="mt-th" data-still="badge" aria-hidden="true"></span><span class="mt-th" data-still="chevalet" aria-hidden="true"></span><span class="mt-th" data-still="qr" aria-hidden="true"></span></span><span class="mt-t">Événement et salon</span><span class="mt-d">Badges, tables, souvenirs à offrir.</span><span class="mt-more">Voir les idées</span></button>
+          <div class="mt-panel" id="mt-event" hidden><ul class="mt-gal"><li><span class="mt-g" data-still="badge"></span><span>Porte-badge</span></li><li><span class="mt-g" data-still="chevalet"></span><span>Chevalet de table</span></li><li><span class="mt-g" data-still="qr"></span><span>Présentoir QR code</span></li><li><span class="mt-g" data-still="porte-cles"></span><span>Porte-clés au logo</span></li><li><span class="mt-g" data-still="sous-verre"></span><span>Sous-verres</span></li></ul><button type="button" class="btn btn-y mt-go" data-metier="event">Je veux ça pour mon événement</button></div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="sec only-pro" id="parler" aria-labelledby="t-parler">
+    <div class="wrap pz">
+      <div class="pz-side">
+        <h2 id="t-parler">Discutez avec Zeste</h2>
+        <p>Quelques questions, deux minutes. On vous répond avec une maquette 3D, le prix et le délai. Gratuit et sans engagement.</p>
+        <img class="pz-zeste" src="img/scene-zeste-atelier.webp" alt="Zeste, le chef d’atelier, inspecte un sous-verre" width="585" height="655" loading="lazy" decoding="async">
+      </div>
+      <div class="pz-chat" id="pz" data-metiers='{"resto": {"t": "Restaurant et café", "objs": ["Chevalet de table", "Présentoir QR code", "Sous-verres", "Porte-menu de table", "Panneau Réservé", "Présentoir Wi-Fi", "Panneau Ouvert / Fermé", "Badge prénom"]}, "hotel": {"t": "Bar et hôtel", "objs": ["Sous-verres", "Panneau Réservé", "Présentoir Wi-Fi", "Numéros de chambre", "Ne pas déranger", "Signalétique", "Porte-clés au logo", "Badge prénom"]}, "club": {"t": "Club et association", "objs": ["Porte-clés au logo", "Porte-badge", "Sous-verres", "Plaque de porte", "Logo en relief"]}, "boutique": {"t": "Boutique et mode", "objs": ["Séparateurs de taille", "Clips de cintre", "Porte-étiquettes de prix", "Enseigne de cabine", "Logo en relief", "Présentoir QR code"]}, "bureau": {"t": "Bureau et entreprise", "objs": ["Plaque de porte", "Porte-badge", "Pot à stylos", "Porte-clés au logo", "Logo en relief", "Chevalet de table"]}, "event": {"t": "Événement et salon", "objs": ["Porte-badge", "Chevalet de table", "Présentoir QR code", "Porte-clés au logo", "Sous-verres"]}}'>
+        <ol class="pz-log" id="pz-log" aria-live="polite"></ol>
+        <div class="pz-input" id="pz-input"></div>
+        <noscript><p>Écrivez-nous à nomeo.atelier@gmail.com.</p></noscript>
+      </div>
+    </div>
+  </section>
+
 
   <section class="sec sec-shop dark-band only-part" id="boutique" aria-labelledby="t-shop">
     <div class="wrap">
@@ -313,9 +353,9 @@
 
   <section class="steps only-pro dark-band" id="pro" aria-labelledby="t-pro">
     <div class="wrap">
-      <h2 class="steps-h" id="t-pro">Votre devis en trois étapes</h2>
+      <h2 class="steps-h" id="t-pro">Comment ça se passe</h2>
       <ol class="steps-list">
-        <li><b>1</b><div><h3>Choisissez vos objets</h3><p>Ajoutez-les à votre demande de devis, avec une photo de votre logo.</p></div></li>
+        <li><b>1</b><div><h3>Écrivez-nous</h3><p>Deux minutes avec Zeste&nbsp;: votre métier, vos idées, votre logo si vous l’avez.</p></div></li>
         <li><b>2</b><div><h3>Recevez la maquette</h3><p>On vous envoie une maquette 3D, le prix et le délai. Gratuit et sans engagement.</p></div></li>
         <li><b>3</b><div><h3>Validez, on fabrique</h3><p>On imprime la série à vos couleurs et on vous la livre en main propre ou par colis.</p></div></li>
       </ol>
@@ -323,7 +363,7 @@
     </div>
   </section>
 
-  <section class="sec sec-aud only-pro" id="pour-qui" aria-labelledby="t-aud">
+  <section class="pro-old sec sec-aud only-pro" id="pour-qui" aria-labelledby="t-aud">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-aud">Vous êtes…</h2>
@@ -406,7 +446,7 @@
     </div>
   </section>
 
-  <section class="sec sec-mode only-pro" id="mode" aria-labelledby="t-mode">
+  <section class="pro-old sec sec-mode only-pro" id="mode" aria-labelledby="t-mode">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-mode">Boutiques et prêt-à-porter</h2>
@@ -496,7 +536,7 @@
     </div>
   </section>
 
-  <section class="sec sec-mode only-pro" id="resto" aria-labelledby="t-resto">
+  <section class="pro-old sec sec-mode only-pro" id="resto" aria-labelledby="t-resto">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-resto">Restaurants, bars et hôtels</h2>
@@ -626,7 +666,7 @@
     </div>
   </section>
 
-  <section class="sec only-pro" id="objets" aria-labelledby="t-objets">
+  <section class="pro-old sec only-pro" id="objets" aria-labelledby="t-objets">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-objets">Les objets</h2>
@@ -757,7 +797,7 @@
     </div>
   </section>
 
-  <section class="sec only-pro" id="packs" aria-labelledby="t-packs">
+  <section class="pro-old sec only-pro" id="packs" aria-labelledby="t-packs">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-packs">Les packs</h2>
@@ -916,7 +956,7 @@
     </div>
   </section>
 
-  <section class="sec sec-devis only-pro" id="devis" aria-labelledby="t-devis">
+  <section class="pro-old sec sec-devis only-pro" id="devis" aria-labelledby="t-devis">
     <div class="wrap">
       <div class="sec-top">
         <h2 id="t-devis">Demander un devis</h2>
@@ -1035,11 +1075,10 @@
       <ul>
         <li class="only-part"><a href="#boutique">La boutique</a></li>
         <li class="only-part"><a href="#creer">Créer votre modèle</a></li>
-        <li class="only-part"><a href="#pro" data-mode-go="pro">Espace professionnels</a></li>
-        <li class="only-pro"><a href="#objets">Les objets</a></li>
-        <li class="only-pro"><a href="#packs">Les packs</a></li>
-        <li class="only-pro"><a href="https://claude.ai/artifact/DFxDtpbdeUhMqeNexRD1c9" target="_blank" rel="noopener noreferrer">Le catalogue</a></li>
-        <li class="only-pro"><a href="#devis">Demander un devis</a></li>
+        <li class="only-part"><a href="#metiers" data-mode-go="pro">Espace professionnels</a></li>
+        <li class="only-pro"><a href="#metiers">Idées par métier</a></li>
+                <li class="only-pro"><a href="https://claude.ai/artifact/DFxDtpbdeUhMqeNexRD1c9" target="_blank" rel="noopener noreferrer">Le catalogue</a></li>
+        <li class="only-pro"><a href="#parler">Nous écrire</a></li>
         <li class="only-pro"><a href="#boutique" data-mode-go="part">Boutique particuliers</a></li>
         <li><a href="#atelier">À propos</a></li>
         <li><a href="#questions">Questions</a></li>
@@ -1062,20 +1101,16 @@
     </div>
     <nav class="menu-links" aria-label="Menu">
       <a href="#boutique" data-mode-go="part">Particuliers : boutique de Noël<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a href="#pro" data-mode-go="pro">Professionnels : devis<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a href="#metiers" data-mode-go="pro">Professionnels : votre projet<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a href="#creer">Créer votre modèle<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="only-pro" href="#mode">Prêt-à-porter<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="only-pro" href="#resto">Restaurants, bars et hôtels<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="only-pro" href="#objets">Les objets<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="only-pro" href="#tarifs">Les tarifs<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="only-pro" href="#packs">Les packs<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="only-pro" href="#metiers">Idées par métier<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a class="only-pro" href="#catalogue">Le catalogue<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a href="#atelier">À propos<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
       <a href="#questions">Questions<svg class="i" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </nav>
     <div class="menu-foot">
       <dl class="contacts" data-contacts></dl>
-      <a class="btn btn-y" href="#devis" id="menu-devis">Demander un devis <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+      <a class="btn btn-y" href="#parler" id="menu-devis">Nous écrire <svg class="go" aria-hidden="true"><use href="#i-arrow"/></svg></a>
     </div>
   </div>
 </dialog>
@@ -1182,8 +1217,9 @@
 </div>
 
 <div class="cr-app" id="cr" role="dialog" aria-modal="true" aria-label="Outil de création sur mesure" hidden><p class="cr-fail">Chargement…</p></div>
-<script type="text/late" data-src="js/ui.js?v=4ee6f91f"></script>
+<script type="text/late" data-src="js/ui.js?v=pro1"></script>
 <script type="text/late" data-src="js/pay.js?v=1"></script>
+<script type="text/late" data-src="js/pro.js?v=1"></script>
 <script type="text/late" data-src="js/vendor/three.min.js?v=r128"></script>
 <script type="text/late" data-src="js/vendor/clipper.min.js?v=642"></script>
 <script type="text/late" data-src="js/fonts.js?v=c8eb5816"></script>
