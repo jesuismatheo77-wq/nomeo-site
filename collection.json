@@ -3,12 +3,72 @@
   "seuilMini": 25,
   "tranche": 50,
   "minisParTranche": 2,
-  "chances": { "l": 0.005, "sr": 0.05, "r": 0.2 },
+  "chances": {
+    "l": 0.005,
+    "sr": 0.05,
+    "r": 0.2
+  },
   "figurines": {
-    "c": [["001", "Flocon"], ["002", "Zeste"], ["003", "Dodo"]],
-    "r": [["004", "Flocon de Noël"], ["005", "Zeste pizzaïolo"]],
-    "sr": [["006", "Dodo fantôme"]],
-    "l": [["007", "Zeste doré"]]
+    "c": [
+      [
+        "001",
+        "Flocon"
+      ],
+      [
+        "002",
+        "Zeste"
+      ],
+      [
+        "003",
+        "Dodo"
+      ],
+      [
+        "008",
+        "Flocon bonhomme de neige"
+      ],
+      [
+        "010",
+        "Dodo bonnet de nuit"
+      ]
+    ],
+    "r": [
+      [
+        "004",
+        "Flocon de Noël"
+      ],
+      [
+        "005",
+        "Zeste pizzaïolo"
+      ],
+      [
+        "009",
+        "Zeste renne"
+      ],
+      [
+        "011",
+        "Zeste skieur"
+      ]
+    ],
+    "sr": [
+      [
+        "006",
+        "Dodo fantôme"
+      ],
+      [
+        "012",
+        "Flocon ange"
+      ],
+      [
+        "013",
+        "Le trio en luge"
+      ]
+    ],
+    "l": [
+      [
+        "007",
+        "Zeste doré"
+      ]
+    ]
   },
   "legendaireUnique": true
 }

@@ -452,3 +452,6 @@ svg.mark rect{height:14px!important}
 .wh-end{margin:0;font-size:.88rem}
 .promo-note{display:block;margin-top:4px;font-size:.8rem;color:#2B2B2B}
 .cl .cl-r b{font-variant-numeric:normal;letter-spacing:-.01em}
+.cl-soon-h{margin:28px 0 10px;font-size:1.15rem;font-weight:800}
+.cl-grid.cl-soon{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cl-soon .cl-card{opacity:.92}
