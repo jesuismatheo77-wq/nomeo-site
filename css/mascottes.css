@@ -313,3 +313,16 @@ svg.mark rect{height:14px!important}
 .fx-send{justify-content:center}
 .fx-send:disabled{opacity:.5;cursor:wait}
 .fx-done-h{font-size:1.5rem;font-weight:850;margin:0}
+/* Visuels de Zeste variés (24/11) */
+.st-img.st-photo{object-fit:cover!important;border-radius:18px!important;filter:none!important;border:2px solid var(--mk-ink)!important}
+#pro .steps-list li .st-img.st-scene{width:110px!important;height:110px!important;margin-bottom:6px}
+@media(min-width:761px){#pro .steps-list li .st-img.st-scene{width:100%!important;height:170px!important}}
+.mt-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
+.mt-head h2{min-width:0}
+.mt-zeste{flex:none;width:clamp(100px,15vw,170px);height:auto;filter:drop-shadow(0 10px 8px rgba(20,20,20,.16))}
+.side-zeste{float:right;width:clamp(96px,14vw,160px);height:auto;margin:0 0 8px 12px;filter:drop-shadow(0 10px 8px rgba(20,20,20,.16))}
+@media(min-width:861px){.side-zeste{float:none;display:block;margin:0 0 14px}}
+@media(max-width:760px){
+  #pro .steps-list li{position:relative;padding-right:112px!important;min-height:120px}
+  #pro .steps-list li .st-img.st-scene{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:92px!important;height:92px!important;margin:0}
+}
