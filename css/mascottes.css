@@ -97,3 +97,4 @@ article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;bo
 .cart-done .cart-scene{width:130px}
 @media(min-width:761px){.steps-list li .st-img.st-scene{width:100%!important;height:200px!important;margin-bottom:6px}}
 @media(max-width:760px){.steps-list li h3{padding-right:30px}}
+.cart-done .cart-scene-wide{width:100%;max-width:340px}
