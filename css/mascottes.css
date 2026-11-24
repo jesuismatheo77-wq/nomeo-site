@@ -118,3 +118,38 @@ article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;bo
 .qa-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
 .qa-head h2{min-width:0}
 .qa-flocon{flex:none;width:clamp(96px,16vw,170px);height:auto;border-radius:24px;border:var(--mk-line) solid var(--mk-ink);box-shadow:var(--mk-pop)}
+
+
+/* ===== Fond unique (24/11) : tout le site sur le même jaune à pastilles, plus de bandes de couleurs ===== */
+html,body{background-color:var(--mk-yellow)!important}
+body{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='68'%3E%3Crect x='0' y='0' width='44' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='60' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3Crect x='86' y='34' width='22' height='14' rx='7' fill='%23FFD95E'/%3E%3C/svg%3E")!important;background-size:120px 68px!important;background-attachment:scroll}
+.hero,.hero:before,.sec,.steps,.band,.band-cat,.fam,.sec-devis,.sec-shop,.sec-creer,.sec-aud,.sec-mode,#questions,#atelier,#pro,#comment,#catalogue,#packs,#objets{background:transparent!important}
+.hero:after{display:none!important}
+/* Les sections qui étaient en noir repassent en clair (texte noir sur le jaune) */
+section.dark-band{--white:#FFFFFF;--soft:#FFF4C9;--soft-2:#FFE9A0;--ink:#141414;--ink-hi:#000;--ink-2:#2B2B2B;--grey:#4A4A4A;--rule:rgba(20,20,20,.9);--field:#FFFFFF;--field-line:#141414;color:var(--mk-ink)!important}
+.sec-shop.dark-band:before,#pro.dark-band:before,#atelier.dark-band:before,.foot.dark-band:before,.sec-shop.dark-band:after,#pro.dark-band:after,#atelier.dark-band:after{display:none!important}
+.steps-list li b{background:var(--mk-ink);color:var(--mk-yellow)}
+/* Bloc « Une question, une idée ? » dans À propos : carte blanche */
+#atelier .wrap>*:not(h2):not(p) .contacts, #atelier [class*=ask], #atelier [class*=help]{color:var(--mk-ink)}
+/* Scènes détourées : les personnages posés directement sur le jaune, sans cadre */
+.st-img.st-scene{object-fit:contain!important;border:0!important;border-radius:0!important;background:none!important;filter:drop-shadow(0 10px 8px rgba(20,20,20,.16))}
+.qa-flocon{border:0!important;box-shadow:none!important;border-radius:0!important;filter:drop-shadow(0 10px 8px rgba(20,20,20,.16))}
+.cart-scene{border-radius:0}
+.shop-sub .cat-ban.cat-ban-noel{aspect-ratio:1400/782!important;object-fit:contain!important;border-radius:0!important;box-shadow:none!important}
+/* Anciennes bandes noires : textes, liens et cartes en version claire */
+.sec-shop.dark-band{margin-left:0!important;margin-right:0!important;border-radius:0!important;box-shadow:none!important}
+.sec-shop.dark-band .shop-trust,.sec-shop.dark-band .shop-none{color:var(--mk-ink)!important}
+#atelier h2,#atelier .t-atelier{color:var(--mk-ink)!important}
+section.dark-band p a,section.dark-band small a,section.dark-band dd a,section.dark-band li a:not(.btn){color:var(--mk-ink)!important;text-decoration-color:var(--mk-ink)!important}
+section.dark-band .how li,#atelier .about-contact{background:#fff!important;border:var(--mk-line) solid var(--mk-ink);box-shadow:var(--mk-pop)}
+section.dark-band .copy-mini{background:var(--mk-yellow)!important;color:var(--mk-ink)!important}
+/* Cartes de la famille : toutes blanches, comme le reste du site */
+.fam-nuage,.fam-citron,.fam-oeuf{background:#fff!important;color:var(--mk-ink)!important}
+.fam-oeuf h3,.fam-oeuf p{color:var(--mk-ink)!important}
+/* Bannières de la boutique détourées */
+.shop-sub .cat-ban{object-fit:contain!important;border-radius:0!important;box-shadow:none!important;background:none!important;filter:drop-shadow(0 12px 10px rgba(20,20,20,.16))}
+.shop-sub .cat-ban,.shop-sub .cat-ban.cat-ban-noel{aspect-ratio:auto!important;width:auto!important;max-width:100%;height:auto;max-height:440px;margin-inline:auto}
+.pro-box,.mode-note{background:#fff!important;border:var(--mk-line) solid var(--mk-ink)!important;box-shadow:var(--mk-pop)!important}
+#pro .steps-list,#pro .wrap>ol{background:transparent!important;box-shadow:none!important;padding:0!important}
+.shop-jump a,.shop-filters button{color:var(--mk-ink)!important;background:#fff!important;box-shadow:inset 0 0 0 2px var(--mk-ink)!important}
+.shop-filters button[aria-pressed=true]{background:var(--mk-ink)!important;color:#fff!important}
