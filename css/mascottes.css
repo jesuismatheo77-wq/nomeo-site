@@ -286,3 +286,6 @@ body[data-mode=pro] .hero{min-height:0!important}
 .pz-head span{font-size:.85rem;color:#2B2B2B}
 .pz-head span:before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#1D9A50;margin-right:6px;vertical-align:1px}
 .mt-go{white-space:normal;text-align:center;height:auto;min-height:52px;padding-block:10px;line-height:1.2}
+/* Logo : les pastilles du haut portaient la classe « top », comme la barre de navigation,
+   et héritaient de sa hauteur (62 px) : elles devenaient de grandes barres jaunes */
+svg.mark rect{height:14px!important}
