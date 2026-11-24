@@ -13,9 +13,9 @@
     var msg, pct, got = ["1 carte de collection"];
     if (t < 25) { msg = "Plus que <b>" + eur(25 - t) + "</b> pour une mini-figurine offerte"; pct = t / 25; }
     else {
-      got.push("1 mini-figurine surprise");
-      var n = Math.floor(t / 50); if (n) got.push(n + " booster" + (n > 1 ? "s" : ""));
-      var next = (n + 1) * 50; msg = "Plus que <b>" + eur(next - t) + "</b> pour " + (n ? "un booster de plus" : "un booster (2 minis + 1 carte)"); pct = (t - n * 50) / 50;
+      got = ["1 mini-figurine surprise et sa carte"];
+      var n = Math.floor(t / 50); if (n) got.push(n + " booster" + (n > 1 ? "s" : "") + " (" + 2 * n + " minis et leurs cartes)");
+      var next = (n + 1) * 50; msg = "Plus que <b>" + eur(next - t) + "</b> pour " + (n ? "un booster de plus" : "un booster (2 minis et leurs cartes)"); pct = (t - n * 50) / 50;
     }
     box.innerHTML = '<p class="gift-h">🎁 ' + msg + '</p><div class="gift-bar"><i style="width:' + Math.round(Math.min(1, pct) * 100) + '%"></i></div><p class="gift-got">Offert avec cette commande&nbsp;: ' + got.join(" + ") + '</p>';
   }
