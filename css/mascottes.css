@@ -345,3 +345,31 @@ svg.mark rect{height:14px!important}
 .mt-row .mt-n{font-size:.84rem}
 @media(min-width:861px){.mt-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.mt-row .mt-gal li{width:150px}}
 @media(prefers-reduced-motion:reduce){.mt-chev{transition:none}}
+
+/* ===== Compactage (24/11) : bannières plus petites, panneau de personnalisation plus court ===== */
+.shop-sub .cat-ban,.shop-sub .cat-ban.cat-ban-noel{max-height:200px!important}
+@media(min-width:761px){.shop-sub .cat-ban,.shop-sub .cat-ban.cat-ban-noel{max-height:260px!important}}
+@media(max-width:760px){
+  .hero-panel .panel{padding:12px!important;gap:10px!important}
+  .hero-panel .p-row{gap:8px!important;margin:0!important}
+  .hero-panel .seg{min-height:0!important;padding:3px!important}
+  .hero-panel .seg label{min-height:38px!important;padding:0 12px!important;font-size:.9rem!important}
+  .hero-panel .seg label{padding:0 6px!important;font-size:.86rem!important}
+  .hero-panel .field input,.hero-panel .text-in{min-height:46px!important;font-size:1.05rem!important}
+  .hero-panel .icon-btn{width:46px!important;height:46px!important;min-height:46px!important}
+  .hero-panel .fonts{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:4px!important;scrollbar-width:none;grid-template-columns:none!important}
+  .hero-panel .fonts::-webkit-scrollbar{display:none}
+  .hero-panel .fonts>*{flex:none!important;min-height:38px!important;padding:0 12px!important;font-size:.92rem!important}
+  .hero-panel .seg-sz label{min-height:44px!important;line-height:1.1}
+  .hero-panel .chips{display:flex!important;flex-wrap:nowrap!important;overflow-x:auto;gap:8px!important;padding:4px 2px!important;scrollbar-width:none;grid-template-columns:none!important}
+  .hero-panel .chips::-webkit-scrollbar{display:none}
+  .hero-panel .chips .sw{flex:none}
+  .hero-panel .chips .sw label{width:38px!important;height:38px!important}
+  .hero-panel .chips>button,.hero-panel .chips>.more{flex:none;min-height:38px!important;padding:0 12px!important;font-size:.85rem!important;white-space:nowrap}
+  .hero-panel .spec{font-size:.85rem!important;margin:0!important}
+  .hero-panel #want{min-height:52px!important}
+}
+@media(max-width:760px){
+  .hero-panel form,.hero-panel .panel,.hero-panel .p-row,.hero-panel .p-row>*,.hero-panel .p-end,.hero-panel .field{min-width:0!important;max-width:100%!important}
+  .hero-panel #want{width:100%!important}
+}
