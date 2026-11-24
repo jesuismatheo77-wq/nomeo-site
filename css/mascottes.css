@@ -114,3 +114,7 @@ article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;bo
 @media(min-width:861px){.foot-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr)}}
 .foot ul{grid-template-columns:repeat(2,minmax(0,max-content))}
 #pro .steps-list{gap:12px!important}
+.shop-sub .cat-ban.cat-ban-noel{object-position:50% 60%}
+.qa-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.qa-head h2{min-width:0}
+.qa-flocon{flex:none;width:clamp(96px,16vw,170px);height:auto;border-radius:24px;border:var(--mk-line) solid var(--mk-ink);box-shadow:var(--mk-pop)}
