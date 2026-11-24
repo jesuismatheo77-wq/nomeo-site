@@ -389,3 +389,30 @@ svg.mark rect{height:14px!important}
 .mg-want{justify-content:center;min-height:44px;font-size:.92rem}
 .mg-form{margin-top:16px;max-width:640px;background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:24px;box-shadow:6px 6px 0 var(--mk-ink);padding:18px;display:grid;gap:14px}
 .mg-form-h{margin:0;font-size:1.05rem}
+
+/* ===== Collection à la Pokémon ===== */
+.cl-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin:8px 0 12px}
+.cl-head h3,.cl-sub{margin:0;font-size:1.3rem;letter-spacing:-.02em}
+.cl-sub{margin:26px 0 12px}
+.cl-legend{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px}
+.cl-legend li{font-size:.78rem;font-weight:750;padding:4px 10px;border-radius:99px;border:2px solid var(--mk-ink);background:var(--cl,#fff)}
+.cl-c{--cl:#fff}.cl-r{--cl:#7DB7FF}.cl-sr{--cl:#C79BFF}.cl-l{--cl:#FFD24A}.cl-s{--cl:#16181B}
+.cl-legend .cl-s{color:#fff}
+.cl-grid{list-style:none;margin:0;padding:4px 2px 12px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media(max-width:860px){.cl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.cl-card{position:relative;display:grid;gap:4px;padding:10px 10px 12px;background:#fff;border:3px solid var(--mk-ink);border-radius:18px;box-shadow:4px 4px 0 var(--mk-ink);min-width:0}
+.cl-card:before{content:"";position:absolute;inset:5px;border-radius:13px;border:3px solid var(--cl);pointer-events:none}
+.k-l:before{border-image:linear-gradient(135deg,#FFE58A,#E0A800,#FFF3B0,#C98F00) 1;border-radius:0}
+.cl-img{position:relative;aspect-ratio:1;border-radius:12px;background:radial-gradient(70% 60% at 50% 45%,#FFF8DC,#FFEFB0);display:grid;place-items:center;overflow:hidden}
+.k-s .cl-img{background:radial-gradient(70% 60% at 50% 45%,#3a3d44,#16181B)}
+.cl-img img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 6px 5px rgba(20,20,20,.18))}
+.cl-hid img{filter:brightness(0) opacity(.85)}
+.k-s .cl-hid img{filter:brightness(0) invert(1) opacity(.25)}
+.cl-q{position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;font-weight:900;color:#fff;text-shadow:0 2px 0 var(--mk-ink)}
+.cl-no{font-size:.75rem;font-weight:800;color:#5A5A5A;margin-top:4px}
+.cl-card h3{margin:0;font-size:.98rem;line-height:1.15}
+.cl-card .cl-badge{justify-self:start;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--mk-ink);background:var(--cl)}
+.k-c{--cl:#fff}.k-r{--cl:#7DB7FF}.k-sr{--cl:#C79BFF}.k-l{--cl:#FFD24A}.k-s{--cl:#16181B}.k-s .cl-badge{color:#fff}
+.mg-packs{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.mg-packs .mg-card{grid-template-rows:auto 1fr auto}
+.cl-next{margin-top:14px;font-weight:700}
