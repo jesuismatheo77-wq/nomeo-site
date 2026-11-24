@@ -90,3 +90,10 @@ article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;bo
 .foot-logo video{display:none}
 .foot-logo img{display:block;width:min(70vw,380px);height:auto}
 .steps-list li:before,.steps-list li:after{display:none!important}
+
+/* Scènes illustrées (Flocon, Zeste, Dodo) */
+.st-img.st-scene{object-fit:cover!important;object-position:center!important;width:120px!important;height:120px!important;border-radius:20px;border:var(--mk-line) solid var(--mk-ink);flex:none}
+.cart-scene{display:block;width:150px;height:auto;margin:0 auto 12px;border-radius:22px}
+.cart-done .cart-scene{width:130px}
+@media(min-width:761px){.steps-list li .st-img.st-scene{width:100%!important;height:200px!important;margin-bottom:6px}}
+@media(max-width:760px){.steps-list li h3{padding-right:30px}}
