@@ -408,7 +408,7 @@ svg.mark rect{height:14px!important}
 .cl-img img{width:78%;height:78%;object-fit:contain;filter:drop-shadow(0 6px 5px rgba(20,20,20,.18))}
 .cl-hid img{filter:brightness(0) opacity(.85)}
 .k-s .cl-hid img{filter:brightness(0) invert(1) opacity(.25)}
-.cl-q{position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;font-weight:900;color:#fff;text-shadow:0 2px 0 var(--mk-ink)}
+.cl-mq{position:absolute;inset:0;display:grid;place-items:center;font-size:3rem;font-weight:900;color:#fff;text-shadow:0 2px 0 var(--mk-ink)}
 .cl-no{font-size:.75rem;font-weight:800;color:#5A5A5A;margin-top:4px}
 .cl-card h3{margin:0;font-size:.98rem;line-height:1.15}
 .cl-card .cl-badge{justify-self:start;font-size:.72rem;font-weight:800;padding:2px 8px;border-radius:99px;border:2px solid var(--mk-ink);background:var(--cl)}
@@ -451,3 +451,4 @@ svg.mark rect{height:14px!important}
 .wh-gold{margin:0;padding:10px 12px;border-radius:14px;border:3px solid #C98F00;background:linear-gradient(135deg,#FFF3B0,#FFD24A);font-weight:750}
 .wh-end{margin:0;font-size:.88rem}
 .promo-note{display:block;margin-top:4px;font-size:.8rem;color:#2B2B2B}
+.cl .cl-r b{font-variant-numeric:normal;letter-spacing:-.01em}
