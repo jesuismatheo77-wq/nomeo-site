@@ -373,3 +373,19 @@ svg.mark rect{height:14px!important}
   .hero-panel form,.hero-panel .panel,.hero-panel .p-row,.hero-panel .p-row>*,.hero-panel .p-end,.hero-panel .field{min-width:0!important;max-width:100%!important}
   .hero-panel #want{width:100%!important}
 }
+
+/* ===== Boutique des mascottes ===== */
+#mascottes h2{font-size:clamp(2rem,1.3rem + 3vw,3.4rem)}
+.mg-intro{max-width:58ch;margin:12px 0 22px;font-size:1.05rem}
+.mg-grid{list-style:none;margin:0;padding:4px 2px 12px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+@media(max-width:960px){.mg-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}.mg-grid::-webkit-scrollbar{display:none}.mg-card{flex:none;width:200px;scroll-snap-align:start}}
+.mg-card{display:grid;grid-template-rows:auto auto 1fr auto;gap:6px;padding:12px;background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:22px;box-shadow:var(--mk-pop);min-width:0}
+.mg-img{aspect-ratio:1;border-radius:16px;background:radial-gradient(70% 60% at 50% 45%,#FFF8DC,#FFEFB0);display:grid;place-items:center;overflow:hidden;position:relative}
+.mg-img img{width:86%;height:86%;object-fit:contain;filter:drop-shadow(0 8px 6px rgba(20,20,20,.18))}
+.mg-pc img{width:62%;transform:rotate(-8deg) translateY(8%)}
+.mg-pc:before{content:"";position:absolute;top:10%;left:50%;width:22%;aspect-ratio:1;border:5px solid #9AA0A8;border-radius:50%;transform:translateX(-50%)}
+.mg-card h3{margin:4px 0 0;font-size:1.05rem}
+.mg-card p{margin:0;font-size:.86rem;color:#2B2B2B}
+.mg-want{justify-content:center;min-height:44px;font-size:.92rem}
+.mg-form{margin-top:16px;max-width:640px;background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:24px;box-shadow:6px 6px 0 var(--mk-ink);padding:18px;display:grid;gap:14px}
+.mg-form-h{margin:0;font-size:1.05rem}
