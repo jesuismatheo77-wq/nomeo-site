@@ -157,6 +157,31 @@ async function status(env, sid) {
     delivery: m.delivery || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
 }
 
+// ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
+const FILE_MAX = 25 * 1024 * 1024, FILE_TTL = 90 * 86400;
+const FILE_EXT = ['stl', '3mf', 'obj', 'step', 'stp', 'ply', 'amf', 'zip'];
+async function upload(env, req, base) {
+  if (!env.FILES) throw new Err('Le dépôt de fichiers n’est pas encore activé.', 503);
+  if (+(req.headers.get('content-length') || 0) > FILE_MAX + 200000) throw new Err('Fichier trop lourd (25 Mo maximum).', 413);
+  const fd = await req.formData();
+  const f = fd.get('file');
+  if (!f || typeof f === 'string') throw new Err('Aucun fichier reçu.');
+  const name = cleanText(f.name, 120) || 'fichier';
+  const ext = (name.split('.').pop() || '').toLowerCase();
+  if (!FILE_EXT.includes(ext)) throw new Err('Format non accepté : envoyez un fichier STL, 3MF, OBJ, STEP ou ZIP.');
+  if (!f.size || f.size > FILE_MAX) throw new Err('Fichier vide ou trop lourd (25 Mo maximum).', 413);
+  const id = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '').slice(0, 8);
+  await env.FILES.put(id, await f.arrayBuffer(), { expirationTtl: FILE_TTL, metadata: { name, size: f.size } });
+  return { url: base + '/f/' + id, name, size: f.size };
+}
+async function download(env, id) {
+  if (!env.FILES || !/^[0-9a-f]{40}$/.test(id)) return new Response('Fichier introuvable.', { status: 404 });
+  const r = await env.FILES.getWithMetadata(id, 'arrayBuffer');
+  if (!r || !r.value) return new Response('Fichier introuvable ou expiré.', { status: 404 });
+  const name = (r.metadata && r.metadata.name || 'fichier').replace(/["\\]/g, '');
+  return new Response(r.value, { headers: { 'Content-Type': 'application/octet-stream', 'Content-Disposition': 'attachment; filename="' + name + '"; filename*=UTF-8\'\'' + encodeURIComponent(name), 'Cache-Control': 'private, no-store', 'X-Content-Type-Options': 'nosniff' } });
+}
+
 // ---------- HTTP ----------
 export default {
   async fetch(req, env) {
@@ -168,6 +193,11 @@ export default {
     const send = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } });
     if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors });
     try {
+      if (url.pathname.startsWith('/f/') && req.method === 'GET') return await download(env, url.pathname.slice(3));
+      if (url.pathname === '/upload' && req.method === 'POST') {
+        if (!okOrigin) throw new Err('Origine non autorisée.', 403);
+        return send(await upload(env, req, url.origin));
+      }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
       if (url.pathname === '/config' && req.method === 'GET') return send({ pk: env.STRIPE_PUBLISHABLE_KEY, shipColisCents: parseInt(env.SHIP_COLIS_CENTS || '490', 10) });

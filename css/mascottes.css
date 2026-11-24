@@ -289,3 +289,27 @@ body[data-mode=pro] .hero{min-height:0!important}
 /* Logo : les pastilles du haut portaient la classe « top », comme la barre de navigation,
    et héritaient de sa hauteur (62 px) : elles devenaient de grandes barres jaunes */
 svg.mark rect{height:14px!important}
+
+/* ===== Dépôt de fichier 3D ===== */
+#fichier h2{font-size:clamp(2rem,1.3rem + 3vw,3.4rem)}
+.fx{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px 48px;align-items:start}
+@media(max-width:860px){.fx{grid-template-columns:minmax(0,1fr)}}
+.fx-side p{margin-top:12px;font-size:1.05rem;max-width:42ch}
+.fx-card{background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:28px;box-shadow:6px 6px 0 var(--mk-ink);padding:20px;display:grid;gap:16px;min-width:0}
+.fx-drop{position:relative;display:grid;justify-items:center;gap:6px;padding:28px 16px;border:2.5px dashed var(--mk-ink);border-radius:20px;background:#FFF4C9;text-align:center;cursor:pointer;min-width:0}
+.fx-drop input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.fx-drop:focus-within{outline:3px solid var(--mk-ink);outline-offset:3px}
+.fx-drop.is-over{background:var(--mk-yellow)}
+.fx-drop.has-file{border-style:solid;background:#fff}
+.fx-ico{display:grid;place-items:center;width:52px;height:52px;border-radius:50%;background:var(--mk-ink);color:var(--mk-yellow);font-size:1.4rem;font-weight:900}
+.fx-drop.has-file .fx-ico{background:#1D9A50;color:#fff}
+.fx-drop.has-file .fx-ico:before{content:"✓"}.fx-drop.has-file .fx-ico{font-size:0}.fx-drop.has-file .fx-ico:before{font-size:1.4rem}
+.fx-t{font-size:1.05rem;word-break:break-word}
+.fx-s{font-size:.86rem;color:#2B2B2B}
+.fx-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media(max-width:520px){.fx-grid{grid-template-columns:minmax(0,1fr)}}
+.fx-wide{grid-column:1/-1}
+.fx-grid select,.fx-grid textarea{width:100%;min-height:48px;padding:10px 14px;border-radius:14px;border:2px solid var(--mk-ink);font:inherit;font-weight:400;background:#fff}
+.fx-send{justify-content:center}
+.fx-send:disabled{opacity:.5;cursor:wait}
+.fx-done-h{font-size:1.5rem;font-weight:850;margin:0}
