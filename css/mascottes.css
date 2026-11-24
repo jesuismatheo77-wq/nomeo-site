@@ -98,3 +98,19 @@ article.sp,.sp,.pkc,.pack{border:var(--mk-line) solid var(--mk-ink)!important;bo
 @media(min-width:761px){.steps-list li .st-img.st-scene{width:100%!important;height:200px!important;margin-bottom:6px}}
 @media(max-width:760px){.steps-list li h3{padding-right:30px}}
 .cart-done .cart-scene-wide{width:100%;max-width:340px}
+
+/* Corrections relecture 24/11 */
+/* Devis pro en 3 étapes : cartes blanches lisibles dans la bande noire */
+#pro .steps-list li{--ink:#16181B;--ink-2:#474B52;--grey:#5C616B;color:#16181B;padding:20px 20px 22px!important;align-items:start}
+#pro .steps-list li h3{color:#16181B}
+#pro .steps-list li p{color:#474B52}
+#pro .steps-list li b{background:var(--mk-yellow);color:#16181B}
+#pro .steps-list li:before{display:none}
+@media(max-width:760px){#pro .steps-list{display:grid;gap:14px}#pro .steps-list li+li{padding-left:20px!important}}
+/* Menu : pas de retour à la ligne */
+.nav a:not(.btn){white-space:nowrap}
+@media(max-width:1439px){.nav a.nav-x:not(.btn){display:none}}
+/* Pied de page : la colonne « Le site » ne déborde plus */
+@media(min-width:861px){.foot-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr)}}
+.foot ul{grid-template-columns:repeat(2,minmax(0,max-content))}
+#pro .steps-list{gap:12px!important}
