@@ -486,3 +486,8 @@ svg.mark rect{height:14px!important}
 .deadline[hidden]{display:none}.deadline span span{opacity:.75}.deadline.late{background:#FFE3DD}
 @media(max-width:860px){body:not([data-mode=pro]) .hero-trio{width:min(64vw,280px);margin:10px auto 0}}
 .hero-price{margin:12px 0 0;font-weight:750;font-size:.95rem;color:var(--mk-ink)}
+
+/* Accueil : l'aperçu 3D du haut de page est retiré (le panneau de réglages reste) */
+.hero .scene{display:none!important}
+.hero .co-nozzle,.hero .co-bed{display:none!important}
+@media(min-width:861px){body:not([data-mode=pro]) .hero-trio{right:7vw;top:130px;width:min(36vw,500px)}.deadline{max-width:min(520px,45vw)}}
