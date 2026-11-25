@@ -43,44 +43,16 @@
   // ---------- interface dans le panier ----------
   var act = form.querySelector('.cart-act'), send = $('c-send');
   var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Livraison' })]);
-  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'postal-code', placeholder: 'Code postal et ville', 'aria-label': 'Code postal et ville de livraison' });
-  var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Calculer' });
-  var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status', text: 'Indiquez où livrer pour voir le prix de la livraison.' });
+  var shipLine = el('p', { class: 'pay-note', id: 'pay-ship', role: 'status', text: '' });
   var freeMsg = el('p', { class: 'pay-free', id: 'pay-free', hidden: '' });
-  var choice = el('div', { class: 'pay-sub pay-choice', hidden: '' });
-  var adrBox = el('div', { class: 'pay-sub pay-first' }, [freeMsg, el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg, choice]);
+  var adrBox = el('div', { class: 'pay-sub pay-first' }, [freeMsg, shipLine]);
   var cgvA = el('button', { type: 'button', class: 'text-btn', 'data-legal': 'cgv', text: 'conditions de vente' });
   var lCgv = el('label', {}, [el('input', { type: 'checkbox', id: 'pay-cgv' }), el('span', {}, [document.createTextNode('J’ai lu et j’accepte les '), cgvA])]);
   var go = el('button', { type: 'button', class: 'btn btn-y', id: 'pay-go', text: 'Payer en ligne' });
   var msg = el('p', { class: 'pay-msg', id: 'pay-msg', role: 'status' });
   [adrBox, lCgv, go, msg].forEach(function (n) { box.appendChild(n); });
   function pieces() { return readCart().reduce(function (a, it) { return a + (parseInt(it.qty, 10) || 1); }, 0); }
-  var quote = null, quoteFor = '';
-  function opt(value, text, checked, cents) {
-    var i = el('input', { type: 'radio', name: 'pay-deliv', value: value, 'data-c': String(cents || 0) }); if (checked) i.checked = true;
-    return el('label', {}, [i, el('span', { text: text })]);
-  }
-  function mode() { var c = form.querySelector('input[name="pay-deliv"]:checked'); return c ? c.value : ''; }
-  function showQuote(r) {
-    choice.textContent = ''; choice.hidden = true;
-    if (!r || !r.ok) { adrMsg.textContent = r ? r.error : 'Impossible de calculer la livraison pour le moment.'; return; }
-    adrMsg.textContent = r.label;
-    var price = r.cents ? eur(r.cents) : 'offerte';
-    choice.appendChild(opt(r.near ? 'main' : 'colis', (r.near ? 'Livraison à votre adresse : ' : 'Livraison en point relais près de chez vous : ') + price, true, r.cents));
-    if (!r.near) choice.appendChild(el('p', { class: 'pay-note', text: 'On choisit le point relais Mondial Relay le plus proche de votre adresse et on vous envoie le suivi.' }));
-    choice.hidden = false; refreshBtn();
-  }
-  function checkAdr() {
-    var q = (adr.value || '').trim(), key = q + '|' + pieces() + '|' + goodsCents();
-    if (q.length < 3) { quote = null; adrMsg.textContent = 'Écrivez votre code postal et votre ville.'; choice.hidden = true; return Promise.resolve(null); }
-    if (quote && quoteFor === key) return Promise.resolve(quote);
-    adrMsg.textContent = 'Calcul de la livraison…';
-    return api('/livraison?adresse=' + encodeURIComponent(q) + '&pieces=' + pieces() + '&montant=' + goodsCents()).then(function (r) { quote = r; quoteFor = key; showQuote(r); return r; })
-      .catch(function () { quote = null; showQuote(null); return null; });
-  }
-  adrBtn.addEventListener('click', checkAdr);
-  adr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); checkAdr(); } });
-  adr.addEventListener('input', function () { quote = null; choice.hidden = true; refreshBtn(); });
+  function shipCents() { var g = cfg && cfg.gratuitDes, c = goodsCents(); return g && c >= g ? 0 : (cfg && cfg.shipCents) || 0; }
   act.parentNode.insertBefore(box, act);
   var fine = [].slice.call(form.querySelectorAll('.cart-fine')).filter(function (p) { return /paiement en ligne arrive/i.test(p.textContent); })[0];
   if (fine) fine.textContent = 'Paiement sécurisé par Stripe : carte, Apple Pay ou Google Pay. Avant l’impression, on vous envoie l’aperçu 3D de votre pièce, et vous pouvez modifier ou annuler sur simple message. Pour une création sur mesure ou un devis, utilisez « Envoyer ma commande ».';
@@ -96,18 +68,15 @@
   function refreshBtn() {
     freeNote();
     var s = totalText(), c = Math.round(parseFloat((s || '0').replace(/[^0-9,]/g, '').replace(',', '.')) * 100) || 0;
-    var sel = form.querySelector('input[name="pay-deliv"]:checked'), sh = sel && !choice.hidden ? parseInt(sel.getAttribute('data-c'), 10) || 0 : 0;
+    var sh = c ? shipCents() : 0;
+    if (cfg) shipLine.textContent = 'Livraison : ' + (c && !sh ? 'offerte' : eur((cfg && cfg.shipCents) || 0)) + '. Adresse demandée à l’étape de paiement.';
     go.textContent = 'Payer en ligne' + (c ? ' · ' + eur(c + sh) : '');
   }
-  box.addEventListener('change', function () { refreshBtn(); });
   var tot = $('cart-total'); if (tot && window.MutationObserver) new MutationObserver(refreshBtn).observe(tot, { childList: true, characterData: true, subtree: true });
   refreshBtn();
-  if (tot && window.MutationObserver) new MutationObserver(function () { if (quote && cfg && cfg.livraison) { quote = null; checkAdr(); } }).observe(tot, { childList: true, characterData: true, subtree: true });
   api('/config').then(function (c) {
+    if (!c.livraison) c.shipCents = c.shipColisCents || 490; // ancien serveur : tarif colis
     cfg = c; refreshBtn();
-    if (!c.livraison) { // ancien serveur : livraison en colis uniquement
-      adrBox.hidden = true; box.insertBefore(opt('colis', 'Livraison en colis : ' + eur(c.shipColisCents || 490), true), lCgv);
-    }
   }).catch(function () { box.hidden = true; document.documentElement.classList.remove('pay-on'); });
 
   // ---------- fenêtre de paiement ----------
@@ -131,7 +100,7 @@
   function sendMail(info, sid) {
     var mk = 'nomeo-mailed-' + sid; try { if (localStorage.getItem(mk)) return Promise.resolve(true); } catch (e) {}
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
-      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ relais: 'point relais Mondial Relay', main: 'à livrer toi-même (moins de 15 km)', 'main-propre': 'à livrer toi-même', colis: 'à expédier en Mondial Relay (point relais le plus proche de l’adresse)' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
+      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + 'à livrer ou à expédier en Mondial Relay selon l’adresse' + (info.where ? ' (' + info.where + ')' : ''),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
       info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };
@@ -205,11 +174,10 @@
     if (!email && !tel) { msg.textContent = 'Ajoutez un e-mail ou un téléphone.'; $('c-email').focus(); return; }
     if (!$('pay-cgv').checked) { msg.textContent = 'Cochez la case des conditions de vente pour payer.'; return; }
     var cart = readCart(); if (!cart.length) { msg.textContent = 'Votre panier est vide.'; return; }
-    if (cfg && cfg.livraison && (!quote || !quote.ok || !mode())) { checkAdr().then(function (r) { msg.textContent = r && r.ok ? 'Vérifiez la livraison puis appuyez de nouveau sur « Payer ».' : 'Indiquez votre code postal et votre ville pour calculer la livraison.'; }); adr.focus(); return; }
-    var delivery = mode();
+    var delivery = 'livraison';
     go.disabled = true; var old = go.textContent; go.textContent = 'Préparation du paiement…';
     api('/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery, adresse: (adr.value || '').trim() }) })
+      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery }) })
       .then(function (s) {
         inner.textContent = '';
         var x = el('button', { type: 'button', class: 'icon-btn pay-x', 'aria-label': 'Fermer', text: '×' });

@@ -1,27 +1,5 @@
 {
-  "_note": "Frais de livraison lus par le serveur de paiement. mainPropre : livraison par l'atelier jusqu'à km (distance estimée depuis l'atelier, réglée dans le serveur). domicile : envoi Mondial Relay en point relais selon le nombre d'objets. Prix en centimes. gratuitDes : montant des articles (en centimes) à partir duquel la livraison est offerte.",
-  "mainPropre": [
-    {
-      "km": 15,
-      "cents": 200
-    }
-  ],
-  "domicile": {
-    "nom": "Livraison en point relais",
-    "paliers": [
-      {
-        "pieces": 6,
-        "cents": 490
-      },
-      {
-        "pieces": 15,
-        "cents": 690
-      },
-      {
-        "pieces": 100000,
-        "cents": 890
-      }
-    ]
-  },
+  "_note": "Frais de livraison lus par le serveur de paiement. cents : prix de la livraison en centimes, pour tout le monde. gratuitDes : montant des articles (en centimes) à partir duquel la livraison est offerte.",
+  "cents": 399,
   "gratuitDes": 5000
 }
