@@ -1,8 +1,7 @@
 {
   "serie": "Série 1 · Hiver 2026",
-  "seuilMini": 25,
-  "tranche": 50,
-  "minisParTranche": 2,
+  "tranche": 25,
+  "minisParTranche": 1,
   "chances": {
     "l": 0.005,
     "sr": 0.05,

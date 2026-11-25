@@ -174,12 +174,12 @@ async function loadCfg(env) {
     const c = await r.json();
     if (c && c.figurines && c.chances && c.figurines.c && c.figurines.c.length) return c;
   } catch (e) {}
-  return { seuilMini: 25, tranche: 50, minisParTranche: 2, chances: { l: 0.005, sr: 0.05, r: 0.2 }, figurines: SERIE, legendaireUnique: true };
+  return { tranche: 25, minisParTranche: 1, chances: { l: 0.005, sr: 0.05, r: 0.2 }, figurines: SERIE, legendaireUnique: true };
 }
 async function gifts(env, sid, goodsCents) {
   const C = await loadCfg(env), F = C.figurines, P = C.chances;
   const eur = goodsCents / 100;
-  const nMini = eur >= (C.seuilMini || 25) ? 1 + (C.minisParTranche || 2) * Math.floor(eur / (C.tranche || 50)) : 0;
+  const nMini = Math.min(20, (C.minisParTranche || 1) * Math.floor(eur / (C.tranche || 25))); // 1 mini offerte par tranche de 25 €
   if (!nMini) return { card: true, minis: [] };
   const u = await rolls(sid, nMini), minis = [];
   for (let i = 0; i < nMini; i++) {

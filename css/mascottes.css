@@ -426,7 +426,7 @@ svg.mark rect{height:14px!important}
 .gift-got{margin:8px 0 0;font-size:.8rem;color:#2B2B2B}
 .gift-note{margin:0 0 14px;padding:12px 16px;background:#fff;border:2px solid var(--mk-ink);border-radius:16px;font-size:.95rem}
 .gift-note a{color:var(--mk-ink);font-weight:750}
-.cl-how{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;counter-reset:h}
+.cl-how{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:10px;counter-reset:h}
 @media(max-width:700px){.cl-how{grid-template-columns:minmax(0,1fr)}}
 .cl-how li{display:grid;gap:2px;padding:14px 16px 14px 52px;position:relative;background:#fff;border:var(--mk-line) solid var(--mk-ink);border-radius:18px;box-shadow:4px 4px 0 var(--mk-ink);counter-increment:h}
 .cl-how li:before{content:counter(h);position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--mk-yellow);border:2px solid var(--mk-ink);display:grid;place-items:center;font-weight:850;font-size:.85rem}
