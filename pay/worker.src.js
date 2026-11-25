@@ -4,6 +4,7 @@
 //   STRIPE_SECRET_KEY  (secret)   sk_test_... puis sk_live_...
 //   STRIPE_PUBLISHABLE_KEY        pk_test_... puis pk_live_...
 //   (les frais de livraison se règlent dans livraison.json sur le site)
+//   DEPART_LAT, DEPART_LON  point de départ de la remise en main propre (reste privé)
 //   ALLOWED_ORIGINS    (optionnel) origines autorisées, séparées par des virgules
 const CATALOG = /*CATALOG*/{};
 const { B, Y, H, PACKS, TIERS, ZO, COLORS, IDS } = CATALOG;
@@ -122,7 +123,7 @@ async function createSession(env, req, origin) {
   if (mode === 'main') {
     const q = await quoteMain(L, b.adresse);
     if (!q.ok) throw new Err(q.error);
-    ship = q.cents; shipName = 'Remise en main propre (' + q.km + ' km)'; where = q.label + ' · environ ' + q.km + ' km';
+    ship = q.cents; shipName = 'Remise en main propre'; where = q.label;
   } else {
     const t = mode === 'relais' ? L.relais : L.domicile;
     ship = tierCents(t.paliers, pieces); shipName = t.nom;
@@ -221,7 +222,7 @@ async function status(env, sid) {
 }
 
 // ---------- livraison : main propre selon la distance, point relais ou Colissimo (réglages dans livraison.json) ----------
-const SHIP_DEFAULT = { depart: { commune: 'Vulaines-sur-Seine', lat: 48.4316, lon: 2.7707 }, facteurRoute: 1.3,
+const SHIP_DEFAULT = { depart: null, facteurRoute: 1.3, // point de départ : variables DEPART_LAT et DEPART_LON dans Cloudflare, jamais envoyé aux clients
   mainPropre: [{ km: 15, cents: 200 }],
   relais: { nom: 'Point relais Mondial Relay', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] },
   domicile: { nom: 'Colissimo à domicile', paliers: [{ pieces: 6, cents: 790 }, { pieces: 15, cents: 990 }, { pieces: 100000, cents: 1190 }] } };
@@ -229,10 +230,11 @@ async function loadShip(env) {
   try {
     const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
     const c = await r.json();
-    if (c && c.depart && c.mainPropre && c.relais && c.domicile) return c;
+    if (c && c.mainPropre && c.relais && c.domicile) return { ...c, depart: departOf(env), facteurRoute: SHIP_DEFAULT.facteurRoute };
   } catch (e) {}
-  return SHIP_DEFAULT;
+  return { ...SHIP_DEFAULT, depart: departOf(env) };
 }
+function departOf(env) { const lat = parseFloat(env.DEPART_LAT), lon = parseFloat(env.DEPART_LON); return isFinite(lat) && isFinite(lon) ? { lat, lon } : null; }
 const tierCents = (paliers, n) => { const p = paliers.find(x => n <= x.pieces) || paliers[paliers.length - 1]; return p.cents; };
 function kmBetween(a, b) {
   const R = 6371, t = x => x * Math.PI / 180, dLa = t(b.lat - a.lat), dLo = t(b.lon - a.lon);
@@ -240,6 +242,7 @@ function kmBetween(a, b) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 async function quoteMain(L, adresse) {
+  if (!L.depart) return { ok: false, error: 'La remise en main propre n’est pas disponible pour le moment. Choisissez le point relais ou Colissimo.' };
   const q = cleanText(adresse, 160);
   if (q.length < 3) return { ok: false, error: 'Indiquez votre adresse ou votre commune pour la remise en main propre.' };
   let f;
@@ -249,11 +252,11 @@ async function quoteMain(L, adresse) {
   } catch (e) { return { ok: false, error: 'Adresse impossible à vérifier pour le moment. Réessayez dans un instant.' }; }
   if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez la commune ou le code postal.' };
   const [lon, lat] = f.geometry.coordinates;
-  const km = Math.round(kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3) * 10) / 10;
-  const t = L.mainPropre.find(x => km <= x.km), max = L.mainPropre[L.mainPropre.length - 1].km;
+  const km = Math.round(kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3) * 10) / 10; // reste sur le serveur
+  const t = L.mainPropre.find(x => km <= x.km);
   const label = cleanText(f.properties.label, 140);
-  if (!t) return { ok: false, km, label, error: label + ' est à environ ' + String(km).replace('.', ',') + ' km : trop loin pour la remise en main propre (' + max + ' km maximum). Choisissez le point relais ou Colissimo.' };
-  return { ok: true, km, label, cents: t.cents };
+  if (!t) return { ok: false, label, error: label + ' : trop loin pour la remise en main propre. Choisissez le point relais ou Colissimo.' };
+  return { ok: true, label, cents: t.cents, km };
 }
 
 // ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
@@ -299,8 +302,8 @@ export default {
       }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
-      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: { commune: L.depart.commune, mainPropre: L.mainPropre, relais: L.relais, domicile: L.domicile } }); }
-      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteMain(await loadShip(env), url.searchParams.get('adresse')));
+      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: { mainPropre: L.mainPropre, relais: L.relais, domicile: L.domicile } }); }
+      if (url.pathname === '/livraison' && req.method === 'GET') { const q = await quoteMain(await loadShip(env), url.searchParams.get('adresse')); delete q.km; return send(q); }
       if (url.pathname === '/session' && req.method === 'POST') {
         if (+(req.headers.get('content-length') || 0) > 30000) throw new Err('Requête trop grande.', 413);
         return send(await createSession(env, req, origin));

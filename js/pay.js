@@ -45,6 +45,7 @@
   var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Réception de la commande' })]);
   var lMain = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'main', checked: '' }), el('span', { id: 'pay-main-t', text: 'Remise en main propre' })]);
   var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'street-address', placeholder: 'Adresse ou commune', 'aria-label': 'Adresse pour la remise en main propre' });
+  // la zone de remise en main propre n'est jamais affichée : seul le serveur connaît le point de départ
   var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Vérifier' });
   var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status' });
   var mainBox = el('div', { class: 'pay-sub' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg]);
@@ -64,7 +65,7 @@
   function shipLabels() {
     var L = cfg && cfg.livraison; if (!L) return;
     var mp = L.mainPropre, n = pieces();
-    $('pay-main-t').textContent = 'Remise en main propre autour de ' + L.commune + ' : ' + mp.map(function (t) { return priceTxt(t.cents) + ' jusqu’à ' + t.km + ' km'; }).join(', ');
+    $('pay-main-t').textContent = 'Remise en main propre : ' + mp.map(function (t) { return priceTxt(t.cents); }).join(' ou ');
     $('pay-rel-t').textContent = L.relais.nom + ' : ' + eur(tier(L.relais.paliers, n));
     $('pay-colis-t').textContent = L.domicile.nom + ' : ' + eur(tier(L.domicile.paliers, n));
   }
@@ -77,7 +78,7 @@
     adrMsg.textContent = 'Vérification de la distance…';
     return api('/livraison?adresse=' + encodeURIComponent(q)).then(function (r) {
       lastQuote = r;
-      adrMsg.textContent = r.ok ? r.label + ' : environ ' + String(r.km).replace('.', ',') + ' km, remise en main propre ' + priceTxt(r.cents) + '.' : r.error;
+      adrMsg.textContent = r.ok ? r.label + ' : remise en main propre possible, ' + priceTxt(r.cents) + '.' : r.error;
       return r;
     }).catch(function () { adrMsg.textContent = 'Impossible de vérifier pour le moment.'; return null; });
   }
