@@ -121,8 +121,10 @@ async function createSession(env, req, origin) {
   if (!q.ok) throw new Err(q.error);
   const mode = q.near ? 'main' : 'colis'; // le client ne choisit rien : livraison chez lui
   const colis = true; // adresse complète demandée dans tous les cas
-  const ship = q.cents;
-  const shipName = 'Livraison';
+  const goods = lines.reduce((a, l) => a + l.cents, 0);
+  const free = L.gratuitDes > 0 && goods >= L.gratuitDes;
+  const ship = free ? 0 : q.cents;
+  const shipName = free ? 'Livraison offerte' : 'Livraison';
   const where = q.label;
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
   const meta = { order_no: no, name, tel, delivery: mode, where, more };
@@ -225,7 +227,7 @@ async function loadShip(env) {
   try {
     const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
     const c = await r.json();
-    if (c && c.mainPropre && c.domicile) return { ...c, depart: departOf(env), facteurRoute: SHIP_DEFAULT.facteurRoute };
+    if (c && c.mainPropre && c.domicile) return { gratuitDes: 0, ...c, depart: departOf(env), facteurRoute: SHIP_DEFAULT.facteurRoute };
   } catch (e) {}
   return { ...SHIP_DEFAULT, depart: departOf(env) };
 }
@@ -236,7 +238,7 @@ function kmBetween(a, b) {
   const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
-async function quoteShip(L, adresse, pieces) {
+async function quoteShip(L, adresse, pieces, montant) {
   const q = cleanText(adresse, 160);
   if (q.length < 3) return { ok: false, error: 'Indiquez votre code postal et votre ville pour calculer la livraison.' };
   let f;
@@ -247,12 +249,13 @@ async function quoteShip(L, adresse, pieces) {
   if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez le code postal et la ville.' };
   const label = cleanText((f.properties.postcode ? f.properties.postcode + ' ' : '') + (f.properties.city || f.properties.label), 140);
   const n = Math.max(1, parseInt(pieces, 10) || 1);
-  const out = { ok: true, label, near: false, cents: tierCents(L.domicile.paliers, n) };
+  const free = L.gratuitDes > 0 && (parseInt(montant, 10) || 0) >= L.gratuitDes; // affichage seulement, recalculé au paiement
+  const out = { ok: true, label, near: false, cents: free ? 0 : tierCents(L.domicile.paliers, n) };
   if (L.depart) {
     const [lon, lat] = f.geometry.coordinates;
     const km = kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3); // reste sur le serveur
     const t = L.mainPropre.find(x => km <= x.km);
-    if (t) return { ok: true, label, near: true, cents: t.cents };
+    if (t) return { ok: true, label, near: true, cents: free ? 0 : t.cents };
   }
   return out;
 }
@@ -300,8 +303,8 @@ export default {
       }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
-      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: true }); }
-      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteShip(await loadShip(env), url.searchParams.get('adresse'), url.searchParams.get('pieces')));
+      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: true, gratuitDes: L.gratuitDes || 0 }); }
+      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteShip(await loadShip(env), url.searchParams.get('adresse'), url.searchParams.get('pieces'), url.searchParams.get('montant')));
       if (url.pathname === '/session' && req.method === 'POST') {
         if (+(req.headers.get('content-length') || 0) > 30000) throw new Err('Requête trop grande.', 413);
         return send(await createSession(env, req, origin));

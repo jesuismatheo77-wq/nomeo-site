@@ -33,7 +33,7 @@
     '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px;min-width:0}.pay-first{margin-left:0}.pay-choice{margin:4px 0 0}.pay-box>*{min-width:0}.pay-box label span{min-width:0;overflow-wrap:anywhere}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px;min-width:0}.pay-row input{flex:1;min-width:0;width:100%}.pay-sub input{width:100%;box-sizing:border-box}' +
     '.pay-sub input{padding:10px 12px;border-radius:12px;border:1.5px solid #dcdfe4;font:inherit;font-size:1rem;color:var(--ink);background:#fff}' +
     '.pay-sub .btn-s{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink,#16181b);background:#fff;font-weight:700;font:inherit;font-weight:700}' +
-    '.pay-note{font-size:.84rem;color:var(--ink-2,#474b52);margin:0}' +
+    '.pay-note{font-size:.84rem;color:var(--ink-2,#474b52);margin:0}.pay-free{margin:0;font-size:.9rem;font-weight:700}' +
     '#pay-dlg{border:0;border-radius:18px;padding:0;width:min(560px,calc(100vw - 20px));max-height:92vh;overflow:auto;background:var(--white,#fff);color:var(--ink,#16181b)}' +
     '#pay-dlg::backdrop{background:var(--scrim,rgba(20,20,20,.55))}' +
     '.pay-in{padding:16px 16px 20px;display:grid;gap:12px}.pay-in h3{margin:0;font-size:1.15rem}' +
@@ -46,8 +46,9 @@
   var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'postal-code', placeholder: 'Code postal et ville', 'aria-label': 'Code postal et ville de livraison' });
   var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Calculer' });
   var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status', text: 'Indiquez où livrer pour voir le prix de la livraison.' });
+  var freeMsg = el('p', { class: 'pay-free', id: 'pay-free', hidden: '' });
   var choice = el('div', { class: 'pay-sub pay-choice', hidden: '' });
-  var adrBox = el('div', { class: 'pay-sub pay-first' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg, choice]);
+  var adrBox = el('div', { class: 'pay-sub pay-first' }, [freeMsg, el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg, choice]);
   var cgvA = el('button', { type: 'button', class: 'text-btn', 'data-legal': 'cgv', text: 'conditions de vente' });
   var lCgv = el('label', {}, [el('input', { type: 'checkbox', id: 'pay-cgv' }), el('span', {}, [document.createTextNode('J’ai lu et j’accepte les '), cgvA])]);
   var go = el('button', { type: 'button', class: 'btn btn-y', id: 'pay-go', text: 'Payer en ligne' });
@@ -64,15 +65,15 @@
     choice.textContent = ''; choice.hidden = true;
     if (!r || !r.ok) { adrMsg.textContent = r ? r.error : 'Impossible de calculer la livraison pour le moment.'; return; }
     adrMsg.textContent = r.label;
-    choice.appendChild(opt(r.near ? 'main' : 'colis', 'Livraison à votre adresse : ' + eur(r.cents), true, r.cents));
+    choice.appendChild(opt(r.near ? 'main' : 'colis', 'Livraison à votre adresse : ' + (r.cents ? eur(r.cents) : 'offerte'), true, r.cents));
     choice.hidden = false; refreshBtn();
   }
   function checkAdr() {
-    var q = (adr.value || '').trim(), key = q + '|' + pieces();
+    var q = (adr.value || '').trim(), key = q + '|' + pieces() + '|' + goodsCents();
     if (q.length < 3) { quote = null; adrMsg.textContent = 'Écrivez votre code postal et votre ville.'; choice.hidden = true; return Promise.resolve(null); }
     if (quote && quoteFor === key) return Promise.resolve(quote);
     adrMsg.textContent = 'Calcul de la livraison…';
-    return api('/livraison?adresse=' + encodeURIComponent(q) + '&pieces=' + pieces()).then(function (r) { quote = r; quoteFor = key; showQuote(r); return r; })
+    return api('/livraison?adresse=' + encodeURIComponent(q) + '&pieces=' + pieces() + '&montant=' + goodsCents()).then(function (r) { quote = r; quoteFor = key; showQuote(r); return r; })
       .catch(function () { quote = null; showQuote(null); return null; });
   }
   adrBtn.addEventListener('click', checkAdr);
@@ -84,17 +85,24 @@
   document.documentElement.classList.add('pay-on');
 
   function totalText() { var t = $('cart-total'); return t ? t.textContent : ''; }
+  function goodsCents() { return Math.round(parseFloat((totalText() || '0').replace(/[^0-9,]/g, '').replace(',', '.')) * 100) || 0; }
+  function freeNote() {
+    var g = cfg && cfg.gratuitDes; if (!g) { freeMsg.hidden = true; return; }
+    var c = goodsCents(); freeMsg.hidden = false;
+    freeMsg.textContent = c >= g ? 'Livraison offerte pour cette commande.' : 'Livraison offerte dès ' + eur(g) + ' d’achat : plus que ' + eur(g - c) + '.';
+  }
   function refreshBtn() {
+    freeNote();
     var s = totalText(), c = Math.round(parseFloat((s || '0').replace(/[^0-9,]/g, '').replace(',', '.')) * 100) || 0;
     var sel = form.querySelector('input[name="pay-deliv"]:checked'), sh = sel && !choice.hidden ? parseInt(sel.getAttribute('data-c'), 10) || 0 : 0;
-    go.textContent = 'Payer en ligne' + (c ? ' · ' + eur(c + sh) + (sh ? ' livraison comprise' : '') : '');
+    go.textContent = 'Payer en ligne' + (c ? ' · ' + eur(c + sh) : '');
   }
   box.addEventListener('change', function () { refreshBtn(); });
   var tot = $('cart-total'); if (tot && window.MutationObserver) new MutationObserver(refreshBtn).observe(tot, { childList: true, characterData: true, subtree: true });
   refreshBtn();
   if (tot && window.MutationObserver) new MutationObserver(function () { if (quote && cfg && cfg.livraison) { quote = null; checkAdr(); } }).observe(tot, { childList: true, characterData: true, subtree: true });
   api('/config').then(function (c) {
-    cfg = c;
+    cfg = c; refreshBtn();
     if (!c.livraison) { // ancien serveur : livraison en colis uniquement
       adrBox.hidden = true; box.insertBefore(opt('colis', 'Livraison en colis : ' + eur(c.shipColisCents || 490), true), lCgv);
     }
