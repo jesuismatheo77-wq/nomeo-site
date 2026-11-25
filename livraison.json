@@ -1,30 +1,13 @@
 {
-  "_note": "Frais de livraison lus par le serveur de paiement. Distances en km (par la route, estimées depuis l'atelier, réglé dans le serveur), prix en centimes. pieces = nombre d'objets dans la commande.",
+  "_note": "Frais de livraison lus par le serveur de paiement. mainPropre : livraison par l'atelier jusqu'à km (distance estimée depuis l'atelier, réglée dans le serveur). domicile : expédition (Colissimo ou Lettre suivie) selon le nombre d'objets. Prix en centimes.",
   "mainPropre": [
     {
       "km": 15,
       "cents": 200
     }
   ],
-  "relais": {
-    "nom": "Point relais Mondial Relay",
-    "paliers": [
-      {
-        "pieces": 6,
-        "cents": 490
-      },
-      {
-        "pieces": 15,
-        "cents": 690
-      },
-      {
-        "pieces": 100000,
-        "cents": 890
-      }
-    ]
-  },
   "domicile": {
-    "nom": "Colissimo à domicile",
+    "nom": "Livraison",
     "paliers": [
       {
         "pieces": 6,

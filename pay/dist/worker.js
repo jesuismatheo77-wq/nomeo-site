@@ -119,10 +119,10 @@ async function createSession(env, req, origin) {
   const no = orderNo();
   const q = await quoteShip(L, b.adresse, pieces);
   if (!q.ok) throw new Err(q.error);
-  const mode = q.near ? 'main' : (b.delivery === 'colis' ? 'colis' : 'relais');
+  const mode = q.near ? 'main' : 'colis'; // le client ne choisit rien : livraison chez lui
   const colis = true; // adresse complète demandée dans tous les cas
-  const ship = q.near ? q.cents : mode === 'colis' ? q.domicile : q.relais;
-  const shipName = q.near ? 'Livraison' : mode === 'colis' ? 'Livraison à domicile (Colissimo)' : 'Livraison en point relais Mondial Relay';
+  const ship = q.cents;
+  const shipName = 'Livraison';
   const where = q.label;
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
   const meta = { order_no: no, name, tel, delivery: mode, where, more };
@@ -225,7 +225,7 @@ async function loadShip(env) {
   try {
     const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
     const c = await r.json();
-    if (c && c.mainPropre && c.relais && c.domicile) return { ...c, depart: departOf(env), facteurRoute: SHIP_DEFAULT.facteurRoute };
+    if (c && c.mainPropre && c.domicile) return { ...c, depart: departOf(env), facteurRoute: SHIP_DEFAULT.facteurRoute };
   } catch (e) {}
   return { ...SHIP_DEFAULT, depart: departOf(env) };
 }
@@ -247,7 +247,7 @@ async function quoteShip(L, adresse, pieces) {
   if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez le code postal et la ville.' };
   const label = cleanText((f.properties.postcode ? f.properties.postcode + ' ' : '') + (f.properties.city || f.properties.label), 140);
   const n = Math.max(1, parseInt(pieces, 10) || 1);
-  const out = { ok: true, label, near: false, relais: tierCents(L.relais.paliers, n), domicile: tierCents(L.domicile.paliers, n) };
+  const out = { ok: true, label, near: false, cents: tierCents(L.domicile.paliers, n) };
   if (L.depart) {
     const [lon, lat] = f.geometry.coordinates;
     const km = kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3); // reste sur le serveur

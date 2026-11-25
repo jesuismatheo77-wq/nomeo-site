@@ -64,8 +64,7 @@
     choice.textContent = ''; choice.hidden = true;
     if (!r || !r.ok) { adrMsg.textContent = r ? r.error : 'Impossible de calculer la livraison pour le moment.'; return; }
     adrMsg.textContent = r.label;
-    if (r.near) choice.appendChild(opt('main', 'Livraison : ' + eur(r.cents), true, r.cents));
-    else { choice.appendChild(opt('relais', 'Livraison en point relais Mondial Relay : ' + eur(r.relais), true, r.relais)); choice.appendChild(opt('colis', 'Livraison à domicile (Colissimo) : ' + eur(r.domicile), false, r.domicile)); }
+    choice.appendChild(opt(r.near ? 'main' : 'colis', 'Livraison à votre adresse : ' + eur(r.cents), true, r.cents));
     choice.hidden = false; refreshBtn();
   }
   function checkAdr() {
@@ -122,7 +121,7 @@
   function sendMail(info, sid) {
     var mk = 'nomeo-mailed-' + sid; try { if (localStorage.getItem(mk)) return Promise.resolve(true); } catch (e) {}
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
-      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ colis: 'Colissimo à domicile', relais: 'point relais Mondial Relay', main: 'à livrer par l’atelier', 'main-propre': 'à livrer par l’atelier' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
+      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ relais: 'point relais Mondial Relay', main: 'à livrer toi-même (moins de 15 km)', 'main-propre': 'à livrer toi-même', colis: 'à expédier (Colissimo ou Lettre suivie)' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
       info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };
