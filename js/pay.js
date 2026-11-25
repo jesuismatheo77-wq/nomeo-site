@@ -30,7 +30,7 @@
     '.pay-box label{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;line-height:1.35}' +
     '.pay-box input[type=radio],.pay-box input[type=checkbox]{margin-top:3px;flex:none;width:18px;height:18px}' +
     '.pay-msg{font-size:.88rem;color:var(--warn,#7a5200);margin:0;min-height:1.2em}' +
-    '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px;min-width:0}.pay-box>*{min-width:0}.pay-box label span{min-width:0;overflow-wrap:anywhere}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px;min-width:0}.pay-row input{flex:1;min-width:0;width:100%}.pay-sub input{width:100%;box-sizing:border-box}' +
+    '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px;min-width:0}.pay-first{margin-left:0}.pay-choice{margin:4px 0 0}.pay-box>*{min-width:0}.pay-box label span{min-width:0;overflow-wrap:anywhere}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px;min-width:0}.pay-row input{flex:1;min-width:0;width:100%}.pay-sub input{width:100%;box-sizing:border-box}' +
     '.pay-sub input{padding:10px 12px;border-radius:12px;border:1.5px solid #dcdfe4;font:inherit;font-size:1rem;color:var(--ink);background:#fff}' +
     '.pay-sub .btn-s{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink,#16181b);background:#fff;font-weight:700;font:inherit;font-weight:700}' +
     '.pay-note{font-size:.84rem;color:var(--ink-2,#474b52);margin:0}' +
@@ -42,66 +42,63 @@
 
   // ---------- interface dans le panier ----------
   var act = form.querySelector('.cart-act'), send = $('c-send');
-  var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Réception de la commande' })]);
-  var lMain = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'main', checked: '' }), el('span', { id: 'pay-main-t', text: 'Remise en main propre' })]);
-  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'street-address', placeholder: 'Adresse ou commune', 'aria-label': 'Adresse pour la remise en main propre' });
-  // la zone de remise en main propre n'est jamais affichée : seul le serveur connaît le point de départ
-  var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Vérifier' });
-  var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status' });
-  var mainBox = el('div', { class: 'pay-sub' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg]);
-  var lRel = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'relais' }), el('span', { id: 'pay-rel-t', text: 'Point relais Mondial Relay' })]);
-  var rel = el('input', { type: 'text', id: 'pay-rel', placeholder: 'Point relais ou code postal', 'aria-label': 'Point relais souhaité' });
-  var relBox = el('div', { class: 'pay-sub', hidden: '' }, [rel, el('p', { class: 'pay-note', text: 'On choisit le point relais Mondial Relay le plus proche et on vous envoie le suivi.' })]);
-  var lColis = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'colis' }), el('span', { id: 'pay-colis-t', text: 'Colissimo à domicile' })]);
+  var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Livraison' })]);
+  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'postal-code', placeholder: 'Code postal et ville', 'aria-label': 'Code postal et ville de livraison' });
+  var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Calculer' });
+  var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status', text: 'Indiquez où livrer pour voir le prix de la livraison.' });
+  var choice = el('div', { class: 'pay-sub pay-choice', hidden: '' });
+  var adrBox = el('div', { class: 'pay-sub pay-first' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg, choice]);
   var cgvA = el('button', { type: 'button', class: 'text-btn', 'data-legal': 'cgv', text: 'conditions de vente' });
   var lCgv = el('label', {}, [el('input', { type: 'checkbox', id: 'pay-cgv' }), el('span', {}, [document.createTextNode('J’ai lu et j’accepte les '), cgvA])]);
   var go = el('button', { type: 'button', class: 'btn btn-y', id: 'pay-go', text: 'Payer en ligne' });
   var msg = el('p', { class: 'pay-msg', id: 'pay-msg', role: 'status' });
-  [lMain, mainBox, lRel, relBox, lColis, lCgv, go, msg].forEach(function (n) { box.appendChild(n); });
-  function mode() { return (form.querySelector('input[name="pay-deliv"]:checked') || {}).value || 'main'; }
+  [adrBox, lCgv, go, msg].forEach(function (n) { box.appendChild(n); });
   function pieces() { return readCart().reduce(function (a, it) { return a + (parseInt(it.qty, 10) || 1); }, 0); }
-  function tier(p, n) { for (var i = 0; i < p.length; i++) if (n <= p[i].pieces) return p[i].cents; return p[p.length - 1].cents; }
-  function priceTxt(c) { return c ? eur(c) : 'gratuit'; }
-  function shipLabels() {
-    var L = cfg && cfg.livraison; if (!L) return;
-    var mp = L.mainPropre, n = pieces();
-    $('pay-main-t').textContent = 'Remise en main propre : ' + mp.map(function (t) { return priceTxt(t.cents); }).join(' ou ');
-    $('pay-rel-t').textContent = L.relais.nom + ' : ' + eur(tier(L.relais.paliers, n));
-    $('pay-colis-t').textContent = L.domicile.nom + ' : ' + eur(tier(L.domicile.paliers, n));
+  var quote = null, quoteFor = '';
+  function opt(value, text, checked, cents) {
+    var i = el('input', { type: 'radio', name: 'pay-deliv', value: value, 'data-c': String(cents || 0) }); if (checked) i.checked = true;
+    return el('label', {}, [i, el('span', { text: text })]);
   }
-  function syncMode() { if (cfg && !cfg.livraison) return; var m = mode(); mainBox.hidden = m !== 'main'; relBox.hidden = m !== 'relais'; }
-  box.addEventListener('change', function (e) { if (e.target.name === 'pay-deliv') syncMode(); });
-  var lastQuote = null;
+  function mode() { var c = form.querySelector('input[name="pay-deliv"]:checked'); return c ? c.value : ''; }
+  function showQuote(r) {
+    choice.textContent = ''; choice.hidden = true;
+    if (!r || !r.ok) { adrMsg.textContent = r ? r.error : 'Impossible de calculer la livraison pour le moment.'; return; }
+    adrMsg.textContent = r.label;
+    if (r.near) choice.appendChild(opt('main', 'Livraison : ' + eur(r.cents), true, r.cents));
+    else { choice.appendChild(opt('relais', 'Livraison en point relais Mondial Relay : ' + eur(r.relais), true, r.relais)); choice.appendChild(opt('colis', 'Livraison à domicile (Colissimo) : ' + eur(r.domicile), false, r.domicile)); }
+    choice.hidden = false; refreshBtn();
+  }
   function checkAdr() {
-    var q = (adr.value || '').trim(); lastQuote = null;
-    if (q.length < 3) { adrMsg.textContent = 'Écrivez votre adresse ou votre commune.'; return Promise.resolve(null); }
-    adrMsg.textContent = 'Vérification de la distance…';
-    return api('/livraison?adresse=' + encodeURIComponent(q)).then(function (r) {
-      lastQuote = r;
-      adrMsg.textContent = r.ok ? r.label + ' : remise en main propre possible, ' + priceTxt(r.cents) + '.' : r.error;
-      return r;
-    }).catch(function () { adrMsg.textContent = 'Impossible de vérifier pour le moment.'; return null; });
+    var q = (adr.value || '').trim(), key = q + '|' + pieces();
+    if (q.length < 3) { quote = null; adrMsg.textContent = 'Écrivez votre code postal et votre ville.'; choice.hidden = true; return Promise.resolve(null); }
+    if (quote && quoteFor === key) return Promise.resolve(quote);
+    adrMsg.textContent = 'Calcul de la livraison…';
+    return api('/livraison?adresse=' + encodeURIComponent(q) + '&pieces=' + pieces()).then(function (r) { quote = r; quoteFor = key; showQuote(r); return r; })
+      .catch(function () { quote = null; showQuote(null); return null; });
   }
   adrBtn.addEventListener('click', checkAdr);
   adr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); checkAdr(); } });
+  adr.addEventListener('input', function () { quote = null; choice.hidden = true; refreshBtn(); });
   act.parentNode.insertBefore(box, act);
   var fine = [].slice.call(form.querySelectorAll('.cart-fine')).filter(function (p) { return /paiement en ligne arrive/i.test(p.textContent); })[0];
   if (fine) fine.textContent = 'Paiement sécurisé par Stripe : carte, Apple Pay ou Google Pay. Avant l’impression, on vous envoie l’aperçu 3D de votre pièce, et vous pouvez modifier ou annuler sur simple message. Pour une création sur mesure ou un devis, utilisez « Envoyer ma commande ».';
   document.documentElement.classList.add('pay-on');
 
   function totalText() { var t = $('cart-total'); return t ? t.textContent : ''; }
-  function refreshBtn() { var s = totalText(); go.textContent = 'Payer en ligne' + (s && s !== '0,00 €' && s !== '0,00 €' ? ' · ' + s : ''); }
+  function refreshBtn() {
+    var s = totalText(), c = Math.round(parseFloat((s || '0').replace(/[^0-9,]/g, '').replace(',', '.')) * 100) || 0;
+    var sel = form.querySelector('input[name="pay-deliv"]:checked'), sh = sel && !choice.hidden ? parseInt(sel.getAttribute('data-c'), 10) || 0 : 0;
+    go.textContent = 'Payer en ligne' + (c ? ' · ' + eur(c + sh) + (sh ? ' livraison comprise' : '') : '');
+  }
+  box.addEventListener('change', function () { refreshBtn(); });
   var tot = $('cart-total'); if (tot && window.MutationObserver) new MutationObserver(refreshBtn).observe(tot, { childList: true, characterData: true, subtree: true });
   refreshBtn();
-  if (tot && window.MutationObserver) new MutationObserver(shipLabels).observe(tot, { childList: true, characterData: true, subtree: true });
+  if (tot && window.MutationObserver) new MutationObserver(function () { if (quote && cfg && cfg.livraison) { quote = null; checkAdr(); } }).observe(tot, { childList: true, characterData: true, subtree: true });
   api('/config').then(function (c) {
     cfg = c;
-    if (!c.livraison) { // ancien serveur : seulement main propre gratuite ou colis
-      lRel.hidden = true; relBox.hidden = true; mainBox.hidden = true; mainBox.className = 'pay-off';
-      $('pay-main-t').textContent = 'Remise en main propre : gratuit'; $('pay-colis-t').textContent = 'Envoi en colis : ' + eur(c.shipColisCents || 490);
-      return;
+    if (!c.livraison) { // ancien serveur : livraison en colis uniquement
+      adrBox.hidden = true; box.insertBefore(opt('colis', 'Livraison en colis : ' + eur(c.shipColisCents || 490), true), lCgv);
     }
-    shipLabels();
   }).catch(function () { box.hidden = true; document.documentElement.classList.remove('pay-on'); });
 
   // ---------- fenêtre de paiement ----------
@@ -125,7 +122,7 @@
   function sendMail(info, sid) {
     var mk = 'nomeo-mailed-' + sid; try { if (localStorage.getItem(mk)) return Promise.resolve(true); } catch (e) {}
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
-      'Total payé : ' + eur(info.totalCents), 'Réception : ' + ({ colis: 'Colissimo à domicile', relais: 'point relais Mondial Relay', main: 'remise en main propre', 'main-propre': 'remise en main propre' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
+      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ colis: 'Colissimo à domicile', relais: 'point relais Mondial Relay', main: 'à livrer par l’atelier', 'main-propre': 'à livrer par l’atelier' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
       info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };
@@ -199,12 +196,11 @@
     if (!email && !tel) { msg.textContent = 'Ajoutez un e-mail ou un téléphone.'; $('c-email').focus(); return; }
     if (!$('pay-cgv').checked) { msg.textContent = 'Cochez la case des conditions de vente pour payer.'; return; }
     var cart = readCart(); if (!cart.length) { msg.textContent = 'Votre panier est vide.'; return; }
+    if (cfg && cfg.livraison && (!quote || !quote.ok || !mode())) { checkAdr().then(function (r) { msg.textContent = r && r.ok ? 'Vérifiez la livraison puis appuyez de nouveau sur « Payer ».' : 'Indiquez votre code postal et votre ville pour calculer la livraison.'; }); adr.focus(); return; }
     var delivery = mode();
-    if (cfg && cfg.livraison && delivery === 'main' && (adr.value || '').trim().length < 3) { msg.textContent = 'Indiquez votre adresse ou votre commune pour la remise en main propre.'; adr.focus(); return; }
-    if (delivery === 'relais' && !(rel.value || '').trim()) { msg.textContent = 'Indiquez le point relais souhaité ou votre code postal.'; rel.focus(); return; }
     go.disabled = true; var old = go.textContent; go.textContent = 'Préparation du paiement…';
     api('/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery, adresse: (adr.value || '').trim(), relais: (rel.value || '').trim() }) })
+      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery, adresse: (adr.value || '').trim() }) })
       .then(function (s) {
         inner.textContent = '';
         var x = el('button', { type: 'button', class: 'icon-btn pay-x', 'aria-label': 'Fermer', text: '×' });

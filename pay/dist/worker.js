@@ -115,20 +115,15 @@ async function createSession(env, req, origin) {
   if (!email && !tel) throw new Err('Indiquez un e-mail ou un téléphone.');
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Err('Cet e-mail semble incomplet.');
   const L = await loadShip(env);
-  const mode = ['main', 'relais', 'colis'].includes(b.delivery) ? b.delivery : 'main';
-  const colis = mode === 'colis';
   const pieces = lines.reduce((a, l) => a + l.qty, 0);
   const no = orderNo();
-  let ship = 0, shipName = '', where = '';
-  if (mode === 'main') {
-    const q = await quoteMain(L, b.adresse);
-    if (!q.ok) throw new Err(q.error);
-    ship = q.cents; shipName = 'Remise en main propre'; where = q.label;
-  } else {
-    const t = mode === 'relais' ? L.relais : L.domicile;
-    ship = tierCents(t.paliers, pieces); shipName = t.nom;
-    if (mode === 'relais') { where = cleanText(b.relais, 140); if (!where) throw new Err('Indiquez le point relais souhaité ou votre code postal.'); }
-  }
+  const q = await quoteShip(L, b.adresse, pieces);
+  if (!q.ok) throw new Err(q.error);
+  const mode = q.near ? 'main' : (b.delivery === 'colis' ? 'colis' : 'relais');
+  const colis = true; // adresse complète demandée dans tous les cas
+  const ship = q.near ? q.cents : mode === 'colis' ? q.domicile : q.relais;
+  const shipName = q.near ? 'Livraison' : mode === 'colis' ? 'Livraison à domicile (Colissimo)' : 'Livraison en point relais Mondial Relay';
+  const where = q.label;
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
   const meta = { order_no: no, name, tel, delivery: mode, where, more };
   chunks(compact).slice(0, 45).forEach((c, i) => { meta['l' + i] = c; });
@@ -241,22 +236,25 @@ function kmBetween(a, b) {
   const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(h));
 }
-async function quoteMain(L, adresse) {
-  if (!L.depart) return { ok: false, error: 'La remise en main propre n’est pas disponible pour le moment. Choisissez le point relais ou Colissimo.' };
+async function quoteShip(L, adresse, pieces) {
   const q = cleanText(adresse, 160);
-  if (q.length < 3) return { ok: false, error: 'Indiquez votre adresse ou votre commune pour la remise en main propre.' };
+  if (q.length < 3) return { ok: false, error: 'Indiquez votre code postal et votre ville pour calculer la livraison.' };
   let f;
   try {
     const r = await fetch('https://api-adresse.data.gouv.fr/search/?limit=1&q=' + encodeURIComponent(q), { cf: { cacheTtl: 3600 } });
     const j = await r.json(); f = j && j.features && j.features[0];
-  } catch (e) { return { ok: false, error: 'Adresse impossible à vérifier pour le moment. Réessayez dans un instant.' }; }
-  if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez la commune ou le code postal.' };
-  const [lon, lat] = f.geometry.coordinates;
-  const km = Math.round(kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3) * 10) / 10; // reste sur le serveur
-  const t = L.mainPropre.find(x => km <= x.km);
-  const label = cleanText(f.properties.label, 140);
-  if (!t) return { ok: false, label, error: label + ' : trop loin pour la remise en main propre. Choisissez le point relais ou Colissimo.' };
-  return { ok: true, label, cents: t.cents, km };
+  } catch (e) { return { ok: false, error: 'Livraison impossible à calculer pour le moment. Réessayez dans un instant.' }; }
+  if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez le code postal et la ville.' };
+  const label = cleanText((f.properties.postcode ? f.properties.postcode + ' ' : '') + (f.properties.city || f.properties.label), 140);
+  const n = Math.max(1, parseInt(pieces, 10) || 1);
+  const out = { ok: true, label, near: false, relais: tierCents(L.relais.paliers, n), domicile: tierCents(L.domicile.paliers, n) };
+  if (L.depart) {
+    const [lon, lat] = f.geometry.coordinates;
+    const km = kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3); // reste sur le serveur
+    const t = L.mainPropre.find(x => km <= x.km);
+    if (t) return { ok: true, label, near: true, cents: t.cents };
+  }
+  return out;
 }
 
 // ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
@@ -302,8 +300,8 @@ export default {
       }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
-      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: { mainPropre: L.mainPropre, relais: L.relais, domicile: L.domicile } }); }
-      if (url.pathname === '/livraison' && req.method === 'GET') { const q = await quoteMain(await loadShip(env), url.searchParams.get('adresse')); delete q.km; return send(q); }
+      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: true }); }
+      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteShip(await loadShip(env), url.searchParams.get('adresse'), url.searchParams.get('pieces')));
       if (url.pathname === '/session' && req.method === 'POST') {
         if (+(req.headers.get('content-length') || 0) > 30000) throw new Err('Requête trop grande.', 413);
         return send(await createSession(env, req, origin));
