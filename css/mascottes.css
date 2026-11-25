@@ -486,3 +486,11 @@ svg.mark rect{height:14px!important}
 .deadline[hidden]{display:none}.deadline span span{opacity:.75}.deadline.late{background:#FFE3DD}
 @media(max-width:860px){body:not([data-mode=pro]) .hero-trio{width:min(64vw,280px);margin:10px auto 0}}
 .hero-price{margin:12px 0 0;font-weight:750;font-size:.95rem;color:var(--mk-ink)}
+
+/* Accueil mobile : l'aperçu 3D reste visible en haut pendant qu'on règle l'objet */
+@media(max-width:860px){
+  body:not([data-mode=pro]) .hero{overflow:clip}
+  body:not([data-mode=pro]) .hero-trio{display:none}
+  body:not([data-mode=pro]) .hero .scene{position:sticky;top:calc(80px + env(safe-area-inset-top,0px));z-index:6;height:210px;max-height:210px;aspect-ratio:auto;width:auto;margin:10px max(16px,env(safe-area-inset-right,0px)) 8px max(16px,env(safe-area-inset-left,0px));background:#FFE98A;border:2px solid var(--mk-ink);border-radius:22px;box-shadow:3px 3px 0 var(--mk-ink);overflow:hidden}
+}
+}
