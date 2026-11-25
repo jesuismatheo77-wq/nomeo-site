@@ -112,15 +112,15 @@
 
   function giftTxt(info) {
     var g = info.gift; if (!g) return '';
-    if (!g.minis || !g.minis.length) return 'CADEAU : 1 carte de collection';
-    return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ') + sa carte'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 100 € ***' : '');
+    if (!g.minis || !g.minis.length) return '';
+    return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ')'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 100 € ***' : '');
   }
   var IMG = { '001': 'mascotte-nuage', '002': 'mascotte-citron', '003': 'mascotte-oeuf', '004': 'mascotte-nuage', '005': 'mascotte-citron', '006': 'mascotte-oeuf', '007': 'mascotte-citron' };
   // Roue : parts proportionnelles aux vraies chances (commune 74,5 %, rare 20 %, super rare 5 %, légendaire 0,5 %)
   var SEG = { c: [0, 268.2], r: [268.2, 340.2], sr: [340.2, 358.2], l: [358.2, 360] };
   function wheel(g) {
     var box = el('div', { class: 'wh' });
-    if (!g || !g.minis || !g.minis.length) { box.appendChild(el('p', { class: 'wh-h', text: '🎁 Une carte de collection est offerte avec votre commande.' })); return box; }
+    if (!g || !g.minis || !g.minis.length) return el('span');
     var n = g.minis.length, i = 0, rot = 0;
     box.appendChild(el('p', { class: 'wh-h', text: '🎁 Vous avez gagné ' + (n > 1 ? n + ' mini-figurines' : 'une mini-figurine') + ' ! Tournez la roue pour découvrir ' + (n > 1 ? 'lesquelles' : 'laquelle') + '.' }));
     var stage = el('div', { class: 'wh-stage' }), disc = el('div', { class: 'wh-disc' }), pin = el('div', { class: 'wh-pin' });
@@ -138,7 +138,7 @@
         var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: 'img/' + IMG[m.no] + '.webp', alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
         res.appendChild(li); i++;
         if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 100 € à utiliser sur le site.' }));
-        if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines et leurs cartes seront glissées dans votre colis.' })); }
+        if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines seront glissées dans votre colis.' })); }
       }, reduce ? 300 : 3300);
     });
     return box;
