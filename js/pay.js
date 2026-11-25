@@ -65,7 +65,9 @@
     choice.textContent = ''; choice.hidden = true;
     if (!r || !r.ok) { adrMsg.textContent = r ? r.error : 'Impossible de calculer la livraison pour le moment.'; return; }
     adrMsg.textContent = r.label;
-    choice.appendChild(opt(r.near ? 'main' : 'colis', 'Livraison à votre adresse : ' + (r.cents ? eur(r.cents) : 'offerte'), true, r.cents));
+    var price = r.cents ? eur(r.cents) : 'offerte';
+    choice.appendChild(opt(r.near ? 'main' : 'colis', (r.near ? 'Livraison à votre adresse : ' : 'Livraison en point relais près de chez vous : ') + price, true, r.cents));
+    if (!r.near) choice.appendChild(el('p', { class: 'pay-note', text: 'On choisit le point relais Mondial Relay le plus proche de votre adresse et on vous envoie le suivi.' }));
     choice.hidden = false; refreshBtn();
   }
   function checkAdr() {
@@ -129,7 +131,7 @@
   function sendMail(info, sid) {
     var mk = 'nomeo-mailed-' + sid; try { if (localStorage.getItem(mk)) return Promise.resolve(true); } catch (e) {}
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
-      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ relais: 'point relais Mondial Relay', main: 'à livrer toi-même (moins de 15 km)', 'main-propre': 'à livrer toi-même', colis: 'à expédier (Colissimo ou Lettre suivie)' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
+      'Total payé : ' + eur(info.totalCents), 'Livraison : ' + ({ relais: 'point relais Mondial Relay', main: 'à livrer toi-même (moins de 15 km)', 'main-propre': 'à livrer toi-même', colis: 'à expédier en Mondial Relay (point relais le plus proche de l’adresse)' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
       info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };

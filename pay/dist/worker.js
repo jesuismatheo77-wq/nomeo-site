@@ -124,7 +124,7 @@ async function createSession(env, req, origin) {
   const goods = lines.reduce((a, l) => a + l.cents, 0);
   const free = L.gratuitDes > 0 && goods >= L.gratuitDes;
   const ship = free ? 0 : q.cents;
-  const shipName = free ? 'Livraison offerte' : 'Livraison';
+  const shipName = free ? 'Livraison offerte' : q.near ? 'Livraison' : 'Livraison en point relais Mondial Relay';
   const where = q.label;
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
   const meta = { order_no: no, name, tel, delivery: mode, where, more };
@@ -222,7 +222,7 @@ async function status(env, sid) {
 const SHIP_DEFAULT = { depart: null, facteurRoute: 1.3, // point de départ : variables DEPART_LAT et DEPART_LON dans Cloudflare, jamais envoyé aux clients
   mainPropre: [{ km: 15, cents: 200 }],
   relais: { nom: 'Point relais Mondial Relay', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] },
-  domicile: { nom: 'Colissimo à domicile', paliers: [{ pieces: 6, cents: 790 }, { pieces: 15, cents: 990 }, { pieces: 100000, cents: 1190 }] } };
+  domicile: { nom: 'Livraison en point relais', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] } };
 async function loadShip(env) {
   try {
     const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
