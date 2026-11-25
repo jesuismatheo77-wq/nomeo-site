@@ -30,7 +30,7 @@
     '.pay-box label{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;line-height:1.35}' +
     '.pay-box input[type=radio],.pay-box input[type=checkbox]{margin-top:3px;flex:none;width:18px;height:18px}' +
     '.pay-msg{font-size:.88rem;color:var(--warn,#7a5200);margin:0;min-height:1.2em}' +
-    '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px}.pay-row input{flex:1;min-width:0}' +
+    '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px;min-width:0}.pay-box>*{min-width:0}.pay-box label span{min-width:0;overflow-wrap:anywhere}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px;min-width:0}.pay-row input{flex:1;min-width:0;width:100%}.pay-sub input{width:100%;box-sizing:border-box}' +
     '.pay-sub input{padding:10px 12px;border-radius:12px;border:1.5px solid #dcdfe4;font:inherit;font-size:1rem;color:var(--ink);background:#fff}' +
     '.pay-sub .btn-s{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink,#16181b);background:#fff;font-weight:700;font:inherit;font-weight:700}' +
     '.pay-note{font-size:.84rem;color:var(--ink-2,#474b52);margin:0}' +
@@ -44,12 +44,12 @@
   var act = form.querySelector('.cart-act'), send = $('c-send');
   var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Réception de la commande' })]);
   var lMain = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'main', checked: '' }), el('span', { id: 'pay-main-t', text: 'Remise en main propre' })]);
-  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'street-address', placeholder: 'Votre adresse ou votre commune', 'aria-label': 'Adresse pour la remise en main propre' });
+  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'street-address', placeholder: 'Adresse ou commune', 'aria-label': 'Adresse pour la remise en main propre' });
   var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Vérifier' });
   var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status' });
   var mainBox = el('div', { class: 'pay-sub' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg]);
   var lRel = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'relais' }), el('span', { id: 'pay-rel-t', text: 'Point relais Mondial Relay' })]);
-  var rel = el('input', { type: 'text', id: 'pay-rel', placeholder: 'Point relais souhaité, ou votre code postal', 'aria-label': 'Point relais souhaité' });
+  var rel = el('input', { type: 'text', id: 'pay-rel', placeholder: 'Point relais ou code postal', 'aria-label': 'Point relais souhaité' });
   var relBox = el('div', { class: 'pay-sub', hidden: '' }, [rel, el('p', { class: 'pay-note', text: 'On choisit le point relais Mondial Relay le plus proche et on vous envoie le suivi.' })]);
   var lColis = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'colis' }), el('span', { id: 'pay-colis-t', text: 'Colissimo à domicile' })]);
   var cgvA = el('button', { type: 'button', class: 'text-btn', 'data-legal': 'cgv', text: 'conditions de vente' });
