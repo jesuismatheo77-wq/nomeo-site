@@ -222,7 +222,7 @@ async function status(env, sid) {
 
 // ---------- livraison : main propre selon la distance, point relais ou Colissimo (réglages dans livraison.json) ----------
 const SHIP_DEFAULT = { depart: { commune: 'Vulaines-sur-Seine', lat: 48.4316, lon: 2.7707 }, facteurRoute: 1.3,
-  mainPropre: [{ km: 5, cents: 0 }, { km: 15, cents: 200 }],
+  mainPropre: [{ km: 15, cents: 200 }],
   relais: { nom: 'Point relais Mondial Relay', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] },
   domicile: { nom: 'Colissimo à domicile', paliers: [{ pieces: 6, cents: 790 }, { pieces: 15, cents: 990 }, { pieces: 100000, cents: 1190 }] } };
 async function loadShip(env) {
