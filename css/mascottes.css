@@ -495,5 +495,5 @@ svg.mark rect{height:14px!important}
 /* Accueil particuliers : plus de panneau noir, la personnalisation se fait sur chaque objet de la boutique */
 body:not([data-mode=pro]) .hero-panel{display:none!important}
 body:not([data-mode=pro]) .hero{min-height:0!important;padding-bottom:clamp(28px,5vw,64px)}
-.hero-slogan{margin:10px 0 0;font-size:clamp(1.1rem,2.2vw,1.4rem);font-weight:650;font-style:italic;color:var(--mk-ink)}
+.hero-slogan{margin:10px 0 0;font-size:clamp(1.1rem,2.2vw,1.4rem);font-weight:600;font-style:normal;color:var(--mk-ink)}
 @media(max-width:860px){body:not([data-mode=pro]) .hero-text .actions{display:none!important}body:not([data-mode=pro]) .hero-slogan,body:not([data-mode=pro]) .hero-price{margin-top:0}}
