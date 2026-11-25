@@ -491,3 +491,7 @@ svg.mark rect{height:14px!important}
 .hero .scene{display:none!important}
 .hero .co-nozzle,.hero .co-bed{display:none!important}
 @media(min-width:861px){body:not([data-mode=pro]) .hero-trio{right:7vw;top:130px;width:min(36vw,500px)}.deadline{max-width:min(520px,45vw)}}
+
+/* Accueil particuliers : plus de panneau noir, la personnalisation se fait sur chaque objet de la boutique */
+body:not([data-mode=pro]) .hero-panel{display:none!important}
+body:not([data-mode=pro]) .hero{min-height:0!important;padding-bottom:clamp(28px,5vw,64px)}
