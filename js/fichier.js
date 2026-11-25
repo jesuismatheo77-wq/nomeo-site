@@ -38,7 +38,7 @@
     if (EXT.indexOf(ext(fl.name)) < 0) { file = null; st.textContent = "Ce format n’est pas accepté : envoyez un fichier STL, 3MF, OBJ, STEP ou ZIP."; return; }
     if (fl.size > MAX) { file = null; st.textContent = "Ce fichier fait " + mo(fl.size) + " : le maximum est de 25 Mo. Compressez-le en ZIP ou écrivez-nous à " + MAIL + "."; return; }
     file = fl;
-    drop.classList.add("has-file");
+    drop.classList.add("has-file"); f.classList.add("has-file");
     tName.textContent = fl.name;
     tSub.textContent = mo(fl.size) + " · toucher pour changer";
     if (ext(fl.name) === "stl" && window.FileReader) {

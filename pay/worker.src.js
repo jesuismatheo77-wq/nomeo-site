@@ -3,7 +3,7 @@
 // Variables à définir dans Cloudflare (Settings > Variables and Secrets) :
 //   STRIPE_SECRET_KEY  (secret)   sk_test_... puis sk_live_...
 //   STRIPE_PUBLISHABLE_KEY        pk_test_... puis pk_live_...
-//   SHIP_COLIS_CENTS   (optionnel) frais d'envoi colis en centimes, défaut 490
+//   (les frais de livraison se règlent dans livraison.json sur le site)
 //   ALLOWED_ORIGINS    (optionnel) origines autorisées, séparées par des virgules
 const CATALOG = /*CATALOG*/{};
 const { B, Y, H, PACKS, TIERS, ZO, COLORS, IDS } = CATALOG;
@@ -113,11 +113,23 @@ async function createSession(env, req, origin) {
   if (!name) throw new Err('Indiquez votre prénom et votre nom.');
   if (!email && !tel) throw new Err('Indiquez un e-mail ou un téléphone.');
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Err('Cet e-mail semble incomplet.');
-  const colis = b.delivery === 'colis';
+  const L = await loadShip(env);
+  const mode = ['main', 'relais', 'colis'].includes(b.delivery) ? b.delivery : 'main';
+  const colis = mode === 'colis';
+  const pieces = lines.reduce((a, l) => a + l.qty, 0);
   const no = orderNo();
-  const ship = parseInt(env.SHIP_COLIS_CENTS || '490', 10);
+  let ship = 0, shipName = '', where = '';
+  if (mode === 'main') {
+    const q = await quoteMain(L, b.adresse);
+    if (!q.ok) throw new Err(q.error);
+    ship = q.cents; shipName = 'Remise en main propre (' + q.km + ' km)'; where = q.label + ' · environ ' + q.km + ' km';
+  } else {
+    const t = mode === 'relais' ? L.relais : L.domicile;
+    ship = tierCents(t.paliers, pieces); shipName = t.nom;
+    if (mode === 'relais') { where = cleanText(b.relais, 140); if (!where) throw new Err('Indiquez le point relais souhaité ou votre code postal.'); }
+  }
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
-  const meta = { order_no: no, name, tel, delivery: colis ? 'colis' : 'main-propre', more };
+  const meta = { order_no: no, name, tel, delivery: mode, where, more };
   chunks(compact).slice(0, 45).forEach((c, i) => { meta['l' + i] = c; });
   const params = {
     ui_mode: 'embedded', mode: 'payment', locale: 'fr', redirect_on_completion: 'if_required', allow_promotion_codes: true,
@@ -127,8 +139,8 @@ async function createSession(env, req, origin) {
     line_items: lines.map(l => ({ quantity: 1, price_data: { currency: 'eur', unit_amount: l.cents,
       product_data: { name: (l.qty > 1 ? l.qty + ' × ' : '') + lineTitle(l), description: lineDetail(l) || undefined } } })),
     shipping_address_collection: colis ? { allowed_countries: ['FR'] } : undefined,
-    shipping_options: [{ shipping_rate_data: { type: 'fixed_amount', display_name: colis ? 'Envoi en colis' : 'Remise en main propre',
-      fixed_amount: { amount: colis ? ship : 0, currency: 'eur' } } }],
+    shipping_options: [{ shipping_rate_data: { type: 'fixed_amount', display_name: shipName,
+      fixed_amount: { amount: ship, currency: 'eur' } } }],
     custom_text: { submit: { message: 'Aucune pièce n’est imprimée avant votre aperçu 3D. Avant l’impression, vous pouvez modifier ou annuler sur simple message.' } },
   };
   // Les versions récentes de l'API Stripe nomment ce mode « embedded_page » : on essaie les deux.
@@ -138,8 +150,8 @@ async function createSession(env, req, origin) {
     if (e.stripeMsg && /ui_mode/i.test(e.stripeMsg)) s = await stripe(env, 'POST', '/checkout/sessions', { ...params, ui_mode: 'embedded_page' });
     else throw e;
   }
-  const total = lines.reduce((a, l) => a + l.cents, 0) + (colis ? ship : 0);
-  return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: colis ? ship : 0, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
+  const total = lines.reduce((a, l) => a + l.cents, 0) + ship;
+  return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: ship, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
 }
 
 // ---------- cadeaux de collection : tirage fait ICI (le navigateur ne peut pas tricher) ----------
@@ -205,7 +217,43 @@ async function status(env, sid) {
   const gift = paid ? await gifts(env, sid, (s.amount_total || 0) - ship) : null;
   const disc = (s.total_details && s.total_details.amount_discount) || 0;
   return { paid, gift, discountCents: disc, orderNo: m.order_no || '', name: m.name || '', tel: m.tel || '', email: (s.customer_details && s.customer_details.email) || s.customer_email || '',
-    delivery: m.delivery || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
+    delivery: m.delivery || '', where: m.where || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
+}
+
+// ---------- livraison : main propre selon la distance, point relais ou Colissimo (réglages dans livraison.json) ----------
+const SHIP_DEFAULT = { depart: { commune: 'Vulaines-sur-Seine', lat: 48.4316, lon: 2.7707 }, facteurRoute: 1.3,
+  mainPropre: [{ km: 5, cents: 0 }, { km: 15, cents: 200 }],
+  relais: { nom: 'Point relais Mondial Relay', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] },
+  domicile: { nom: 'Colissimo à domicile', paliers: [{ pieces: 6, cents: 790 }, { pieces: 15, cents: 990 }, { pieces: 100000, cents: 1190 }] } };
+async function loadShip(env) {
+  try {
+    const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
+    const c = await r.json();
+    if (c && c.depart && c.mainPropre && c.relais && c.domicile) return c;
+  } catch (e) {}
+  return SHIP_DEFAULT;
+}
+const tierCents = (paliers, n) => { const p = paliers.find(x => n <= x.pieces) || paliers[paliers.length - 1]; return p.cents; };
+function kmBetween(a, b) {
+  const R = 6371, t = x => x * Math.PI / 180, dLa = t(b.lat - a.lat), dLo = t(b.lon - a.lon);
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+async function quoteMain(L, adresse) {
+  const q = cleanText(adresse, 160);
+  if (q.length < 3) return { ok: false, error: 'Indiquez votre adresse ou votre commune pour la remise en main propre.' };
+  let f;
+  try {
+    const r = await fetch('https://api-adresse.data.gouv.fr/search/?limit=1&q=' + encodeURIComponent(q), { cf: { cacheTtl: 3600 } });
+    const j = await r.json(); f = j && j.features && j.features[0];
+  } catch (e) { return { ok: false, error: 'Adresse impossible à vérifier pour le moment. Réessayez dans un instant.' }; }
+  if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez la commune ou le code postal.' };
+  const [lon, lat] = f.geometry.coordinates;
+  const km = Math.round(kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3) * 10) / 10;
+  const t = L.mainPropre.find(x => km <= x.km), max = L.mainPropre[L.mainPropre.length - 1].km;
+  const label = cleanText(f.properties.label, 140);
+  if (!t) return { ok: false, km, label, error: label + ' est à environ ' + String(km).replace('.', ',') + ' km : trop loin pour la remise en main propre (' + max + ' km maximum). Choisissez le point relais ou Colissimo.' };
+  return { ok: true, km, label, cents: t.cents };
 }
 
 // ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
@@ -251,7 +299,8 @@ export default {
       }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
-      if (url.pathname === '/config' && req.method === 'GET') return send({ pk: env.STRIPE_PUBLISHABLE_KEY, shipColisCents: parseInt(env.SHIP_COLIS_CENTS || '490', 10) });
+      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: { commune: L.depart.commune, mainPropre: L.mainPropre, relais: L.relais, domicile: L.domicile } }); }
+      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteMain(await loadShip(env), url.searchParams.get('adresse')));
       if (url.pathname === '/session' && req.method === 'POST') {
         if (+(req.headers.get('content-length') || 0) > 30000) throw new Err('Requête trop grande.', 413);
         return send(await createSession(env, req, origin));

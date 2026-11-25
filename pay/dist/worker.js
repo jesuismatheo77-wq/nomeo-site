@@ -3,7 +3,7 @@
 // Variables à définir dans Cloudflare (Settings > Variables and Secrets) :
 //   STRIPE_SECRET_KEY  (secret)   sk_test_... puis sk_live_...
 //   STRIPE_PUBLISHABLE_KEY        pk_test_... puis pk_live_...
-//   SHIP_COLIS_CENTS   (optionnel) frais d'envoi colis en centimes, défaut 490
+//   (les frais de livraison se règlent dans livraison.json sur le site)
 //   ALLOWED_ORIGINS    (optionnel) origines autorisées, séparées par des virgules
 const CATALOG = {"B":{"sous-verre":[5.99,4.99,4.99,4.99,4.99],"porte-cles":[3.99,2.39,2.19,2.19,1.99],"medaille":[4.99,3.99,3.99,2.99,2.99],"plaque":[5.99,4.99,3.99,3.99,3.99],"noel-boule":[4.99,3.99,3.99,2.99,2.99],"noel-boule:m":[6.99,5.99,4.99,4.99,4.99],"noel-boule:l":[10.99,9.99,7.99,7.99,6.99],"noel-boule-logo":[5.99,4.99,4.99,4.99,3.99],"noel-boule-logo:m":[8.99,7.99,5.99,5.99,4.99],"noel-boule-logo:l":[10.99,9.99,9.99,8.99,7.99],"logo-pc":[3.99,2.99,2.39,2.29,2.19],"logo-pc:m":[4.99,3.99,2.99,2.99,2.99],"logo-pc:l":[5.99,4.99,4.99,3.99,3.99],"logo-resine":[14.99,12.99,11.99,10.99,10.99],"logo-resine:m":[29.99,26.99,24.99,22.99,21.99],"logo-resine:l":[59.99,54.99,49.99,46.99,44.99],"logo-simple":[3.99,2.99,2.99,2.39,2.39],"logo-simple:m":[5.99,4.99,4.99,3.99,3.99],"logo-simple:l":[10.99,9.99,7.99,7.99,7.99],"noel-etoile":[3.99,2.99,2.99,2.39,2.39],"noel-etoile:m":[5.99,4.99,4.99,3.99,3.99],"noel-etoile:l":[7.99,6.99,5.99,4.99,4.99],"noel-sapin":[3.99,2.99,2.99,2.39,2.39],"noel-sapin:m":[5.99,4.99,4.99,3.99,3.99],"noel-sapin:l":[7.99,6.99,5.99,4.99,4.99],"noel-calendrier":[30.99,29.99,28.99,26.99,25.99],"noel-bonhomme-art":[13.99,12.99,10.99,10.99,10.99],"noel-pere-noel":[17.99,16.99,15.99,15.99,14.99],"noel-lutin":[13.99,12.99,10.99,10.99,10.99],"noel-boule-bonhomme":[9.99,8.99,8.99,7.99,6.99],"noel-boule-pere-noel":[9.99,8.99,8.99,7.99,6.99],"noel-cheminee":[15.99,14.99,13.99,13.99,12.99],"noel-orn-sapin":[4.99,3.99,3.99,3.99,2.99],"noel-orn-flocon":[4.99,3.99,3.99,3.99,2.99],"noel-orn-cloche":[4.99,3.99,3.99,3.99,2.99],"noel-orn-canne":[4.99,3.99,3.99,3.99,2.99],"noel-orn-houx":[4.99,3.99,3.99,3.99,2.99],"noel-orn-renne":[4.99,3.99,3.99,3.99,2.99],"noel-orn-comete":[4.99,3.99,3.99,3.99,2.99],"noel-cadeau":[13.99,12.99,12.99,11.99,10.99],"noel-cadeau:m":[23.99,22.99,21.99,20.99,19.99],"noel-cadeau:l":[35.99,34.99,33.99,32.99,31.99],"noel-essuie-tout":[25.99,24.99,24.99,24.99,23.99],"noel-cheminee-deco":[18.99,17.99,16.99,16.99,15.99],"noel-sous-verres":[18.99,17.99,16.99,16.99,15.99],"noel-boule-neige":[15.99,14.99,13.99,13.99,12.99],"noel-bougeoir":[13.99,12.99,10.99,10.99,10.99],"noel-mini-bonnets":[0.9975,0.89,0.85,0.79,0.75],"noel-orn-bonhomme":[10.99,9.99,9.99,9.99,8.99],"noel-orn-pere-noel":[10.99,9.99,9.99,9.99,8.99],"noel-bonhomme":[5.99,4.99,4.99,4.99,4.99],"noel-bonhomme:m":[9.99,8.99,7.99,6.99,6.99],"noel-bonhomme:l":[11.99,9.99,8.99,8.99,8.99],"c-coeurduo":[3.99,2.99,2.99,2.99,2.99],"c-coeurduo:m":[4.99,3.99,2.99,2.99,2.99],"c-coeurduo:l":[5.99,4.99,3.99,3.99,3.99],"c-coeur":[3.99,2.99,2.99,2.99,2.99],"c-coeur:m":[5.99,4.99,3.99,3.99,3.99],"c-coeur:l":[5.99,4.99,4.99,4.99,4.99],"c-duo":[7.99,6.99,5.99,5.99,5.99],"c-lampe":[7.99,6.99,6.99,6.99,5.99],"c-lampe:m":[10.99,9.99,8.99,8.99,8.99],"c-lampe:l":[10.99,8.99,7.99,7.99,7.99],"c-magnet":[3.99,2.99,2.99,2.39,2.39],"c-magnet:m":[4.99,3.99,3.99,2.99,2.99],"c-magnet:l":[5.99,4.99,4.99,4.99,3.99],"c-magnetcoeur":[3.99,2.39,2.39,2.39,2.09],"c-magnetcoeur:m":[3.99,2.99,2.99,2.99,2.99],"c-magnetcoeur:l":[5.99,4.99,3.99,3.99,3.99],"j-puzzle":[6.99,5.99,5.99,5.99,5.99],"j-laby":[8.99,7.99,7.99,7.99,7.99],"j-animal":[6.99,5.99,5.99,5.99,5.99],"j-toupie":[5.99,4.99,4.99,4.99,4.99],"noel-etiquette":[3.99,2.39,2.29,2.19,2.19],"noel-etiquette:m":[4.99,3.99,3.99,2.99,2.99],"noel-etiquette:l":[6.99,5.99,4.99,4.99,4.99],"noel-cimier":[11.99,10.99,9.99,9.99,8.99],"g-casque":[13.99,12.99,10.99,10.99,9.99],"g-manette":[10.99,9.99,9.99,8.99,8.99],"marque-page":[3.99,2.99,2.99,2.39,2.39],"prenom-volume":[8.99,7.99,6.99,5.99,5.99],"prenom-volume:m":[10.99,9.99,9.99,8.99,8.99],"prenom-volume:l":[11.99,10.99,9.99,9.99,8.99],"tirelire":[13.99,12.99,10.99,10.99,9.99],"c-nounours":[15.99,14.99,13.99,12.99,12.99],"c-nounours-ballon":[17.99,16.99,15.99,15.99,14.99]},"Y":{"noel-boule":[{"k":"s","l":"Petite","d":"Ø 30 mm"},{"k":"m","l":"Moyenne","d":"Ø 45 mm"},{"k":"l","l":"Grande","d":"Ø 60 mm"}],"noel-etoile":[{"k":"s","l":"Petite","d":"76 mm"},{"k":"m","l":"Moyenne","d":"10 cm"},{"k":"l","l":"Grande","d":"13 cm"}],"noel-sapin":[{"k":"s","l":"Petit","d":"79 mm"},{"k":"m","l":"Moyen","d":"10 cm"},{"k":"l","l":"Grand","d":"13 cm"}],"noel-bonhomme":[{"k":"s","l":"Petit","d":"6,5 cm"},{"k":"m","l":"Moyen","d":"9 cm"},{"k":"l","l":"Grand","d":"12,5 cm"}],"c-coeurduo":[{"k":"s","l":"Petit","d":"5 cm"},{"k":"m","l":"Moyen","d":"6,5 cm"},{"k":"l","l":"Grand","d":"8 cm"}],"c-coeur":[{"k":"s","l":"Petit","d":"7 cm"},{"k":"m","l":"Moyen","d":"9 cm"},{"k":"l","l":"Grand","d":"11 cm"}],"c-lampe":[{"k":"s","l":"Petite","d":"8 cm"},{"k":"m","l":"Moyenne","d":"10 cm"},{"k":"l","l":"Grande","d":"12 cm"}],"c-magnet":[{"k":"s","l":"Petit","d":"5,5 cm"},{"k":"m","l":"Moyen","d":"7 cm"},{"k":"l","l":"Grand","d":"9 cm"}],"c-magnetcoeur":[{"k":"s","l":"Petit","d":"5 cm"},{"k":"m","l":"Moyen","d":"6,5 cm"},{"k":"l","l":"Grand","d":"8 cm"}],"noel-etiquette":[{"k":"s","l":"Petite","d":"72 mm"},{"k":"m","l":"Moyenne","d":"9,5 cm"},{"k":"l","l":"Grande","d":"12 cm"}],"noel-cadeau":[{"k":"s","l":"Petite","d":"10 cm"},{"k":"m","l":"Moyenne","d":"14 cm"},{"k":"l","l":"Grande","d":"18 cm"}],"noel-boule-logo":[{"k":"s","l":"Petite","d":"Ø 30 mm"},{"k":"m","l":"Moyenne","d":"Ø 45 mm"},{"k":"l","l":"Grande","d":"Ø 60 mm"}],"logo-pc":[{"k":"s","l":"Petit","d":"18 mm"},{"k":"m","l":"Moyen","d":"27 mm"},{"k":"l","l":"Grand","d":"40 mm"}],"logo-resine":[{"k":"s","l":"Petit","d":"cube 4 cm"},{"k":"m","l":"Moyen","d":"cube 6 cm"},{"k":"l","l":"Grand","d":"cube 8 cm"}],"logo-simple":[{"k":"s","l":"Petit","d":"30 mm"},{"k":"m","l":"Moyen","d":"50 mm"},{"k":"l","l":"Grand","d":"80 mm"}],"prenom-volume":[{"k":"s","l":"Petit","d":"10 cm de large"},{"k":"m","l":"Moyen","d":"14 cm"},{"k":"l","l":"Grand","d":"17 cm"}]},"H":{"noel-boule":{"q":1,"logo":false,"toy":false,"t":"Boule de Noël","one":"boule de Noël","many":"boules de Noël","ml":0},"noel-etoile":{"q":1,"logo":false,"toy":false,"t":"Étoile de Noël","one":"étoile de Noël","many":"étoiles de Noël","ml":0},"noel-calendrier":{"q":1,"logo":false,"toy":false,"t":"Calendrier de l’Avent","one":"calendrier de l’Avent","many":"calendriers de l’Avent","ml":10},"noel-pere-noel":{"q":1,"logo":false,"toy":false,"t":"Père Noël","one":"Père Noël","many":"Pères Noël","ml":10},"noel-orn-bonhomme":{"q":1,"logo":false,"toy":false,"t":"Ornement bonhomme de neige","one":"ornement bonhomme de neige","many":"ornements bonhomme de neige","ml":9},"noel-mini-bonnets":{"q":4,"qmin":4,"qmax":20,"logo":false,"toy":false,"t":"Mini bonnets de Père Noël","one":"mini bonnet de Père Noël","many":"mini bonnets","ml":20},"noel-bougeoir":{"q":1,"logo":false,"toy":false,"t":"Bougeoir Père Noël et sapin","one":"bougeoir de Noël","many":"bougeoirs de Noël","ml":12},"noel-orn-flocon":{"q":1,"logo":false,"toy":false,"t":"Ornement flocon","one":"ornement flocon","many":"ornements flocon","ml":9},"noel-orn-cloche":{"q":1,"logo":false,"toy":false,"t":"Ornement cloche","one":"ornement cloche","many":"ornements cloche","ml":9},"noel-orn-canne":{"q":1,"logo":false,"toy":false,"t":"Ornement canne à sucre","one":"ornement canne à sucre","many":"ornements canne à sucre","ml":9},"noel-orn-houx":{"q":1,"logo":false,"toy":false,"t":"Ornement houx","one":"ornement houx","many":"ornements houx","ml":9},"noel-cadeau":{"q":1,"logo":false,"toy":false,"t":"Grosse boîte cadeau","one":"boîte cadeau","many":"boîtes cadeau","ml":9},"noel-essuie-tout":{"q":1,"logo":false,"toy":false,"t":"Porte-essuie-tout bonnet de Père Noël","one":"porte-essuie-tout de Noël","many":"porte-essuie-tout de Noël","ml":10},"noel-cheminee-deco":{"q":1,"logo":false,"toy":false,"t":"Cheminée de Noël lumineuse","one":"cheminée de Noël lumineuse","many":"cheminées de Noël lumineuses","ml":12},"noel-sous-verres":{"q":1,"logo":false,"toy":false,"t":"Sous-verres de Noël avec support","one":"lot de 6 sous-verres de Noël","many":"lots de 6 sous-verres de Noël","ml":9},"noel-boule-neige":{"q":1,"logo":false,"toy":false,"t":"Boule à neige lumineuse","one":"boule à neige lumineuse","many":"boules à neige lumineuses","ml":12},"noel-cheminee":{"q":1,"logo":false,"toy":false,"t":"Boîte cheminée du Père Noël","one":"boîte cheminée","many":"boîtes cheminée","ml":12},"noel-lutin":{"q":1,"logo":false,"toy":false,"t":"Gnome de Noël","one":"gnome de Noël","many":"gnomes de Noël","ml":10},"noel-bonhomme":{"q":1,"logo":false,"toy":false,"t":"Bonhomme de neige 3D","one":"bonhomme de neige","many":"bonhommes de neige","ml":0},"noel-sapin":{"q":1,"logo":false,"toy":false,"t":"Sapin de Noël","one":"sapin de Noël","many":"sapins de Noël","ml":0},"noel-boule-logo":{"q":1,"logo":true,"toy":false,"t":"Boule de Noël à votre logo","one":"boule de Noël à votre logo","many":"boules de Noël à votre logo","ml":0},"noel-etiquette":{"q":1,"logo":false,"toy":false,"t":"Étiquette cadeau","one":"étiquette cadeau","many":"étiquettes cadeau","ml":0},"c-coeurduo":{"q":1,"logo":false,"toy":false,"t":"Collier cœur en deux morceaux","one":"collier cœur en deux morceaux","many":"colliers cœur en deux morceaux","ml":0},"c-coeur":{"q":1,"logo":false,"toy":false,"t":"Cœur gravé","one":"cœur gravé","many":"cœurs gravés","ml":0},"c-duo":{"q":1,"logo":false,"toy":false,"t":"Sous-verres d’amoureux","one":"duo de sous-verres","many":"duos de sous-verres","ml":0},"c-magnet":{"q":1,"logo":false,"toy":false,"t":"Magnet à votre texte","one":"magnet","many":"magnets","ml":0},"c-magnetcoeur":{"q":1,"logo":false,"toy":false,"t":"Magnet cœur","one":"magnet cœur","many":"magnets cœur","ml":0},"porte-cles":{"q":50,"logo":false,"toy":false,"t":"Porte-clés au logo","one":"porte-clés","many":"porte-clés","ml":0},"sous-verre":{"q":50,"logo":false,"toy":false,"t":"Sous-verres","one":"sous-verre","many":"sous-verres","ml":0},"logo-pc":{"q":1,"logo":true,"toy":false,"t":"Votre logo en porte-clés","one":"porte-clés à votre logo","many":"porte-clés à votre logo","ml":0},"logo-resine":{"q":1,"logo":true,"toy":false,"t":"Logo flottant en résine","one":"logo flottant en résine","many":"logos flottants en résine","ml":0},"logo-simple":{"q":1,"logo":true,"toy":false,"t":"Logo en volume","one":"logo en volume","many":"logos en volume","ml":0},"plaque":{"q":5,"logo":false,"toy":false,"t":"Plaque de porte","one":"plaque de porte","many":"plaques de porte","ml":0},"noel-cimier":{"q":1,"logo":false,"toy":false,"t":"Étoile de cimier","one":"étoile de cimier","many":"étoiles de cimier","ml":10},"g-casque":{"q":1,"logo":false,"toy":false,"t":"Support de casque gamer","one":"support de casque","many":"supports de casque","ml":12},"g-manette":{"q":1,"logo":false,"toy":false,"t":"Support de manette","one":"support de manette","many":"supports de manette","ml":12},"marque-page":{"q":1,"logo":false,"toy":false,"t":"Marque-page à son prénom","one":"marque-page","many":"marque-pages","ml":12},"prenom-volume":{"q":1,"logo":false,"toy":false,"t":"Prénom en volume","one":"prénom en volume","many":"prénoms en volume","ml":9},"tirelire":{"q":1,"logo":false,"toy":false,"t":"Tirelire cochon","one":"tirelire cochon","many":"tirelires cochon","ml":10},"c-nounours-ballon":{"q":1,"logo":false,"toy":false,"t":"Nounours au ballon cœur","one":"nounours au ballon cœur","many":"nounours au ballon cœur","ml":12},"c-nounours":{"q":1,"logo":false,"toy":false,"t":"Nounours à bougie LED","one":"nounours à bougie LED","many":"nounours à bougie LED","ml":12}},"PACKS":[{"k":"amoureux","t":"Pack Amoureux","fix":0,"items":[["c-coeurduo","s",1,"ab"],["c-duo","",1,"ab"],["c-nounours-ballon","",1,"ab"],["c-magnetcoeur","s",1,"a"],["c-magnetcoeur","s",1,"b"]],"two":true},{"k":"mariage","t":"Pack Mariage","fix":0,"items":[["c-magnet","s",30,"abd","c-magnet2"],["c-coeur","m",1,"abd"],["c-duo","",1,"ab"]],"two":true},{"k":"noel","t":"Pack Noël en famille","fix":0,"items":[["noel-boule","m",1,"s"],["noel-bonhomme","m",1,"s"],["noel-etoile","m",1,"s"],["noel-bougeoir","",1,"s"],["noel-mini-bonnets","",4,"n"],["noel-etiquette","s",1,"s"],["noel-etiquette","s",1,"s"],["noel-etiquette","s",1,"s"],["noel-etiquette","s",1,"s"]],"two":false},{"k":"chambre","t":"Pack Ma chambre","fix":0,"items":[["plaque","",1,"s"],["prenom-volume","m",1,"s"],["porte-cles","",1,"s"],["marque-page","",1,"s"],["c-magnet","s",1,"s"]],"two":false},{"k":"gamer","t":"Pack Gamer","fix":0,"items":[["g-casque","",1,"s"],["g-manette","",1,"s"],["porte-cles","",1,"s"],["sous-verre","",1,"s"]],"two":false}],"TIERS":[1,10,25,50,100],"ZO":0.3,"COLORS":{"jaune":"jaune tournesol","noir":"noir","blanc":"blanc","rouge":"rouge","bleu":"bleu","sapin":"vert bambou","orange":"orange","gris":"gris","rose":"rose","violet":"violet","turquoise":"turquoise","marron":"marron","bordeaux":"bordeaux","beige":"beige","dore":"doré","argent":"argent","vertclair":"vert clair","marine":"bleu marine"},"IDS":["noel-boule","noel-etoile","noel-calendrier","noel-pere-noel","noel-orn-bonhomme","noel-mini-bonnets","noel-bougeoir","noel-orn-flocon","noel-orn-cloche","noel-orn-canne","noel-orn-houx","noel-cadeau","noel-essuie-tout","noel-cheminee-deco","noel-sous-verres","noel-boule-neige","noel-cheminee","noel-lutin","noel-bonhomme","noel-sapin","noel-boule-logo","noel-etiquette","c-coeurduo","c-coeur","c-duo","c-magnet","c-magnetcoeur","porte-cles","sous-verre","logo-pc","logo-resine","logo-simple","plaque","noel-cimier","g-casque","g-manette","marque-page","prenom-volume","tirelire","c-nounours-ballon","c-nounours"]};
 const { B, Y, H, PACKS, TIERS, ZO, COLORS, IDS } = CATALOG;
@@ -113,11 +113,23 @@ async function createSession(env, req, origin) {
   if (!name) throw new Err('Indiquez votre prénom et votre nom.');
   if (!email && !tel) throw new Err('Indiquez un e-mail ou un téléphone.');
   if (email && !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) throw new Err('Cet e-mail semble incomplet.');
-  const colis = b.delivery === 'colis';
+  const L = await loadShip(env);
+  const mode = ['main', 'relais', 'colis'].includes(b.delivery) ? b.delivery : 'main';
+  const colis = mode === 'colis';
+  const pieces = lines.reduce((a, l) => a + l.qty, 0);
   const no = orderNo();
-  const ship = parseInt(env.SHIP_COLIS_CENTS || '490', 10);
+  let ship = 0, shipName = '', where = '';
+  if (mode === 'main') {
+    const q = await quoteMain(L, b.adresse);
+    if (!q.ok) throw new Err(q.error);
+    ship = q.cents; shipName = 'Remise en main propre (' + q.km + ' km)'; where = q.label + ' · environ ' + q.km + ' km';
+  } else {
+    const t = mode === 'relais' ? L.relais : L.domicile;
+    ship = tierCents(t.paliers, pieces); shipName = t.nom;
+    if (mode === 'relais') { where = cleanText(b.relais, 140); if (!where) throw new Err('Indiquez le point relais souhaité ou votre code postal.'); }
+  }
   const compact = lines.map(l => [l.qty, l.id, l.sz, l.combo, l.text, l.fo, l.dg, l.cents, l.pn].join('|')).join('\n');
-  const meta = { order_no: no, name, tel, delivery: colis ? 'colis' : 'main-propre', more };
+  const meta = { order_no: no, name, tel, delivery: mode, where, more };
   chunks(compact).slice(0, 45).forEach((c, i) => { meta['l' + i] = c; });
   const params = {
     ui_mode: 'embedded', mode: 'payment', locale: 'fr', redirect_on_completion: 'if_required', allow_promotion_codes: true,
@@ -127,8 +139,8 @@ async function createSession(env, req, origin) {
     line_items: lines.map(l => ({ quantity: 1, price_data: { currency: 'eur', unit_amount: l.cents,
       product_data: { name: (l.qty > 1 ? l.qty + ' × ' : '') + lineTitle(l), description: lineDetail(l) || undefined } } })),
     shipping_address_collection: colis ? { allowed_countries: ['FR'] } : undefined,
-    shipping_options: [{ shipping_rate_data: { type: 'fixed_amount', display_name: colis ? 'Envoi en colis' : 'Remise en main propre',
-      fixed_amount: { amount: colis ? ship : 0, currency: 'eur' } } }],
+    shipping_options: [{ shipping_rate_data: { type: 'fixed_amount', display_name: shipName,
+      fixed_amount: { amount: ship, currency: 'eur' } } }],
     custom_text: { submit: { message: 'Aucune pièce n’est imprimée avant votre aperçu 3D. Avant l’impression, vous pouvez modifier ou annuler sur simple message.' } },
   };
   // Les versions récentes de l'API Stripe nomment ce mode « embedded_page » : on essaie les deux.
@@ -138,8 +150,8 @@ async function createSession(env, req, origin) {
     if (e.stripeMsg && /ui_mode/i.test(e.stripeMsg)) s = await stripe(env, 'POST', '/checkout/sessions', { ...params, ui_mode: 'embedded_page' });
     else throw e;
   }
-  const total = lines.reduce((a, l) => a + l.cents, 0) + (colis ? ship : 0);
-  return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: colis ? ship : 0, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
+  const total = lines.reduce((a, l) => a + l.cents, 0) + ship;
+  return { clientSecret: s.client_secret, orderNo: no, totalCents: total, shipCents: ship, summary: lines.map(l => ({ qty: l.qty, title: lineTitle(l), cents: l.cents })) };
 }
 
 // ---------- cadeaux de collection : tirage fait ICI (le navigateur ne peut pas tricher) ----------
@@ -205,7 +217,43 @@ async function status(env, sid) {
   const gift = paid ? await gifts(env, sid, (s.amount_total || 0) - ship) : null;
   const disc = (s.total_details && s.total_details.amount_discount) || 0;
   return { paid, gift, discountCents: disc, orderNo: m.order_no || '', name: m.name || '', tel: m.tel || '', email: (s.customer_details && s.customer_details.email) || s.customer_email || '',
-    delivery: m.delivery || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
+    delivery: m.delivery || '', where: m.where || '', more: m.more || '', address: addr, totalCents: s.amount_total, message: msg };
+}
+
+// ---------- livraison : main propre selon la distance, point relais ou Colissimo (réglages dans livraison.json) ----------
+const SHIP_DEFAULT = { depart: { commune: 'Vulaines-sur-Seine', lat: 48.4316, lon: 2.7707 }, facteurRoute: 1.3,
+  mainPropre: [{ km: 5, cents: 0 }, { km: 15, cents: 200 }],
+  relais: { nom: 'Point relais Mondial Relay', paliers: [{ pieces: 6, cents: 490 }, { pieces: 15, cents: 690 }, { pieces: 100000, cents: 890 }] },
+  domicile: { nom: 'Colissimo à domicile', paliers: [{ pieces: 6, cents: 790 }, { pieces: 15, cents: 990 }, { pieces: 100000, cents: 1190 }] } };
+async function loadShip(env) {
+  try {
+    const r = await fetch(env.LIVRAISON_URL || 'https://nomeo-atelier.com/livraison.json', { cf: { cacheTtl: 60 } }); if (!r.ok) throw 0;
+    const c = await r.json();
+    if (c && c.depart && c.mainPropre && c.relais && c.domicile) return c;
+  } catch (e) {}
+  return SHIP_DEFAULT;
+}
+const tierCents = (paliers, n) => { const p = paliers.find(x => n <= x.pieces) || paliers[paliers.length - 1]; return p.cents; };
+function kmBetween(a, b) {
+  const R = 6371, t = x => x * Math.PI / 180, dLa = t(b.lat - a.lat), dLo = t(b.lon - a.lon);
+  const h = Math.sin(dLa / 2) ** 2 + Math.cos(t(a.lat)) * Math.cos(t(b.lat)) * Math.sin(dLo / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(h));
+}
+async function quoteMain(L, adresse) {
+  const q = cleanText(adresse, 160);
+  if (q.length < 3) return { ok: false, error: 'Indiquez votre adresse ou votre commune pour la remise en main propre.' };
+  let f;
+  try {
+    const r = await fetch('https://api-adresse.data.gouv.fr/search/?limit=1&q=' + encodeURIComponent(q), { cf: { cacheTtl: 3600 } });
+    const j = await r.json(); f = j && j.features && j.features[0];
+  } catch (e) { return { ok: false, error: 'Adresse impossible à vérifier pour le moment. Réessayez dans un instant.' }; }
+  if (!f || !(f.properties && f.properties.score > 0.35)) return { ok: false, error: 'Adresse introuvable : vérifiez la commune ou le code postal.' };
+  const [lon, lat] = f.geometry.coordinates;
+  const km = Math.round(kmBetween(L.depart, { lat, lon }) * (L.facteurRoute || 1.3) * 10) / 10;
+  const t = L.mainPropre.find(x => km <= x.km), max = L.mainPropre[L.mainPropre.length - 1].km;
+  const label = cleanText(f.properties.label, 140);
+  if (!t) return { ok: false, km, label, error: label + ' est à environ ' + String(km).replace('.', ',') + ' km : trop loin pour la remise en main propre (' + max + ' km maximum). Choisissez le point relais ou Colissimo.' };
+  return { ok: true, km, label, cents: t.cents };
 }
 
 // ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
@@ -251,7 +299,8 @@ export default {
       }
       if (!env.STRIPE_SECRET_KEY || !env.STRIPE_PUBLISHABLE_KEY) throw new Err('Paiement non configuré.', 503);
       if (!okOrigin) throw new Err('Origine non autorisée.', 403);
-      if (url.pathname === '/config' && req.method === 'GET') return send({ pk: env.STRIPE_PUBLISHABLE_KEY, shipColisCents: parseInt(env.SHIP_COLIS_CENTS || '490', 10) });
+      if (url.pathname === '/config' && req.method === 'GET') { const L = await loadShip(env); return send({ pk: env.STRIPE_PUBLISHABLE_KEY, livraison: { commune: L.depart.commune, mainPropre: L.mainPropre, relais: L.relais, domicile: L.domicile } }); }
+      if (url.pathname === '/livraison' && req.method === 'GET') return send(await quoteMain(await loadShip(env), url.searchParams.get('adresse')));
       if (url.pathname === '/session' && req.method === 'POST') {
         if (+(req.headers.get('content-length') || 0) > 30000) throw new Err('Requête trop grande.', 413);
         return send(await createSession(env, req, origin));

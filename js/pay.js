@@ -30,6 +30,10 @@
     '.pay-box label{display:flex;gap:10px;align-items:flex-start;font-size:.92rem;line-height:1.35}' +
     '.pay-box input[type=radio],.pay-box input[type=checkbox]{margin-top:3px;flex:none;width:18px;height:18px}' +
     '.pay-msg{font-size:.88rem;color:var(--warn,#7a5200);margin:0;min-height:1.2em}' +
+    '.pay-sub{display:grid;gap:6px;margin:-2px 0 4px 28px}.pay-sub[hidden]{display:none}.pay-row{display:flex;gap:8px}.pay-row input{flex:1;min-width:0}' +
+    '.pay-sub input{padding:10px 12px;border-radius:12px;border:1.5px solid #dcdfe4;font:inherit;font-size:1rem;color:var(--ink);background:#fff}' +
+    '.pay-sub .btn-s{min-height:44px;padding:0 14px;border-radius:12px;border:2px solid var(--ink,#16181b);background:#fff;font-weight:700;font:inherit;font-weight:700}' +
+    '.pay-note{font-size:.84rem;color:var(--ink-2,#474b52);margin:0}' +
     '#pay-dlg{border:0;border-radius:18px;padding:0;width:min(560px,calc(100vw - 20px));max-height:92vh;overflow:auto;background:var(--white,#fff);color:var(--ink,#16181b)}' +
     '#pay-dlg::backdrop{background:var(--scrim,rgba(20,20,20,.55))}' +
     '.pay-in{padding:16px 16px 20px;display:grid;gap:12px}.pay-in h3{margin:0;font-size:1.15rem}' +
@@ -39,13 +43,46 @@
   // ---------- interface dans le panier ----------
   var act = form.querySelector('.cart-act'), send = $('c-send');
   var box = el('fieldset', { class: 'pay-box' }, [el('legend', { text: 'Réception de la commande' })]);
-  var lMain = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'main', checked: '' }), el('span', { text: 'Remise en main propre : gratuit' })]);
-  var lColis = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'colis' }), el('span', { id: 'pay-colis-t', text: 'Envoi en colis' })]);
+  var lMain = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'main', checked: '' }), el('span', { id: 'pay-main-t', text: 'Remise en main propre' })]);
+  var adr = el('input', { type: 'text', id: 'pay-adr', autocomplete: 'street-address', placeholder: 'Votre adresse ou votre commune', 'aria-label': 'Adresse pour la remise en main propre' });
+  var adrBtn = el('button', { type: 'button', class: 'btn btn-s', text: 'Vérifier' });
+  var adrMsg = el('p', { class: 'pay-note', id: 'pay-adr-msg', role: 'status' });
+  var mainBox = el('div', { class: 'pay-sub' }, [el('div', { class: 'pay-row' }, [adr, adrBtn]), adrMsg]);
+  var lRel = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'relais' }), el('span', { id: 'pay-rel-t', text: 'Point relais Mondial Relay' })]);
+  var rel = el('input', { type: 'text', id: 'pay-rel', placeholder: 'Point relais souhaité, ou votre code postal', 'aria-label': 'Point relais souhaité' });
+  var relBox = el('div', { class: 'pay-sub', hidden: '' }, [rel, el('p', { class: 'pay-note', text: 'On choisit le point relais Mondial Relay le plus proche et on vous envoie le suivi.' })]);
+  var lColis = el('label', {}, [el('input', { type: 'radio', name: 'pay-deliv', value: 'colis' }), el('span', { id: 'pay-colis-t', text: 'Colissimo à domicile' })]);
   var cgvA = el('button', { type: 'button', class: 'text-btn', 'data-legal': 'cgv', text: 'conditions de vente' });
   var lCgv = el('label', {}, [el('input', { type: 'checkbox', id: 'pay-cgv' }), el('span', {}, [document.createTextNode('J’ai lu et j’accepte les '), cgvA])]);
   var go = el('button', { type: 'button', class: 'btn btn-y', id: 'pay-go', text: 'Payer en ligne' });
   var msg = el('p', { class: 'pay-msg', id: 'pay-msg', role: 'status' });
-  [lMain, lColis, lCgv, go, msg].forEach(function (n) { box.appendChild(n); });
+  [lMain, mainBox, lRel, relBox, lColis, lCgv, go, msg].forEach(function (n) { box.appendChild(n); });
+  function mode() { return (form.querySelector('input[name="pay-deliv"]:checked') || {}).value || 'main'; }
+  function pieces() { return readCart().reduce(function (a, it) { return a + (parseInt(it.qty, 10) || 1); }, 0); }
+  function tier(p, n) { for (var i = 0; i < p.length; i++) if (n <= p[i].pieces) return p[i].cents; return p[p.length - 1].cents; }
+  function priceTxt(c) { return c ? eur(c) : 'gratuit'; }
+  function shipLabels() {
+    var L = cfg && cfg.livraison; if (!L) return;
+    var mp = L.mainPropre, n = pieces();
+    $('pay-main-t').textContent = 'Remise en main propre autour de ' + L.commune + ' : ' + mp.map(function (t) { return priceTxt(t.cents) + ' jusqu’à ' + t.km + ' km'; }).join(', ');
+    $('pay-rel-t').textContent = L.relais.nom + ' : ' + eur(tier(L.relais.paliers, n));
+    $('pay-colis-t').textContent = L.domicile.nom + ' : ' + eur(tier(L.domicile.paliers, n));
+  }
+  function syncMode() { if (cfg && !cfg.livraison) return; var m = mode(); mainBox.hidden = m !== 'main'; relBox.hidden = m !== 'relais'; }
+  box.addEventListener('change', function (e) { if (e.target.name === 'pay-deliv') syncMode(); });
+  var lastQuote = null;
+  function checkAdr() {
+    var q = (adr.value || '').trim(); lastQuote = null;
+    if (q.length < 3) { adrMsg.textContent = 'Écrivez votre adresse ou votre commune.'; return Promise.resolve(null); }
+    adrMsg.textContent = 'Vérification de la distance…';
+    return api('/livraison?adresse=' + encodeURIComponent(q)).then(function (r) {
+      lastQuote = r;
+      adrMsg.textContent = r.ok ? r.label + ' : environ ' + String(r.km).replace('.', ',') + ' km, remise en main propre ' + priceTxt(r.cents) + '.' : r.error;
+      return r;
+    }).catch(function () { adrMsg.textContent = 'Impossible de vérifier pour le moment.'; return null; });
+  }
+  adrBtn.addEventListener('click', checkAdr);
+  adr.addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); checkAdr(); } });
   act.parentNode.insertBefore(box, act);
   var fine = [].slice.call(form.querySelectorAll('.cart-fine')).filter(function (p) { return /paiement en ligne arrive/i.test(p.textContent); })[0];
   if (fine) fine.textContent = 'Paiement sécurisé par Stripe : carte, Apple Pay ou Google Pay. Avant l’impression, on vous envoie l’aperçu 3D de votre pièce, et vous pouvez modifier ou annuler sur simple message. Pour une création sur mesure ou un devis, utilisez « Envoyer ma commande ».';
@@ -55,7 +92,16 @@
   function refreshBtn() { var s = totalText(); go.textContent = 'Payer en ligne' + (s && s !== '0,00 €' && s !== '0,00 €' ? ' · ' + s : ''); }
   var tot = $('cart-total'); if (tot && window.MutationObserver) new MutationObserver(refreshBtn).observe(tot, { childList: true, characterData: true, subtree: true });
   refreshBtn();
-  api('/config').then(function (c) { cfg = c; $('pay-colis-t').textContent = 'Envoi en colis : ' + eur(c.shipColisCents); }).catch(function () { box.hidden = true; document.documentElement.classList.remove('pay-on'); });
+  if (tot && window.MutationObserver) new MutationObserver(shipLabels).observe(tot, { childList: true, characterData: true, subtree: true });
+  api('/config').then(function (c) {
+    cfg = c;
+    if (!c.livraison) { // ancien serveur : seulement main propre gratuite ou colis
+      lRel.hidden = true; relBox.hidden = true; mainBox.hidden = true; mainBox.className = 'pay-off';
+      $('pay-main-t').textContent = 'Remise en main propre : gratuit'; $('pay-colis-t').textContent = 'Envoi en colis : ' + eur(c.shipColisCents || 490);
+      return;
+    }
+    shipLabels();
+  }).catch(function () { box.hidden = true; document.documentElement.classList.remove('pay-on'); });
 
   // ---------- fenêtre de paiement ----------
   var dlg = el('dialog', { id: 'pay-dlg', 'aria-label': 'Paiement' });
@@ -78,7 +124,7 @@
   function sendMail(info, sid) {
     var mk = 'nomeo-mailed-' + sid; try { if (localStorage.getItem(mk)) return Promise.resolve(true); } catch (e) {}
     var body = ['COMMANDE PAYÉE EN LIGNE n° ' + info.orderNo, '', info.message, '',
-      'Total payé : ' + eur(info.totalCents), 'Réception : ' + (info.delivery === 'colis' ? 'envoi en colis' : 'remise en main propre'),
+      'Total payé : ' + eur(info.totalCents), 'Réception : ' + ({ colis: 'Colissimo à domicile', relais: 'point relais Mondial Relay', main: 'remise en main propre', 'main-propre': 'remise en main propre' }[info.delivery] || info.delivery) + (info.where ? ' (' + info.where + ')' : ''),
       info.address ? 'Adresse : ' + info.address : '', '', 'Nom : ' + info.name, info.email ? 'E-mail : ' + info.email : '', info.tel ? 'Téléphone : ' + info.tel : '',
       info.more ? 'Remise, remarques : ' + info.more : '', '', giftTxt(info), '', 'Paiement Stripe : ' + sid].filter(function (x, i, a) { return x !== '' || a[i - 1] !== ''; }).join('\n');
     var payload = { access_key: MAIL_KEY, subject: 'Commande payée Noméo ' + info.orderNo + ' : ' + info.name, from_name: 'Site Noméo', name: info.name, phone: info.tel || '', message: body };
@@ -152,10 +198,12 @@
     if (!email && !tel) { msg.textContent = 'Ajoutez un e-mail ou un téléphone.'; $('c-email').focus(); return; }
     if (!$('pay-cgv').checked) { msg.textContent = 'Cochez la case des conditions de vente pour payer.'; return; }
     var cart = readCart(); if (!cart.length) { msg.textContent = 'Votre panier est vide.'; return; }
-    var delivery = (form.querySelector('input[name="pay-deliv"]:checked') || {}).value || 'main';
+    var delivery = mode();
+    if (cfg && cfg.livraison && delivery === 'main' && (adr.value || '').trim().length < 3) { msg.textContent = 'Indiquez votre adresse ou votre commune pour la remise en main propre.'; adr.focus(); return; }
+    if (delivery === 'relais' && !(rel.value || '').trim()) { msg.textContent = 'Indiquez le point relais souhaité ou votre code postal.'; rel.focus(); return; }
     go.disabled = true; var old = go.textContent; go.textContent = 'Préparation du paiement…';
     api('/session', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
-      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery }) })
+      items: cart, name: name, email: email, tel: tel, more: ($('c-more').value || '').trim(), delivery: delivery, adresse: (adr.value || '').trim(), relais: (rel.value || '').trim() }) })
       .then(function (s) {
         inner.textContent = '';
         var x = el('button', { type: 'button', class: 'icon-btn pay-x', 'aria-label': 'Fermer', text: '×' });
