@@ -57,21 +57,32 @@
     el("button", { type: "button", "data-st": "-1", "aria-label": "Une pièce de moins", text: "−" }), qIn,
     el("button", { type: "button", "data-st": "1", "aria-label": "Une pièce de plus", text: "+" })]);
 
+  var sum = el("p", { class: "li-sum", "aria-live": "polite" });
+  var tog = el("button", { type: "button", class: "li-tog", "aria-expanded": "false", "aria-controls": "li-more", text: "Changer version, taille ou sens" });
+  tog.addEventListener("click", function () {
+    var m = document.getElementById("li-more"), open = m.hasAttribute("hidden");
+    if (open) m.removeAttribute("hidden"); else m.setAttribute("hidden", "");
+    tog.setAttribute("aria-expanded", String(open)); tog.textContent = open ? "Réduire" : "Changer version, taille ou sens";
+  });
   root.appendChild(el("div", { class: "li-card" }, [
     el("div", { class: "li-left" }, [fig, el("div", { class: "li-pickrow" }, [pick, file, zoomW]), hint]),
     el("div", { class: "li-right" }, [
-      el("h4", { text: "Votre version" }), gForm,
-      el("h4", { text: "Taille" }), gSize,
-      el("h4", { text: "Sens" }), gDir,
-      el("p", { class: "li-tip", text: "Conseil : une photo nette et bien éclairée, avec le visage assez grand. Le passage en noir et blanc se fait tout seul." }),
-      el("div", { class: "sp-b" }, [stepper, add]), msg,
-      el("p", { class: "sp-safe", text: "Fabriqué par Noméo, France. PLA blanc, usage intérieur. Version boîte : uniquement avec la bougie LED fournie." })
+      sum, tog,
+      el("div", { class: "li-more", id: "li-more", hidden: "" }, [
+        el("h4", { text: "Votre version" }), gForm,
+        el("h4", { text: "Taille" }), gSize,
+        el("h4", { text: "Sens" }), gDir,
+        el("p", { class: "li-tip", text: "Conseil : une photo nette et bien éclairée, avec le visage assez grand. Le passage en noir et blanc se fait tout seul." }),
+        el("p", { class: "sp-safe", text: "Fabriqué par Noméo, France. PLA blanc, usage intérieur. Version boîte : uniquement avec la bougie LED fournie." })
+      ]),
+      el("div", { class: "sp-b" }, [stepper, add]), msg
     ])
   ]));
 
   function priceNow() { return PRICE[st.id][st.sz]; }
   function refresh() {
     add.textContent = "Ajouter · " + eur(priceNow() * st.qty);
+    sum.innerHTML = "<b>" + (st.id === "litho" ? "Plaque seule" : "Avec boîte lumineuse") + "</b> · " + SIZES.filter(function (z) { return z.k === st.sz; })[0].l + " " + SIZES.filter(function (z) { return z.k === st.sz; })[0].d + " · " + (st.port ? "portrait" : "paysage");
     [].forEach.call(gSize.querySelectorAll("small"), function (s, i) { s.innerHTML = SIZES[i].d + "<br>" + eur(PRICE[st.id][SIZES[i].k]); });
     [].forEach.call(root.querySelectorAll(".li-opts label"), function (l) { l.classList.toggle("sel", l.querySelector("input").checked); });
     draw();

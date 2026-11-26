@@ -531,3 +531,7 @@ h1#titre{font-family:Fredoka,"Schibsted Grotesk",system-ui,sans-serif;font-weigh
 .li-opts[aria-label=Taille] label,.li-opts[aria-label^=Sens] label{padding:9px 8px;justify-content:center;text-align:center;position:relative}
 .li-opts[aria-label=Taille] input,.li-opts[aria-label^=Sens] input{position:absolute;opacity:0;pointer-events:none}
 .li-opts[aria-label=Taille] label:focus-within,.li-opts[aria-label^=Sens] label:focus-within{outline:3px solid var(--mk-ink);outline-offset:2px}
+
+.li-sum{margin:0 0 .5rem;font-size:.98rem}
+.li-tog{font:inherit;font-weight:700;background:none;border:2px solid currentColor;border-radius:999px;padding:.45rem 1rem;cursor:pointer;margin-bottom:.8rem}
+.li-more[hidden]{display:none}
