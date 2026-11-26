@@ -115,31 +115,96 @@
     if (!g.minis || !g.minis.length) return '';
     return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ')'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 20 € ***' : '');
   }
-  var IMG = { '001': 'mascotte-nuage', '002': 'mascotte-citron', '003': 'mascotte-oeuf', '004': 'mascotte-nuage', '005': 'mascotte-citron', '006': 'mascotte-oeuf', '007': 'mascotte-citron' };
-  // Roue : parts proportionnelles aux vraies chances (commune 74,5 %, rare 20 %, super rare 5 %, légendaire 0,5 %)
-  var SEG = { c: [0, 268.2], r: [268.2, 340.2], sr: [340.2, 358.2], l: [358.2, 360] };
+  var FIG = { '001': 'flocon', '002': 'zeste', '003': 'dodo', '004': 'flocon-noel', '005': 'zeste-pizzaiolo', '006': 'dodo-fantome', '007': 'zeste-dore', '008': 'flocon-neige', '009': 'zeste-renne', '010': 'dodo-nuit', '011': 'zeste-skieur', '012': 'flocon-ange', '013': 'trio-luge', '014': 'secret' };
+  function figSrc(no) { return 'img/fig-' + no + '-' + (FIG[no] || 'secret') + '.webp'; }
+  var COL_DEF = { chances: { l: 0.005, sr: 0.05, r: 0.2 }, figurines: { c: [['001', 'Flocon'], ['002', 'Zeste'], ['003', 'Dodo'], ['008', 'Flocon bonhomme de neige'], ['010', 'Dodo bonnet de nuit']], r: [['004', 'Flocon de Noël'], ['005', 'Zeste pizzaïolo'], ['009', 'Zeste renne'], ['011', 'Zeste skieur']], sr: [['006', 'Dodo fantôme'], ['012', 'Flocon ange'], ['013', 'Le trio en luge']], l: [['007', 'Zeste doré']] } };
+  var colP = null;
+  function loadCol() {
+    if (!colP) colP = fetch('collection.json', { cache: 'no-cache' }).then(function (r) { return r.json(); }).then(function (c) { if (!c || !c.figurines || !c.chances) throw 0; return c; }).catch(function () { return COL_DEF; });
+    return colP;
+  }
+  var RCOL = { c: '#FFFFFF', r: '#7DB7FF', sr: '#C79BFF', l: '#FFD24A' };
+  // Une part par figurine, taille = sa vraie chance ; les petites parts sont réparties entre les grandes.
+  function slices(col) {
+    var F = col.figurines, P = col.chances, pr = { l: P.l || 0, sr: P.sr || 0, r: P.r || 0 };
+    pr.c = 1 - pr.l - pr.sr - pr.r;
+    var one = function (k) { return (F[k] || []).map(function (f) { return { no: f[0], name: f[1], r: k, p: (F[k].length ? pr[k] / F[k].length : 0) }; }); };
+    var C = one('c'), R = one('r'), small = one('sr').concat(one('l')), others = [];
+    while (R.length || small.length) { if (R.length) others.push(R.shift()); if (small.length) others.push(small.shift()); }
+    var seq = [], per = C.length ? Math.ceil(others.length / C.length) : others.length;
+    C.forEach(function (c) { seq.push(c); for (var k = 0; k < per && others.length; k++) seq.push(others.shift()); });
+    seq = seq.concat(others).filter(function (s) { return s.p > 0; });
+    var tot = seq.reduce(function (a, s) { return a + s.p; }, 0), a0 = 0;
+    seq.forEach(function (s) { s.a0 = a0; s.a1 = a0 + s.p / tot * 360; a0 = s.a1; });
+    return seq;
+  }
+  var NS = 'http://www.w3.org/2000/svg';
+  function sv(t, a) { var n = document.createElementNS(NS, t); Object.keys(a).forEach(function (k) { n.setAttribute(k, a[k]); }); return n; }
+  function pt(a, r) { var t = a * Math.PI / 180; return (r * Math.sin(t)).toFixed(2) + ' ' + (-r * Math.cos(t)).toFixed(2); }
+  function pct(p) { return (Math.round(p * 1000) / 10).toString().replace('.', ',') + ' %'; }
+  function drawWheel(seq) {
+    var R = 128, svg = sv('svg', { viewBox: '-172 -172 344 344', class: 'wh-svg', role: 'img', 'aria-label': 'Roue des mini-figurines : chaque part a la taille de sa chance' });
+    var defs = sv('defs', {}); svg.appendChild(defs);
+    var g = sv('g', { class: 'wh-rot' }); svg.appendChild(g);
+    g.appendChild(sv('circle', { r: R + 4, fill: '#141414' }));
+    seq.forEach(function (s, i) {
+      var big = s.a1 - s.a0 > 180 ? 1 : 0;
+      s.path = sv('path', { d: 'M0 0 L' + pt(s.a0, R) + ' A' + R + ' ' + R + ' 0 ' + big + ' 1 ' + pt(s.a1, R) + ' Z', fill: RCOL[s.r], stroke: '#141414', 'stroke-width': 1.6, class: 'wh-sl' });
+      g.appendChild(s.path);
+      var mid = (s.a0 + s.a1) / 2, w = s.a1 - s.a0, gi = sv('g', { transform: 'rotate(' + mid.toFixed(2) + ')' });
+      if (w >= 14) {
+        var rr = w > 40 ? 80 : 98, sz = Math.min(w > 40 ? 66 : 40, 2 * rr * Math.sin(w * Math.PI / 360) * 1.05);
+        gi.appendChild(sv('image', { href: figSrc(s.no), x: -sz / 2, y: -rr - sz / 2, width: sz, height: sz, preserveAspectRatio: 'xMidYMid meet' }));
+      } else {
+        // part trop fine : médaillon au bord de la roue, aligné sur sa part
+        var id = 'whc' + i, cy = -(R + 22), rad = s.r === 'l' ? 17 : 15;
+        var cp = sv('clipPath', { id: id }); cp.appendChild(sv('circle', { cx: 0, cy: cy, r: rad - 2 })); defs.appendChild(cp);
+        gi.appendChild(sv('path', { d: 'M0 ' + (-R + 2) + ' L0 ' + (cy + rad), stroke: '#141414', 'stroke-width': 2 }));
+        gi.appendChild(sv('circle', { cx: 0, cy: cy, r: rad, fill: RCOL[s.r], stroke: s.r === 'l' ? '#B07D00' : '#141414', 'stroke-width': 2.5 }));
+        gi.appendChild(sv('image', { href: figSrc(s.no), x: -rad, y: cy - rad + 1, width: rad * 2, height: rad * 2 - 2, preserveAspectRatio: 'xMidYMid meet', 'clip-path': 'url(#' + id + ')' }));
+      }
+      g.appendChild(gi);
+    });
+    g.appendChild(sv('circle', { r: 20, fill: '#FFC61A', stroke: '#141414', 'stroke-width': 3 }));
+    g.appendChild(sv('circle', { r: 6, fill: '#141414' }));
+    svg.appendChild(sv('path', { d: 'M-13 -170 L13 -170 L0 -138 Z', fill: '#141414', stroke: '#FFFDF6', 'stroke-width': 2, 'stroke-linejoin': 'round' }));
+    return { svg: svg, g: g };
+  }
+  function legend(seq) {
+    var by = {}; seq.forEach(function (s) { (by[s.r] = by[s.r] || s); });
+    var ul = el('ul', { class: 'wh-leg' });
+    [['c', 'Commune'], ['r', 'Rare'], ['sr', 'Super rare'], ['l', 'Légendaire']].forEach(function (k) {
+      if (!by[k[0]]) return; ul.appendChild(el('li', { class: 'wk-' + k[0] }, [el('i', {}), el('span', { text: k[1] + ' : ' + pct(by[k[0]].p) + (k[0] === 'l' ? '' : ' chacune') })]));
+    });
+    return ul;
+  }
+
   function wheel(g) {
     var box = el('div', { class: 'wh' });
     if (!g || !g.minis || !g.minis.length) return el('span');
     var n = g.minis.length, i = 0, rot = 0;
     box.appendChild(el('p', { class: 'wh-h', text: '🎁 Vous avez gagné ' + (n > 1 ? n + ' mini-figurines' : 'une mini-figurine') + ' ! Tournez la roue pour découvrir ' + (n > 1 ? 'lesquelles' : 'laquelle') + '.' }));
-    var stage = el('div', { class: 'wh-stage' }), disc = el('div', { class: 'wh-disc' }), pin = el('div', { class: 'wh-pin' });
-    ['Commune', 'Rare', 'Super rare'].forEach(function (t, k) { var l = el('span', { class: 'wh-l wh-l' + k, text: t }); disc.appendChild(l); });
-    stage.appendChild(disc); stage.appendChild(pin); box.appendChild(stage);
-    var res = el('ul', { class: 'wh-res' }), btn = el('button', { type: 'button', class: 'btn btn-y wh-go', text: 'Tourner la roue' + (n > 1 ? ' (1/' + n + ')' : '') });
-    box.appendChild(btn); box.appendChild(res);
-    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var stage = el('div', { class: 'wh-stage' }); box.appendChild(stage);
+    var btn = el('button', { type: 'button', class: 'btn btn-y wh-go', text: 'Tourner la roue' + (n > 1 ? ' (1/' + n + ')' : '') }), res = el('ul', { class: 'wh-res' });
+    btn.disabled = true; box.appendChild(btn); box.appendChild(res);
+    var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches, seq = [], W = null, last = null;
+    loadCol().then(function (col) {
+      seq = slices(col); W = drawWheel(seq); stage.appendChild(W.svg); box.insertBefore(legend(seq), btn); btn.disabled = false;
+    });
     btn.addEventListener('click', function () {
-      if (i >= n) return; var m = g.minis[i]; btn.disabled = true;
-      var s = SEG[m.r], target = s[0] + (s[1] - s[0]) * (0.2 + Math.random() * 0.6);
+      if (i >= n || !W) return; var m = g.minis[i]; btn.disabled = true;
+      if (last) last.classList.remove('wh-win');
+      var s = seq.filter(function (x) { return x.no === m.no; })[0] || seq.filter(function (x) { return x.r === m.r; })[0] || seq[0];
+      var target = s.a0 + (s.a1 - s.a0) * (0.3 + Math.random() * 0.4);
       rot += 360 * 5 + ((360 - target) - (rot % 360) + 360) % 360;
-      disc.style.transition = reduce ? 'none' : 'transform 3.2s cubic-bezier(.12,.7,.15,1)'; disc.style.transform = 'rotate(' + rot + 'deg)';
+      W.g.style.transition = reduce ? 'none' : 'transform 4s cubic-bezier(.12,.7,.12,1)'; W.g.style.transform = 'rotate(' + rot + 'deg)';
       setTimeout(function () {
-        var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: 'img/' + IMG[m.no] + '.webp', alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
+        s.path.classList.add('wh-win'); last = s.path;
+        var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: figSrc(m.no), alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
         res.appendChild(li); i++;
         if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 20 € à utiliser sur le site.' }));
         if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines seront glissées dans votre colis.' })); }
-      }, reduce ? 300 : 3300);
+      }, reduce ? 300 : 4100);
     });
     return box;
   }
