@@ -11,7 +11,7 @@
     { k: "m", l: "Moyen", mm: [150, 100], d: "15 × 10 cm" },
     { k: "l", l: "Grand", mm: [200, 150], d: "20 × 15 cm" }
   ];
-  var PRICE = { litho: { s: 14.9, m: 19.9, l: 29.9 }, "litho-lampe": { s: 19.9, m: 24.9, l: 34.9 } };
+  var PRICE = { litho: { s: 14.9, m: 19.9, l: 29.9 }, "litho-lampe": { s: 19.9, m: 26.9, l: 39.9 } };
   var T_MIN = 0.8, T_MAX = 3.2, K = 1.25, BORDER = 3; // mm
 
   var st = { id: "litho", sz: "s", port: false, lit: true, qty: 1, img: null, sample: true, zoom: 1, px: 0, py: 0, up: null };
@@ -46,7 +46,7 @@
   }
   var gForm = radios("li-form", [
     { v: "litho", l: "Plaque seule", d: "Sur un petit pied, à poser devant une fenêtre ou une lampe" },
-    { v: "litho-lampe", l: "Avec socle lumineux", d: "Socle noir et lumière LED à piles fournie (+ 5 €)" }
+    { v: "litho-lampe", l: "Avec boîte lumineuse", d: "Boîte blanche, bougie LED fournie, photo interchangeable (+ 5, 7 ou 10 €)" }
   ], "litho", "Version");
   var gSize = radios("li-sz", SIZES.map(function (s) { return { v: s.k, l: s.l, d: s.d }; }), "s", "Taille");
   var gDir = radios("li-dir", [{ v: "h", l: "Paysage" }, { v: "v", l: "Portrait" }], "h", "Sens de la photo");
@@ -65,7 +65,7 @@
       el("h4", { text: "Sens" }), gDir,
       el("p", { class: "li-tip", text: "Conseil : une photo nette et bien éclairée, avec le visage assez grand. Le passage en noir et blanc se fait tout seul." }),
       el("div", { class: "sp-b" }, [stepper, add]), msg,
-      el("p", { class: "sp-safe", text: "Fabriqué par Noméo, France. PLA blanc, usage intérieur. Version socle : uniquement avec la lumière LED fournie." })
+      el("p", { class: "sp-safe", text: "Fabriqué par Noméo, France. PLA blanc, usage intérieur. Version boîte : uniquement avec la bougie LED fournie." })
     ])
   ]));
 
@@ -131,7 +131,7 @@
     var Wc = Math.round(box * dpr), Hc = Math.round(box * 0.86 * dpr);
     cv.width = Wc; cv.height = Hc; cv.style.height = Math.round(box * 0.86) + "px";
     var lamp = st.id === "litho-lampe", d = dims();
-    var baseH = (lamp ? 0.16 : 0.05) * Hc, maxW = Wc * 0.82, maxH = Hc * 0.86 - baseH;
+    var baseH = 0.05 * Hc, maxW = Wc * 0.82, maxH = Hc * 0.86 - baseH;
     var s = Math.min(maxW / d[0], maxH / d[1]), pw = Math.round(d[0] * s), ph = Math.round(d[1] * s);
     var x0 = Math.round((Wc - pw) / 2), y0 = Math.round((Hc - baseH - ph) / 2 + Hc * 0.02);
     // fond : pièce sombre si allumé, clair sinon
@@ -162,10 +162,11 @@
     // support
     var by = y0 + ph;
     if (lamp) {
-      var bw = pw + 24 * dpr, bh = baseH * 0.78, bx = (Wc - bw) / 2;
-      if (st.lit) { var gl = ctx.createLinearGradient(0, by - 4 * dpr, 0, by + 6 * dpr); gl.addColorStop(0, "rgba(255,210,140,.9)"); gl.addColorStop(1, "rgba(255,210,140,0)"); ctx.fillStyle = gl; ctx.fillRect(x0, by - 4 * dpr, pw, 10 * dpr); }
-      ctx.fillStyle = "#1B1B1D"; rr(bx, by - 6 * dpr, bw, bh, 8 * dpr); ctx.fill();
-      ctx.fillStyle = "rgba(255,255,255,.08)"; rr(bx, by - 6 * dpr, bw, 4 * dpr, 2 * dpr); ctx.fill();
+      // boîte blanche : cadre de 4 mm autour de la photo, la plaque se glisse par le haut
+      var bz = Math.max(4 * dpr, pw * 0.04), ox = x0 - bz * 0.7, oy = y0 - bz * 0.7;
+      ctx.save(); ctx.fillStyle = st.lit ? "#CFC6B6" : "#F4F2EC"; ctx.shadowColor = "rgba(0,0,0,.25)"; ctx.shadowBlur = 10 * dpr; ctx.shadowOffsetY = 4 * dpr;
+      ctx.beginPath(); ctx.rect(ox, oy, pw + 1.4 * bz, ph + 1.4 * bz); ctx.rect(x0 + bz * 0.7, y0 + bz * 0.7, pw - 1.4 * bz, ph - 1.4 * bz); ctx.fill("evenodd"); ctx.restore();
+      ctx.fillStyle = st.lit ? "#B9AF9E" : "#E4E0D6"; ctx.fillRect(x0 + pw * 0.5 - 13 * dpr, oy - 1 * dpr, 26 * dpr, 3 * dpr);
     } else {
       ctx.fillStyle = st.lit ? "#8F8579" : "#E9E5DC"; var fw = Math.max(20 * dpr, pw * 0.16), fh = baseH * 0.9;
       rr(x0 + pw * 0.12, by - 3 * dpr, fw, fh, 3 * dpr); ctx.fill(); rr(x0 + pw * 0.88 - fw, by - 3 * dpr, fw, fh, 3 * dpr); ctx.fill();
@@ -207,7 +208,7 @@
     if (!window.A77 || !window.A77.addItem) { msg.textContent = "Le panier n’est pas encore prêt, réessayez dans un instant."; return; }
     add.disabled = true; var old = add.textContent; add.textContent = "Envoi de la photo…"; msg.textContent = "";
     var done = function (text, note) {
-      window.A77.addItem(st.id, { text: text, combo: st.id === "litho-lampe" ? "blanc-noir" : "blanc-blanc", qty: st.qty, sz: st.sz });
+      window.A77.addItem(st.id, { text: text, combo: st.id === "litho-lampe" ? "blanc-blanc" : "blanc-blanc", qty: st.qty, sz: st.sz });
       add.disabled = false; add.textContent = old; msg.textContent = note || "Ajouté à votre panier, avec votre photo.";
     };
     (st.up ? Promise.resolve(st.up) : photoBlob().then(function (b) {
