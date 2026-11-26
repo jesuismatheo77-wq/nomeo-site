@@ -57,6 +57,7 @@
     el("button", { type: "button", "data-st": "-1", "aria-label": "Une pièce de moins", text: "−" }), qIn,
     el("button", { type: "button", "data-st": "1", "aria-label": "Une pièce de plus", text: "+" })]);
 
+  var lampNote = el("li", { text: "Boîte noire : à utiliser avec la bougie LED fournie." });
   var sum = el("p", { class: "li-sum", "aria-live": "polite" });
   var tog = el("button", { type: "button", class: "li-tog", "aria-expanded": "false", "aria-controls": "li-more", text: "Changer version, taille ou sens" });
   tog.addEventListener("click", function () {
@@ -72,7 +73,7 @@
         el("h4", { text: "Votre version" }), gForm,
         el("h4", { text: "Taille" }), gSize,
         el("h4", { text: "Sens" }), gDir,
-        el("p", { class: "li-tip", html: "<b>Photo nette, visage assez grand</b> : le noir et blanc se fait tout seul. Fabriqué en France, PLA, usage intérieur. Boîte : uniquement avec la bougie LED fournie." })
+        el("ul", { class: "li-tl" }, [el("li", { text: "Photo nette, visage bien visible." }), el("li", { text: "Noir et blanc automatique." }), el("li", { text: "Fabriqué en France, en PLA, pour l’intérieur." }), lampNote])
       ]),
       el("div", { class: "sp-b" }, [stepper, add]), msg
     ])
@@ -80,6 +81,7 @@
 
   function priceNow() { return PRICE[st.id][st.sz]; }
   function refresh() {
+    lampNote.hidden = st.id !== "litho-lampe";
     add.textContent = "Ajouter · " + eur(priceNow() * st.qty);
     sum.innerHTML = "<b>" + (st.id === "litho" ? "Plaque seule" : "Avec boîte noire lumineuse") + "</b> · " + SIZES.filter(function (z) { return z.k === st.sz; })[0].l + " " + SIZES.filter(function (z) { return z.k === st.sz; })[0].d + " · " + (st.port ? "portrait" : "paysage");
     [].forEach.call(gSize.querySelectorAll("small"), function (s, i) { s.innerHTML = SIZES[i].d + "<br>" + eur(PRICE[st.id][SIZES[i].k]); });

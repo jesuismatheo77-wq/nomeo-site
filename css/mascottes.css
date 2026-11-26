@@ -162,8 +162,8 @@ body{background-image:
   radial-gradient(900px 700px at 0% 72%,rgba(255,231,140,.6),transparent 70%),
   radial-gradient(800px 700px at 100% 100%,rgba(255,176,0,.3),transparent 70%),
   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.35 0 0 0 0 0.24 0 0 0 0 0 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E")!important;
-  background-size:100% 3200px,100% 3200px,100% 3200px,100% 3200px,180px 180px!important;
-  background-repeat:repeat-y,repeat-y,repeat-y,repeat-y,repeat!important}
+  background-size:100% 100%,100% 100%,100% 100%,100% 100%,180px 180px!important;
+  background-repeat:no-repeat,no-repeat,no-repeat,no-repeat,repeat!important}
 
 /* ===== Espace pros (24/11) : pas de panier ni d'outil 3D, des idées par métier et une discussion avec Zeste ===== */
 .pro-old{display:none!important}
@@ -540,3 +540,9 @@ h1#titre{font-family:Fredoka,"Schibsted Grotesk",system-ui,sans-serif;font-weigh
 .fam-nuage{background:#BFDDF0!important}
 .li-tip{margin:.9rem 0 0;font-size:.88rem;line-height:1.45;color:var(--ink-2,#474B52)}
 .li-more h4{margin-top:.8rem}
+
+.fam-citron{background:#CDEBD3!important}
+.fam-oeuf{background:#F6D3DE!important}
+.li-tl{list-style:none;margin:.9rem 0 0;padding:0;display:grid;gap:.35rem;font-size:.9rem;line-height:1.35;color:var(--ink-2,#474B52)}
+.li-tl li{padding-left:1.3rem;position:relative}
+.li-tl li:before{content:"";position:absolute;left:0;top:.45em;width:.55rem;height:.55rem;border-radius:50%;background:var(--mk-yellow,#FFC61A);border:2px solid var(--mk-ink,#141414);box-sizing:content-box;width:.35rem;height:.35rem}
