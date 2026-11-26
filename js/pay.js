@@ -183,7 +183,7 @@
     var box = el('div', { class: 'wh' });
     if (!g || !g.minis || !g.minis.length) return el('span');
     var n = g.minis.length, i = 0, rot = 0;
-    box.appendChild(el('p', { class: 'wh-h', text: '🎁 Vous avez gagné ' + (n > 1 ? n + ' mini-figurines' : 'une mini-figurine') + ' ! Tournez la roue pour découvrir ' + (n > 1 ? 'lesquelles' : 'laquelle') + '.' }));
+    box.appendChild(el('p', { class: 'wh-h', text: 'Vous avez gagné ' + (n > 1 ? n + ' mini-figurines' : 'une mini-figurine') + ' ! Tournez la roue pour découvrir ' + (n > 1 ? 'lesquelles' : 'laquelle') + '.' }));
     var stage = el('div', { class: 'wh-stage' }); box.appendChild(stage);
     var btn = el('button', { type: 'button', class: 'btn btn-y wh-go', text: 'Tourner la roue' + (n > 1 ? ' (1/' + n + ')' : '') }), res = el('ul', { class: 'wh-res' });
     btn.disabled = true; box.appendChild(btn); box.appendChild(res);
@@ -202,7 +202,7 @@
         s.path.classList.add('wh-win'); last = s.path;
         var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: figSrc(m.no), alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
         res.appendChild(li); i++;
-        if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 20 € à utiliser sur le site.' }));
+        if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: 'INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 20 € à utiliser sur le site.' }));
         if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines seront glissées dans votre colis.' })); }
       }, reduce ? 300 : 4100);
     });
