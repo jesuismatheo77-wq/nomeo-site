@@ -113,7 +113,7 @@
   function giftTxt(info) {
     var g = info.gift; if (!g) return '';
     if (!g.minis || !g.minis.length) return '';
-    return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ')'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 100 € ***' : '');
+    return 'CADEAUX À GLISSER DANS LE COLIS :\n' + g.minis.map(function (m) { return '- Mini N°' + m.no + ' ' + m.name + ' (' + m.rar + ')'; }).join('\n') + (g.gold ? '\n*** ZESTE DORÉ GAGNÉ : envoyer la carte cadeau de 20 € ***' : '');
   }
   var IMG = { '001': 'mascotte-nuage', '002': 'mascotte-citron', '003': 'mascotte-oeuf', '004': 'mascotte-nuage', '005': 'mascotte-citron', '006': 'mascotte-oeuf', '007': 'mascotte-citron' };
   // Roue : parts proportionnelles aux vraies chances (commune 74,5 %, rare 20 %, super rare 5 %, légendaire 0,5 %)
@@ -137,7 +137,7 @@
       setTimeout(function () {
         var li = el('li', { class: 'wh-card wk-' + m.r }, [el('img', { src: 'img/' + IMG[m.no] + '.webp', alt: '' }), el('span', { class: 'wh-no', text: 'N°' + m.no }), el('b', { text: m.name }), el('span', { class: 'wh-rar', text: m.rar })]);
         res.appendChild(li); i++;
-        if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 100 € à utiliser sur le site.' }));
+        if (m.r === 'l') box.appendChild(el('p', { class: 'wh-gold', text: '✨ INCROYABLE : vous avez trouvé l’unique Zeste doré ! Il vous sera envoyé avec une carte cadeau de 20 € à utiliser sur le site.' }));
         if (i < n) { btn.disabled = false; btn.textContent = 'Tourner encore (' + (i + 1) + '/' + n + ')'; } else { btn.remove(); box.appendChild(el('p', { class: 'wh-end', text: 'Vos figurines seront glissées dans votre colis.' })); }
       }, reduce ? 300 : 3300);
     });
