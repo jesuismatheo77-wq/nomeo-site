@@ -504,3 +504,30 @@ h1#titre{font-family:Fredoka,"Schibsted Grotesk",system-ui,sans-serif;font-weigh
 
 .cr-dot{display:inline-block;width:18px;height:18px;border-radius:50%;border:2px solid var(--mk-ink);vertical-align:middle}
 .fx-drop.has-file .fx-ico svg{display:none}
+/* Portraits lumineux */
+.li-card{display:grid;gap:16px;padding:14px;background:#fff;border:3px solid var(--mk-ink);border-radius:22px;box-shadow:5px 5px 0 var(--mk-ink);margin:0 0 28px}
+@media(min-width:760px){.li-card{grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);padding:18px;gap:22px}}
+.li-left,.li-right{min-width:0;display:grid;gap:10px;align-content:start}
+.li-fig{position:relative;border-radius:16px;overflow:hidden;border:2px solid var(--mk-ink)}
+.li-cv{display:block;width:100%;touch-action:none;cursor:grab}
+.li-light{position:absolute;top:10px;left:10px;padding:7px 12px;border-radius:99px;border:2px solid var(--mk-ink);background:var(--mk-yellow);font:inherit;font-size:.8rem;font-weight:800;color:var(--mk-ink);cursor:pointer}
+.li-light[aria-pressed=false]{background:#fff}
+.li-pickrow{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.li-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.li-pick{cursor:pointer}
+.li-file:focus-visible+.li-zoom,.li-pick:focus-within{outline:3px solid var(--mk-ink);outline-offset:2px}
+.li-zoom{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:700;flex:1;min-width:160px}.li-zoom input{flex:1;accent-color:var(--mk-ink)}
+.li-hint,.li-tip{margin:0;font-size:.85rem;color:#3A3A3A}
+.li-right h4{margin:4px 0 0;font-size:.95rem}
+.li-opts{display:grid;gap:6px}
+.li-opts label{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border:2px solid var(--mk-ink);border-radius:14px;background:var(--mk-paper);cursor:pointer}
+.li-opts label.sel{background:var(--mk-yellow-soft)}
+.li-opts input{margin:3px 0 0;accent-color:var(--mk-ink);flex:none}
+.li-opts span{display:grid;gap:1px}.li-opts small{font-size:.8rem;color:#3A3A3A}
+.li-opts[aria-label^=Sens]{grid-template-columns:1fr 1fr}
+.li-msg{margin:0;font-size:.88rem;font-weight:700;min-height:1em}
+.li .sp-safe{margin:0;font-size:.78rem;color:#4A4A4A}
+.li-opts[aria-label=Taille]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.li-opts[aria-label=Taille] label,.li-opts[aria-label^=Sens] label{padding:9px 8px;justify-content:center;text-align:center;position:relative}
+.li-opts[aria-label=Taille] input,.li-opts[aria-label^=Sens] input{position:absolute;opacity:0;pointer-events:none}
+.li-opts[aria-label=Taille] label:focus-within,.li-opts[aria-label^=Sens] label:focus-within{outline:3px solid var(--mk-ink);outline-offset:2px}

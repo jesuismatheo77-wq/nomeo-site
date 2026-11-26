@@ -204,7 +204,7 @@ async function status(env, sid) {
   const m = s.metadata || {}; let raw = ''; for (let i = 0; i < 45 && m['l' + i]; i++) raw += m['l' + i];
   const rows = raw ? raw.split('\n').map(r => r.split('|')) : [];
   const msg = rows.map(r => '- ' + r[0] + ' × ' + (H[r[1]] ? H[r[1]].t : r[1]) + (r[2] ? ' (taille ' + r[2] + ')' : '') +
-    (r[3] ? ' · ' + comboTxt(r[3]) : '') + (r[4] ? ' · texte « ' + r[4] + ' »' : '') + (r[5] ? ' · police ' + r[5] : '') + (r[6] ? ' · design ' + r[6] : '') +
+    (r[3] ? ' · ' + comboTxt(r[3]) : '') + (r[4] ? (/^Photo réf\. [0-9a-f]{40}$/.test(r[4]) ? ' · photo à télécharger : https://nomeo-pay.jesuismatheo77.workers.dev/f/' + r[4].slice(11) : ' · texte « ' + r[4] + ' »') : '') + (r[5] ? ' · police ' + r[5] : '') + (r[6] ? ' · design ' + r[6] : '') +
     (r[8] ? ' · remise ' + r[8] : '') + ' : ' + eur(+r[7])).join('\n');
   const sd = s.collected_information && s.collected_information.shipping_details || s.shipping_details;
   const addr = sd && sd.address ? [sd.name, sd.address.line1, sd.address.line2, sd.address.postal_code, sd.address.city].filter(Boolean).join(', ') : '';
@@ -228,7 +228,7 @@ async function loadShip(env) {
 
 // ---------- dépôt de fichiers 3D (Cloudflare KV, variable FILES) ----------
 const FILE_MAX = 25 * 1024 * 1024, FILE_TTL = 90 * 86400;
-const FILE_EXT = ['stl', '3mf', 'obj', 'step', 'stp', 'ply', 'amf', 'zip'];
+const FILE_EXT = ['stl', '3mf', 'obj', 'step', 'stp', 'ply', 'amf', 'zip', 'jpg', 'jpeg', 'png', 'webp', 'heic'];
 async function upload(env, req, base) {
   if (!env.FILES) throw new Err('Le dépôt de fichiers n’est pas encore activé.', 503);
   if (+(req.headers.get('content-length') || 0) > FILE_MAX + 200000) throw new Err('Fichier trop lourd (25 Mo maximum).', 413);
@@ -237,7 +237,7 @@ async function upload(env, req, base) {
   if (!f || typeof f === 'string') throw new Err('Aucun fichier reçu.');
   const name = cleanText(f.name, 120) || 'fichier';
   const ext = (name.split('.').pop() || '').toLowerCase();
-  if (!FILE_EXT.includes(ext)) throw new Err('Format non accepté : envoyez un fichier STL, 3MF, OBJ, STEP ou ZIP.');
+  if (!FILE_EXT.includes(ext)) throw new Err('Format non accepté : envoyez un fichier STL, 3MF, OBJ, STEP, ZIP ou une photo JPG ou PNG.');
   if (!f.size || f.size > FILE_MAX) throw new Err('Fichier vide ou trop lourd (25 Mo maximum).', 413);
   const id = crypto.randomUUID().replace(/-/g, '') + crypto.randomUUID().replace(/-/g, '').slice(0, 8);
   await env.FILES.put(id, await f.arrayBuffer(), { expirationTtl: FILE_TTL, metadata: { name, size: f.size } });
