@@ -46,7 +46,7 @@
   }
   var gForm = radios("li-form", [
     { v: "litho", l: "Plaque seule", d: "Sur un petit pied, à poser devant une fenêtre ou une lampe" },
-    { v: "litho-lampe", l: "Avec boîte lumineuse", d: "Boîte blanche, bougie LED fournie, photo interchangeable (+ 5, 7 ou 10 €)" }
+    { v: "litho-lampe", l: "Avec boîte noire lumineuse", d: "Boîte noire, bougie LED fournie, photo interchangeable (+ 5, 7 ou 10 €)" }
   ], "litho", "Version");
   var gSize = radios("li-sz", SIZES.map(function (s) { return { v: s.k, l: s.l, d: s.d }; }), "s", "Taille");
   var gDir = radios("li-dir", [{ v: "h", l: "Paysage" }, { v: "v", l: "Portrait" }], "h", "Sens de la photo");
@@ -72,8 +72,7 @@
         el("h4", { text: "Votre version" }), gForm,
         el("h4", { text: "Taille" }), gSize,
         el("h4", { text: "Sens" }), gDir,
-        el("p", { class: "li-tip", text: "Conseil : une photo nette et bien éclairée, avec le visage assez grand. Le passage en noir et blanc se fait tout seul." }),
-        el("p", { class: "sp-safe", text: "Fabriqué par Noméo, France. PLA blanc, usage intérieur. Version boîte : uniquement avec la bougie LED fournie." })
+        el("p", { class: "li-tip", html: "<b>Photo nette, visage assez grand</b> : le noir et blanc se fait tout seul. Fabriqué en France, PLA, usage intérieur. Boîte : uniquement avec la bougie LED fournie." })
       ]),
       el("div", { class: "sp-b" }, [stepper, add]), msg
     ])
@@ -82,7 +81,7 @@
   function priceNow() { return PRICE[st.id][st.sz]; }
   function refresh() {
     add.textContent = "Ajouter · " + eur(priceNow() * st.qty);
-    sum.innerHTML = "<b>" + (st.id === "litho" ? "Plaque seule" : "Avec boîte lumineuse") + "</b> · " + SIZES.filter(function (z) { return z.k === st.sz; })[0].l + " " + SIZES.filter(function (z) { return z.k === st.sz; })[0].d + " · " + (st.port ? "portrait" : "paysage");
+    sum.innerHTML = "<b>" + (st.id === "litho" ? "Plaque seule" : "Avec boîte noire lumineuse") + "</b> · " + SIZES.filter(function (z) { return z.k === st.sz; })[0].l + " " + SIZES.filter(function (z) { return z.k === st.sz; })[0].d + " · " + (st.port ? "portrait" : "paysage");
     [].forEach.call(gSize.querySelectorAll("small"), function (s, i) { s.innerHTML = SIZES[i].d + "<br>" + eur(PRICE[st.id][SIZES[i].k]); });
     [].forEach.call(root.querySelectorAll(".li-opts label"), function (l) { l.classList.toggle("sel", l.querySelector("input").checked); });
     draw();
@@ -173,11 +172,11 @@
     // support
     var by = y0 + ph;
     if (lamp) {
-      // boîte blanche : cadre de 4 mm autour de la photo, la plaque se glisse par le haut
+      // boîte noire : cadre de 4 mm autour de la photo, la plaque se glisse par le haut
       var bz = Math.max(4 * dpr, pw * 0.04), ox = x0 - bz * 0.7, oy = y0 - bz * 0.7;
-      ctx.save(); ctx.fillStyle = st.lit ? "#CFC6B6" : "#F4F2EC"; ctx.shadowColor = "rgba(0,0,0,.25)"; ctx.shadowBlur = 10 * dpr; ctx.shadowOffsetY = 4 * dpr;
+      ctx.save(); ctx.fillStyle = st.lit ? "#0E0E10" : "#1B1B1D"; ctx.shadowColor = "rgba(0,0,0,.25)"; ctx.shadowBlur = 10 * dpr; ctx.shadowOffsetY = 4 * dpr;
       ctx.beginPath(); ctx.rect(ox, oy, pw + 1.4 * bz, ph + 1.4 * bz); ctx.rect(x0 + bz * 0.7, y0 + bz * 0.7, pw - 1.4 * bz, ph - 1.4 * bz); ctx.fill("evenodd"); ctx.restore();
-      ctx.fillStyle = st.lit ? "#B9AF9E" : "#E4E0D6"; ctx.fillRect(x0 + pw * 0.5 - 13 * dpr, oy - 1 * dpr, 26 * dpr, 3 * dpr);
+      ctx.fillStyle = st.lit ? "#2A2A2E" : "#303034"; ctx.fillRect(x0 + pw * 0.5 - 13 * dpr, oy - 1 * dpr, 26 * dpr, 3 * dpr);
     } else {
       ctx.fillStyle = st.lit ? "#8F8579" : "#E9E5DC"; var fw = Math.max(20 * dpr, pw * 0.16), fh = baseH * 0.9;
       rr(x0 + pw * 0.12, by - 3 * dpr, fw, fh, 3 * dpr); ctx.fill(); rr(x0 + pw * 0.88 - fw, by - 3 * dpr, fw, fh, 3 * dpr); ctx.fill();
@@ -219,7 +218,7 @@
     if (!window.A77 || !window.A77.addItem) { msg.textContent = "Le panier n’est pas encore prêt, réessayez dans un instant."; return; }
     add.disabled = true; var old = add.textContent; add.textContent = "Envoi de la photo…"; msg.textContent = "";
     var done = function (text, note) {
-      window.A77.addItem(st.id, { text: text, combo: st.id === "litho-lampe" ? "blanc-blanc" : "blanc-blanc", qty: st.qty, sz: st.sz });
+      window.A77.addItem(st.id, { text: text, combo: st.id === "litho-lampe" ? "blanc-noir" : "blanc-blanc", qty: st.qty, sz: st.sz });
       add.disabled = false; add.textContent = old; msg.textContent = note || "Ajouté à votre panier, avec votre photo.";
     };
     (st.up ? Promise.resolve(st.up) : photoBlob().then(function (b) {
