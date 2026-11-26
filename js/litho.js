@@ -32,7 +32,7 @@
   var pick = el("label", { class: "btn btn-y li-pick", for: "li-file", text: "Choisir ma photo" });
   var zoom = el("input", { type: "range", min: "1", max: "3", step: "0.01", value: "1", "aria-label": "Zoom sur la photo" });
   var zoomW = el("label", { class: "li-zoom", hidden: "" }, [el("span", { text: "Zoom" }), zoom]);
-  var hint = el("p", { class: "li-hint", text: "Exemple avec nos mascottes. Choisissez votre photo pour voir votre portrait." });
+  var hint = el("p", { class: "li-hint", text: "Exemple avec Zeste. Choisissez votre photo pour voir votre portrait." });
   var fig = el("div", { class: "li-fig" }, [cv, light]);
 
   function radios(name, opts, cur, label) {
@@ -89,7 +89,7 @@
     if (!sample) { var dir = src.height > src.width ? "v" : "h"; st.port = dir === "v"; gDir.querySelector('[value="' + dir + '"]').checked = true; }
     refresh();
   }
-  var sm = new Image(); sm.onload = function () { if (!st.img || st.sample) setImage(sm, true); }; sm.src = "img/scene-trio-fete.webp";
+  var sm = new Image(); sm.onload = function () { if (!st.img || st.sample) setImage(sm, true); }; sm.src = "img/litho-exemple.webp";
   file.addEventListener("change", function () {
     var f = file.files && file.files[0]; if (!f) return;
     if (!/^image\//.test(f.type) && !/\.(jpe?g|png|webp|heic|heif)$/i.test(f.name)) { msg.textContent = "Choisissez une photo (JPG, PNG ou HEIC)."; return; }
